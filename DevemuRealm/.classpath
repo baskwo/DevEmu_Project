@@ -2,15 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/mina-core-2.0.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/slf4j-log4j12-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/mysql-connector-java-5.1.10-bin.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DevemuNetwork"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DevemuBase"/>
-	<classpathentry kind="lib" path="C:/Users/Sylvie/Dropbox/Ishina/libs/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/mina-core-2.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
