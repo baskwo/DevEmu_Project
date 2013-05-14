@@ -16,7 +16,7 @@ public class AccountDAOFinderId implements DAOFinder<Account> {
     @Override
     public Account find(Object o) {
         if (o instanceof Long) {
-            return accounts.get((Long)o);
+            return accounts.get(o);
         }
         throw new IllegalArgumentException("AccountDAOFinderId.find(Object o) : o must be a Long.");
     }

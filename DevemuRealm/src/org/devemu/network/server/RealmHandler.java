@@ -8,6 +8,7 @@ import org.devemu.network.server.client.RealmClient.State;
 
 public class RealmHandler extends IoHandlerAdapter{
 	
+	@Override
 	public void sessionCreated(IoSession session) throws Exception{
 		RealmClient loc1 = new RealmClient(session);
 		session.setAttribute("client", loc1);
@@ -18,10 +19,12 @@ public class RealmHandler extends IoHandlerAdapter{
 		loc1.write(loc3.toString());
 	}
 	
+	@Override
 	public void sessionClosed(IoSession session) throws Exception{
 		session.close(true);
 	}
 	
+	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception{
 		String loc1 = message.toString();
 		if(session.getAttribute("client") instanceof RealmClient) {
@@ -37,6 +40,7 @@ public class RealmHandler extends IoHandlerAdapter{
 		}
 	}
 	
+	@Override
 	public void messageSent(IoSession session, Object message) throws Exception{
 		String loc1 = message.toString();
 		System.out.println("Sending : " + loc1 + " to : " + session.getRemoteAddress().toString());
