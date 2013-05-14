@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <REALM_IP>127.0.0.1</REALM_IP>
+    <REALM_PORT>444</REALM_PORT>
+    <INTER_IP>127.0.0.1</INTER_IP>
+    <INTER_PORT>666</INTER_PORT>
+    <VERSION>1.29.1</VERSION>
+    <MAX_SERVER>12</MAX_SERVER>
+    <COMMUNITY>0</COMMUNITY>
+</config>

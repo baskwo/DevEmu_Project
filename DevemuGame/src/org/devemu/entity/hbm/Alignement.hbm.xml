@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class catalog="ishina" entity-name="org.ishina.entity.Alignement"
+        name="org.ishina.entity.Alignement" table="Alignements">
+        <id name="id" type="int">
+            <column name="id"/>
+            <generator class="assigned"/>
+        </id>
+        <property generated="never" name="ordre" type="byte">
+            <column length="20" name="ordre"/>
+        </property>
+        <property generated="never" name="level" type="int">
+            <column length="20" name="level"/>
+        </property>
+        <property generated="never" name="honor" type="int">
+            <column length="20" name="honor"/>
+        </property>
+        <property generated="never" name="deshonor" type="int">
+            <column length="20" name="deshonor"/>
+        </property>
+        <property generated="never" name="grade" type="int">
+            <column length="20" name="grade"/>
+        </property>
+    </class>
+</hibernate-mapping>

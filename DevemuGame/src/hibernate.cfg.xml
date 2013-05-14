@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    
+<hibernate-configuration>
+    <session-factory>
+
+        <!--  Paramètres de connexion à la base de données -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/ishina</property>
+        <property name="hibernate.connection.username">baskwo</property>
+        <property name="hibernate.connection.password">Colacoka1</property>
+        
+        <property name="hibernate.connection.provider_class">org.devemu.sql.DBCPConnectionProvider</property>
+        <property name="hibernate.dbcp.initialSize">8</property>
+        <property name="hibernate.dbcp.maxActive">20</property>
+  		<property name="hibernate.dbcp.maxIdle">20</property>
+ 		<property name="hibernate.dbcp.minIdle">0</property>
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- Affiche les logs SQL -->
+        <property name="show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="use_sql_comments">false</property>
+        
+    </session-factory>
+</hibernate-configuration>

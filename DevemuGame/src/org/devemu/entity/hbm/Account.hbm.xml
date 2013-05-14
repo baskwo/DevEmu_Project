@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class catalog="ishina" entity-name="org.ishina.entity.Account"
+        name="org.ishina.entity.Account" table="accounts">
+        <id name="guid" type="int">
+            <column name="guid"/>
+            <generator class="assigned"/>
+        </id>
+        <property generated="never" name="name" type="string">
+            <column length="50" name="name"/>
+        </property>
+        <property generated="never" name="password" type="string">
+            <column length="150" name="password"/>
+        </property>
+        <property generated="never" name="level" type="int">
+            <column length="11" name="level"/>
+        </property>
+        <property generated="never" name="pseudo" type="string">
+            <column length="150" name="pseudo"/>
+        </property>
+        <property generated="never" name="question" type="string">
+            <column length="250" name="question"/>
+        </property>
+        <list name = "players" lazy = "false" fetch = "join" cascade = "save-update, delete">
+            <key column="account_guid"/>
+            <list-index column="account_guidx"/>
+            <one-to-many class="org.ishina.entity.Player"/>
+        </list>
+        <property generated="never" name="aboTime" type="long">
+            <column length="15" name="aboTime"/>
+        </property>
+    </class>
+    <query name="findAccountByName">SELECT a FROM Account a WHERE a.name = :name</query>
+</hibernate-mapping>

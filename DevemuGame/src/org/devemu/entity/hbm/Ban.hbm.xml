@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class catalog="ishina" entity-name="org.ishina.entity.Ban"
+        name="org.ishina.entity.Ban" table="Ban">
+        <id name="id" type="int">
+            <column name="id"/>
+            <generator class="assigned"/>
+        </id>
+        <property generated="never" name="username" type="string">
+            <column length="20" name="username"/>
+        </property>
+        <property generated="never" name="banTime" type="long">
+            <column length="20" name="banTime"/>
+        </property>
+    </class>
+</hibernate-mapping>
