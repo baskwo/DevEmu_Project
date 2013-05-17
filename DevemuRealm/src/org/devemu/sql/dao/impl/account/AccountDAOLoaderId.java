@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.devemu.program.Main;
 import org.devemu.sql.DAOLoader;
 import org.devemu.sql.Database;
 import org.devemu.sql.GetDatabase;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.manager.AccountManager;
+import org.devemu.utils.config.ConfigEnum;
 
 public class AccountDAOLoaderId implements DAOLoader<Account> {
 
@@ -21,7 +23,7 @@ public class AccountDAOLoaderId implements DAOLoader<Account> {
     private GetDatabase getDb = new GetDatabase() {
         @Override
         public Database getDatabase() {
-            return Database.getDatabase("Piou.Database.Accounts");
+            return Database.getDatabase((String) Main.getConfigValue(ConfigEnum.DATABASE_NAME));
         }
     };
     private boolean allowLoad = true;

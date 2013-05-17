@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.devemu.program.Main;
 import org.devemu.sql.DAOPreloader;
 import org.devemu.sql.Database;
 import org.devemu.sql.GetDatabase;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.manager.AccountManager;
+import org.devemu.utils.config.ConfigEnum;
 
 public class AccountDAOPreloader implements DAOPreloader<Account> {
 
@@ -21,7 +23,7 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
     private GetDatabase getDb = new GetDatabase() {
         @Override
         public Database getDatabase() {
-            return Database.getDatabase("Piou.Database.Accounts");
+            return Database.getDatabase((String) Main.getConfigValue(ConfigEnum.DATABASE_NAME));
         }
     };
     private Database database;
