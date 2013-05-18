@@ -16,7 +16,6 @@ import org.devemu.network.server.RealmServer;
 import org.devemu.network.server.client.RealmClient.State;
 import org.devemu.program.Main;
 import org.devemu.sql.entity.Account;
-import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.manager.AccountManager;
 import org.devemu.utils.Crypt;
 import org.devemu.utils.config.ConfigEnum;
@@ -111,19 +110,9 @@ public class ClientManager {
 		Packet loc1 = new Packet();
 		loc1.setIdentificator("Ax");
 		loc1.setFirstParam("K" + AccountManager.getAboTime(arg1.getAcc()));
-		Map<Integer,Byte> loc5 = new TreeMap<Integer,Byte>();
-		for(Player loc3 : arg1.getAcc().getPlayers()) {
-			int loc4 = loc3.getGameGuid();
-			if(!loc5.containsKey(loc4))
-				loc5.put(loc4, (byte)1);
-			else{
-				int loc6 = loc5.get(loc4) + 1;
-				loc5.remove(loc4);
-				loc5.put(loc4, (byte)loc6);
-			}
-		}
+
 		List<String> loc2 = new ArrayList<String>();
-		for(Entry<Integer,Byte> loc7 : loc5.entrySet()) {
+		for(Entry<Integer,Byte> loc7 : arg1.getAcc().getPlayers().entrySet()) {
 			loc2.add(loc7.getKey() + "," + loc7.getValue());
 		}
 		loc1.setParam(loc2);

@@ -58,27 +58,21 @@ public class Database {
     public static void close(ResultSet resultSet, Statement statement, Connection connection) {
         if (resultSet != null) {
             try {
-                if (!resultSet.isClosed()) {
-                    resultSet.close();
-                }
+            	resultSet.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
         if (statement != null) {
             try {
-                if (!statement.isClosed()) {
-                    statement.close();
-                }
+            	statement.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
         if (connection != null) {
             try {
-                if (!connection.isClosed()) {
-                    connection.close();
-                }
+            	connection.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

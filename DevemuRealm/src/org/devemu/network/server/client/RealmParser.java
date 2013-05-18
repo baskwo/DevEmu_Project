@@ -36,6 +36,8 @@ public class RealmParser {
 		case ACCOUNT:
 			if(arg1.contains("\n"))
 				ClientManager.onAccount(arg1, client);
+			else if(arg1.startsWith("Af"))
+				return;
 			else{
 				Packet loc1 = new Packet();
 				loc1.setIdentificator("Al");

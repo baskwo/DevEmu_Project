@@ -1,7 +1,7 @@
 package org.devemu.sql.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Account {
 	private int guid = 0;
@@ -10,7 +10,7 @@ public class Account {
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private List<Player> players = new ArrayList<Player>();
+	private Map<Integer,Byte> players = new TreeMap<Integer,Byte>();
 	private long aboTime = 0;
 
 	public int getGuid() {
@@ -65,19 +65,30 @@ public class Account {
 		this.question = question;
 	}
 
-	public List<Player> getPlayers() {
-		return players;
-	}
-
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
 	public long getAboTime() {
 		return aboTime;
 	}
 
 	public void setAboTime(long aboTime) {
 		this.aboTime = aboTime;
+	}
+
+	public Map<Integer,Byte> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Map<Integer,Byte> players) {
+		this.players = players;
+	}
+	
+	public void addPlayer(int param1) {
+		if(players.containsKey(param1)) {
+			byte loc1 = players.get(param1);
+			loc1++;
+			players.remove(param1);
+			players.put(param1, loc1);
+		}else{
+			players.put(param1, (byte) 1);
+		}
 	}
 }

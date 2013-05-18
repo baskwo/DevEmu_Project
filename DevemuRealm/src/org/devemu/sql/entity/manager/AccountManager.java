@@ -3,6 +3,7 @@ package org.devemu.sql.entity.manager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.StringUtils;
 import org.devemu.sql.dao.DAO;
 import org.devemu.sql.entity.Account;
 
@@ -27,16 +28,12 @@ public class AccountManager {
             acc.setPseudo(set.getString("pseudo"));
             acc.setQuestion(set.getString("question"));
             acc.setAboTime(set.getLong("aboTime"));
-            /*String s = set.getString("characters");
-            String[] s1 = s.split("&");
+            String s = set.getString("players");
+            String[] s1 = s.split(";");
             for (String s2 : s1) {
                 String[] s3 = StringUtils.split(s2, ':');
-                if (s3.length < 2) {
-                    continue;
-                }
-                acc.setNbrCharacter(Integer.parseInt(s3[0]), Integer.parseInt(s3[1]));
-            }*/
-            //TODO: Character load
+                acc.addPlayer(Integer.parseInt(s3[1]));
+            }
             return acc;
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -25,6 +25,11 @@ public class RealmHandler extends IoHandlerAdapter{
 	}
 	
 	@Override
+	public void exceptionCaught(IoSession session,Throwable cause) throws Exception{
+		cause.printStackTrace();
+	}
+	
+	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception{
 		String loc1 = message.toString();
 		if(session.getAttribute("client") instanceof RealmClient) {

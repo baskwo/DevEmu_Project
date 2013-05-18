@@ -17,7 +17,7 @@ public class DAO {
     public static void init() {
     	String loc1 = (String) Main.getConfigValue(ConfigEnum.DATABASE_NAME);
     	String loc2 = (String) Main.getConfigValue(ConfigEnum.DATABASE_DRIVER);
-    	String loc3 = Main.getConfigValue(ConfigEnum.DATABASE_URL) + "?" + loc1;
+    	String loc3 = Main.getConfigValue(ConfigEnum.DATABASE_URL) + loc1;
     	String loc4 = (String) Main.getConfigValue(ConfigEnum.DATABASE_USER);
     	String loc5 = (String) Main.getConfigValue(ConfigEnum.DATABASE_USER_PASS);
     	Database.newDatabase(loc1,loc2,loc3, loc4, loc5, 10, 500, false);
