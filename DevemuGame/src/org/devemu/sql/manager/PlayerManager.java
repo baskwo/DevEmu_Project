@@ -1,16 +1,16 @@
 package org.devemu.sql.manager;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.devemu.network.server.client.GameClient;
 import org.devemu.program.Main;
+import org.devemu.sql.dao.DAO;
 import org.devemu.sql.entity.ExpStep;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.Stats;
 import org.devemu.utils.constants.StatsID;
-import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
 
 public class PlayerManager {
 	public static String toALK(Player arg0) {
@@ -92,20 +92,13 @@ public class PlayerManager {
 	}
 	
 	public static Player getById(int arg0) {
-		Session loc1 = Main.getSqlSession();
-		Player loc2 = (Player) loc1.get(Player.class, arg0);
-		loc1.close();
+		Player loc2 = DAO.getPlayerDAO().find(arg0);
 		return loc2;
 	}
 	
 	public static int getNextId() {
-		Session loc1 = Main.getSqlSession();
-		Object loc3 = loc1.createCriteria(Player.class).setProjection(Projections.max("guid")).uniqueResult();
-		int loc2 = 0;
-		if(loc3 != null)
-			loc2 = (int) loc3;
-		loc1.close();
-		return (loc2 + 1);
+		int nextId = DAO.getPlayerDAO().getNextID();
+		return nextId;
 	}
 	
 	public static void generateBaseStats(Player arg0) {
@@ -196,23 +189,55 @@ public class PlayerManager {
 	}
 	
 	public static void create(Player arg1,GameClient arg2) {
-		Session loc1 = Main.getSqlSession();
-		arg2.getAcc().getPlayers().add(arg1);
-		loc1.beginTransaction();
-		loc1.saveOrUpdate(arg2.getAcc());
-		loc1.getTransaction().commit();
-		loc1.close();
+		arg2.getAcc().getPlayers().add(arg1.getGuid());
+		DAO.getAccountDAO().update(arg2.getAcc());
+		DAO.getPlayerDAO().create(arg1);
 	}
 	
+	public static Player create(ResultSet set) {
+       /* try {
+            Account acc = new Account();
+            acc.setGuid(set.getInt("id"));
+            acc.setName(set.getString("name"));
+            acc.setPassword(set.getString("password"));
+            acc.setPseudo(set.getString("pseudo"));
+            acc.setQuestion(set.getString("question"));
+            acc.setAboTime(set.getLong("aboTime"));
+            String s = set.getString("players");
+            String[] s1 = s.split(";");
+            for (String s2 : s1) {
+                String[] s3 = StringUtils.split(s2, ':');
+                if(Integer.parseInt(s3[1]) == Main.getGuid())
+                	acc.getPlayers().add(Integer.parseInt(s3[0]));
+            }
+            return acc;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }*/
+        return null;
+    }
+	
+	public static Player create(String[] set) {
+        /*Account acc = new Account();
+        acc.setGuid(Integer.parseInt(set[0]));
+        acc.setName(set[1]);
+        acc.setPassword(set[2]);
+        acc.setPseudo(set[3]);
+        acc.setQuestion(set[4]);
+        acc.setAboTime(Long.parseLong(set[5]));
+        String s = set[6];
+        String[] s1 = StringUtils.split(s, ';');
+        for (String s2 : s1) {
+            String[] s3 = StringUtils.split(s2, ':');
+            if(Integer.parseInt(s3[1]) == Main.getGuid())
+            	acc.getPlayers().add(Integer.parseInt(s3[0]));
+        }*/
+        return null;
+    }
+	
 	public static void delete(Player arg1,GameClient arg2) {
-		Session loc1 = Main.getSqlSession();
 		AccountManager.removePlayer(arg2.getAcc(), arg1.getGuid());
-		loc1.beginTransaction();
-		loc1.delete(arg1);
-		loc1.getTransaction().commit();
-		loc1.beginTransaction();
-		loc1.saveOrUpdate(arg2.getAcc());
-		loc1.getTransaction().commit();
-		loc1.close();
+		DAO.getAccountDAO().update(arg2.getAcc());
+		DAO.getPlayerDAO().delete(arg1);
 	}
 }

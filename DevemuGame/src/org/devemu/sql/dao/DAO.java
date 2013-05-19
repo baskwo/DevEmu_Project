@@ -3,12 +3,15 @@ package org.devemu.sql.dao;
 import org.devemu.program.Main;
 import org.devemu.sql.Database;
 import org.devemu.sql.dao.impl.IAccountDAO;
+import org.devemu.sql.dao.impl.IPlayerDAO;
 import org.devemu.sql.dao.impl.account.AccountDAO;
+import org.devemu.sql.dao.impl.player.PlayerDAO;
 import org.devemu.utils.config.ConfigEnum;
 
 public class DAO {
     
     private static IAccountDAO accountDAO = new AccountDAO();
+    private static IPlayerDAO playerDAO = new PlayerDAO();
 
     private DAO() {
         
@@ -30,4 +33,12 @@ public class DAO {
     public static void setAccountDAO(IAccountDAO accountDAO) {
         DAO.accountDAO = accountDAO;
     }
+
+	public static IPlayerDAO getPlayerDAO() {
+		return playerDAO;
+	}
+
+	public static void setPlayerDAO(IPlayerDAO playerDAO) {
+		DAO.playerDAO = playerDAO;
+	}
 }
