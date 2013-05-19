@@ -1,4 +1,4 @@
-package org.devemu.entity;
+package org.devemu.sql.entity;
 
 public class ExpStep {
 	private int id = 0;

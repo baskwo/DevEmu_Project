@@ -1,4 +1,4 @@
-package org.devemu.entity;
+package org.devemu.sql.entity;
 
 public class Stats {
 	private int id = 0;

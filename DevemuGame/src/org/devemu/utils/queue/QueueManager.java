@@ -1,9 +1,9 @@
 package org.devemu.utils.queue;
 
-import org.devemu.entity.manager.AccountManager;
 import org.devemu.network.server.client.ClientManager;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.program.Main.Queue;
+import org.devemu.sql.manager.AccountManager;
 
 public class QueueManager implements Runnable {
 	//private Thread thread;

@@ -1,4 +1,4 @@
-package org.devemu.entity;
+package org.devemu.sql.entity;
 
 import java.util.HashMap;
 import java.util.Map;

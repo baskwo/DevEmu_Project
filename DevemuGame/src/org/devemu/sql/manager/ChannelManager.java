@@ -1,10 +1,10 @@
-package org.devemu.entity.manager;
+package org.devemu.sql.manager;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.devemu.entity.Channel;
-import org.devemu.entity.Player;
+import org.devemu.sql.entity.Channel;
+import org.devemu.sql.entity.Player;
 
 public class ChannelManager {
 	private static Map<String,Channel> channels = new HashMap<String,Channel>();

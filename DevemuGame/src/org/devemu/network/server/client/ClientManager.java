@@ -2,14 +2,14 @@ package org.devemu.network.server.client;
 
 import java.util.List;
 
-import org.devemu.entity.Player;
-import org.devemu.entity.manager.AccountManager;
-import org.devemu.entity.manager.AlignementManager;
-import org.devemu.entity.manager.PlayerManager;
 import org.devemu.network.inter.client.InterManager;
 import org.devemu.network.protocol.Packet;
 import org.devemu.program.Main;
 import org.devemu.program.Main.Queue;
+import org.devemu.sql.entity.Player;
+import org.devemu.sql.manager.AccountManager;
+import org.devemu.sql.manager.AlignementManager;
+import org.devemu.sql.manager.PlayerManager;
 
 public class ClientManager {
 	public static void onTransfert(GameClient arg0, Packet arg1) {
@@ -106,8 +106,9 @@ public class ClientManager {
 		loc1.setFirstParam("K" + AccountManager.getAboTime(arg1.getAcc()));
 		List<String> loc2 = loc1.getParam();
 		loc2.add("" + arg1.getAcc().getPlayers().size());
-		for(Player loc3 : arg1.getAcc().getPlayers()) {
-			loc2.add(PlayerManager.toALK(loc3));
+		for(Integer loc3 : arg1.getAcc().getPlayers()) {
+			//loc2.add(PlayerManager.toALK(loc3));
+			//TODO: Find player and to ALK
 		}
 		loc1.setParam(loc2);
 		arg1.write(loc1.toString());

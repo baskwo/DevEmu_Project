@@ -1,4 +1,4 @@
-package org.devemu.entity;
+package org.devemu.sql.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ public class Account {
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private List<Player> players = new ArrayList<Player>();
+	private List<Integer> players = new ArrayList<Integer>();
 	private long aboTime = 0;
 
 	public int getGuid() {
@@ -65,11 +65,11 @@ public class Account {
 		this.question = question;
 	}
 
-	public List<Player> getPlayers() {
+	public List<Integer> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(List<Player> players) {
+	public void setPlayers(List<Integer> players) {
 		this.players = players;
 	}
 

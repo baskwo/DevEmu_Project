@@ -3,11 +3,11 @@ package org.devemu.network.server.client;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
-import org.devemu.entity.Account;
-import org.devemu.entity.Player;
 import org.devemu.network.client.SimpleClient;
 import org.devemu.network.protocol.Packet;
 import org.devemu.program.Main.Queue;
+import org.devemu.sql.entity.Account;
+import org.devemu.sql.entity.Player;
 
 public class GameClient extends SimpleClient {
 	

@@ -1,7 +1,7 @@
-package org.devemu.entity.manager;
+package org.devemu.sql.manager;
 
-import org.devemu.entity.ExpStep;
 import org.devemu.program.Main;
+import org.devemu.sql.entity.ExpStep;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 

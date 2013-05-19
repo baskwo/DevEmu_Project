@@ -3,8 +3,8 @@ package org.devemu.utils.queue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.devemu.entity.manager.AccountManager;
 import org.devemu.network.server.client.GameClient;
+import org.devemu.sql.manager.AccountManager;
 
 public class QueueSelector {
 	private int nextAbo = 0;

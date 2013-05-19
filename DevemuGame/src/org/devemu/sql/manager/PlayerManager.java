@@ -1,13 +1,13 @@
-package org.devemu.entity.manager;
+package org.devemu.sql.manager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.devemu.entity.ExpStep;
-import org.devemu.entity.Player;
-import org.devemu.entity.Stats;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.program.Main;
+import org.devemu.sql.entity.ExpStep;
+import org.devemu.sql.entity.Player;
+import org.devemu.sql.entity.Stats;
 import org.devemu.utils.constants.StatsID;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
