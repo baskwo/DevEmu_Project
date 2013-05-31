@@ -8,7 +8,6 @@ import org.devemu.program.Main;
 import org.devemu.program.Main.Queue;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.manager.AccountManager;
-import org.devemu.sql.manager.AlignementManager;
 import org.devemu.sql.manager.PlayerManager;
 
 public class ClientManager {
@@ -126,14 +125,13 @@ public class ClientManager {
 		loc1.setSexe(loc2.get(1).equalsIgnoreCase("1") ? true : false);
 		loc1.setColors(new int[]{Integer.parseInt(loc2.get(2)),Integer.parseInt(loc2.get(3)),Integer.parseInt(loc2.get(4))});
 		loc1.setGameGuid(Main.getGuid());
-		loc1.getAlignement().setId(AlignementManager.getNextId());
 		
 		PlayerManager.generateBaseStats(loc1);
 		
 		Packet loc3 = new Packet();
 		loc3.setIdentificator("AA");
 		try {
-			PlayerManager.create(loc1,arg1);
+			PlayerManager.createOnDb(loc1,arg1);
 		} catch(Exception e) {
 			loc3.setFirstParam("E");
 			arg1.write(loc3.toString());
@@ -153,7 +151,7 @@ public class ClientManager {
 		if(!arg2.getParam().isEmpty())
 			loc3 =  arg2.getParam().get(0);
 		try {
-			PlayerManager.delete(loc2, arg1);
+			PlayerManager.deleteOnDb(loc2, arg1);
 		}catch(Exception e) {
 			e.printStackTrace();
 			Packet loc4 = new Packet();

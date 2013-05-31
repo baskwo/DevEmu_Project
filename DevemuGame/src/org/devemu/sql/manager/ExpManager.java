@@ -1,9 +1,6 @@
 package org.devemu.sql.manager;
 
-import org.devemu.program.Main;
 import org.devemu.sql.entity.ExpStep;
-import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
 
 public class ExpManager {
 	public static Number getCount() {

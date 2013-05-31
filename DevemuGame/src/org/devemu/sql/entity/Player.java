@@ -23,7 +23,7 @@ public class Player {
 	private int spellPoints = 0;
 	private int pdv = 0;
 	private int energy = 0;
-	private Alignement alignement = new Alignement();
+	private Alignement align = new Alignement();
 	private boolean isShowingWings = false;
 
 	public int getGuid() {
@@ -170,19 +170,19 @@ public class Player {
 		this.energy = energy;
 	}
 
-	public Alignement getAlignement() {
-		return alignement;
-	}
-
-	public void setAlignement(Alignement alignement) {
-		this.alignement = alignement;
-	}
-
 	public boolean isShowingWings() {
 		return isShowingWings;
 	}
 
 	public void setShowingWings(boolean isShowingWings) {
 		this.isShowingWings = isShowingWings;
+	}
+
+	public Alignement getAlign() {
+		return align;
+	}
+
+	public void setAlign(Alignement align) {
+		this.align = align;
 	}
 }

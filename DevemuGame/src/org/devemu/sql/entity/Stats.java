@@ -1,25 +1,17 @@
 package org.devemu.sql.entity;
 
 public class Stats {
-	private int id = 0;
 	private int statsId = 0;
 	private int value = 0;
 	
 	public Stats() {
 	}
 	
-	public Stats(int arg0, int arg1, int arg2) {
-		id = arg0;
+	public Stats(int arg1, int arg2) {
 		statsId = arg1;
 		value = arg2;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public int getValue() {
 		return value;
 	}

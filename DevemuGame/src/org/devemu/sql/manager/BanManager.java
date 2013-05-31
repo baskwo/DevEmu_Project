@@ -3,10 +3,7 @@ package org.devemu.sql.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.devemu.program.Main;
 import org.devemu.sql.entity.Ban;
-import org.hibernate.Query;
-import org.hibernate.Session;
 
 public class BanManager {
 	public static List<String> getAllBan() {
