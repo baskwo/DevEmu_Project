@@ -13,6 +13,7 @@ import org.devemu.utils.config.ConfigReader;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
 import org.devemu.utils.queue.QueueManager;
+import org.devemu.utils.timer.SaveTimer;
 
 public class Main {
 	public enum Queue {
@@ -41,6 +42,7 @@ public class Main {
 		queues.put(Queue.SELECTING, loc4);
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(loc3, 0, 1000, TimeUnit.MILLISECONDS);
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(loc4, 0, 1000, TimeUnit.MILLISECONDS);
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new SaveTimer(), 0, 10, TimeUnit.MINUTES);
 		InterServer.getInstance().start();
 		GameServer.getInstance().start();
 		System.out.println("Launched time : " + ((double)(System.nanoTime() - loc1) / 1000000000) + " seconds");
