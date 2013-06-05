@@ -5,12 +5,6 @@ public class ExpStep {
 	private long player = 0;
 	private long alignement = 0;
 	
-	public int getId() {
-		return level;
-	}
-	public void setId(int id) {
-		this.level = id;
-	}
 	public long getPlayer() {
 		return player;
 	}
@@ -22,5 +16,11 @@ public class ExpStep {
 	}
 	public void setAlignement(long alignement) {
 		this.alignement = alignement;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

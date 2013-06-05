@@ -3,8 +3,12 @@ package org.devemu.sql.dao;
 import org.devemu.program.Main;
 import org.devemu.sql.Database;
 import org.devemu.sql.dao.impl.IAccountDAO;
+import org.devemu.sql.dao.impl.IBanDAO;
+import org.devemu.sql.dao.impl.IExpDAO;
 import org.devemu.sql.dao.impl.IPlayerDAO;
 import org.devemu.sql.dao.impl.account.AccountDAO;
+import org.devemu.sql.dao.impl.ban.BanDAO;
+import org.devemu.sql.dao.impl.exp.ExpDAO;
 import org.devemu.sql.dao.impl.player.PlayerDAO;
 import org.devemu.utils.config.ConfigEnum;
 
@@ -12,6 +16,8 @@ public class DAO {
     
     private static IAccountDAO accountDAO = new AccountDAO();
     private static IPlayerDAO playerDAO = new PlayerDAO();
+    private static IBanDAO banDAO = new BanDAO();
+    private static IExpDAO expDAO = new ExpDAO();
 
     private DAO() {
         
@@ -40,5 +46,21 @@ public class DAO {
 
 	public static void setPlayerDAO(IPlayerDAO playerDAO) {
 		DAO.playerDAO = playerDAO;
+	}
+
+	public static IBanDAO getBanDAO() {
+		return banDAO;
+	}
+
+	public static void setBanDAO(IBanDAO banDAO) {
+		DAO.banDAO = banDAO;
+	}
+
+	public static IExpDAO getExpDAO() {
+		return expDAO;
+	}
+
+	public static void setExpDAO(IExpDAO expDAO) {
+		DAO.expDAO = expDAO;
 	}
 }
