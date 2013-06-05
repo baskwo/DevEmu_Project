@@ -13,11 +13,11 @@ import org.devemu.program.Main;
 import org.devemu.sql.DAOLoader;
 import org.devemu.sql.Database;
 import org.devemu.sql.GetDatabase;
-import org.devemu.sql.entity.Player;
-import org.devemu.sql.manager.PlayerManager;
+import org.devemu.sql.entity.Ban;
+import org.devemu.sql.manager.BanManager;
 import org.devemu.utils.config.ConfigEnum;
 
-public class PlayerDAOLoader implements DAOLoader<Player> {
+public class BanDAOLoader implements DAOLoader<Ban> {
 
     private Database database;
     private GetDatabase getDb = new GetDatabase() {
@@ -28,12 +28,12 @@ public class PlayerDAOLoader implements DAOLoader<Player> {
     };
     private boolean allowLoad = true;
 
-    public PlayerDAOLoader() {
+    public BanDAOLoader() {
         
     }
 
     @Override
-    public Player load(Object o) {
+    public Ban load(Object o) {
         if (!allowLoad) {
             return null;
         }
@@ -42,7 +42,7 @@ public class PlayerDAOLoader implements DAOLoader<Player> {
             database = getDb.getDatabase();
         }
         
-        Player acc = null;
+        Ban acc = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -52,7 +52,7 @@ public class PlayerDAOLoader implements DAOLoader<Player> {
             statement.setLong(1, (Long)o);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                acc = PlayerManager.create(resultSet);
+                acc = BanManager.create(resultSet);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -63,16 +63,16 @@ public class PlayerDAOLoader implements DAOLoader<Player> {
     }
 
     @Override
-    public Collection<Player> loadAll() {
+    public Collection<Ban> loadAll() {
         if (!allowLoad) {
-            return new ArrayList<Player>(0);
+            return new ArrayList<Ban>(0);
         }
         
         if (database == null) {
             database = getDb.getDatabase();
         }
         
-        List<Player> players = new ArrayList<Player>(512);
+        List<Ban> players = new ArrayList<Ban>(512);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -81,14 +81,14 @@ public class PlayerDAOLoader implements DAOLoader<Player> {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM players;");
             while (resultSet.next()) {
-                players.add(PlayerManager.create(resultSet));
+                players.add(BanManager.create(resultSet));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             Database.close(resultSet, statement, connection);
         }
-        /*if (!LoginConfig.getInstance().getConfiguration().getBoolean("Piou.Database.Players.CanLoadAfterStart")) {
+        /*if (!LoginConfig.getInstance().getConfiguration().getBoolean("Piou.Database.Bans.CanLoadAfterStart")) {
             allowLoad = false;
         }*/
         return players;

@@ -13,11 +13,11 @@ import org.devemu.program.Main;
 import org.devemu.sql.DAOPreloader;
 import org.devemu.sql.Database;
 import org.devemu.sql.GetDatabase;
-import org.devemu.sql.entity.Player;
-import org.devemu.sql.manager.PlayerManager;
+import org.devemu.sql.entity.Ban;
+import org.devemu.sql.manager.BanManager;
 import org.devemu.utils.config.ConfigEnum;
 
-public class PlayerDAOPreloader implements DAOPreloader<Player> {
+public class BanDAOPreloader implements DAOPreloader<Ban> {
 
     private List<String> preload;
     private GetDatabase getDb = new GetDatabase() {
@@ -28,7 +28,7 @@ public class PlayerDAOPreloader implements DAOPreloader<Player> {
     };
     private Database database;
 
-    public PlayerDAOPreloader() {
+    public BanDAOPreloader() {
         
     }
     
@@ -80,13 +80,13 @@ public class PlayerDAOPreloader implements DAOPreloader<Player> {
     }
 
     @Override
-    public Collection<Player> load() {
+    public Collection<Ban> load() {
         if (preload == null) {
-            return new ArrayList<Player>(0);
+            return new ArrayList<Ban>(0);
         }
-        List<Player> players = new ArrayList<Player>(preload.size());
+        List<Ban> players = new ArrayList<Ban>(preload.size());
         for (String s : preload) {
-            players.add(PlayerManager.create(s.split(";")));
+            players.add(BanManager.create(s.split(";")));
         }
         preload.clear();
         return players;

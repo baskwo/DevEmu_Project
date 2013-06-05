@@ -3,24 +3,16 @@ package org.devemu.sql.manager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
-import org.devemu.program.Main;
-import org.devemu.sql.entity.Account;
+import org.devemu.sql.dao.DAO;
 import org.devemu.sql.entity.ExpStep;
 
 public class ExpManager {
 	public static Number getCount() {
-		Session loc1 = Main.getSqlSession();
-		Number loc2 = (Number) loc1.createCriteria(ExpStep.class).setProjection(Projections.rowCount()).uniqueResult();
-		loc1.close();
-		return loc2;
+		return DAO.getExpDAO().getSize();
 	}
 	
 	public static ExpStep getExpStepByLevel(int arg0) {
-		Session loc0 = Main.getSqlSession();
-		ExpStep loc1 = (ExpStep) loc0.get(ExpStep.class, arg0);
-		loc0.close();
-		return loc1;
+		return DAO.getExpDAO().find(arg0);
 	}
 	
 	public static ExpStep create(ResultSet set) {

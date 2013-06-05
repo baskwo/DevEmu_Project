@@ -10,6 +10,7 @@ import org.devemu.sql.entity.ExpStep;
 public interface IExpDAO {
 	public ExpStep find(long id);
     public Collection<ExpStep> findAll();
+    public int getSize();
 
     public int preload();
     public Collection<ExpStep> load();

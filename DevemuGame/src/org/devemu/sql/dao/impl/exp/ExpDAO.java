@@ -44,6 +44,11 @@ public class ExpDAO implements IExpDAO {
     public Collection<ExpStep> findAll() {
         return finders.get("level").findAll();
     }
+    
+    @Override
+	public int getSize() {
+    	return finders.get("level").findAll().size();
+	}
 
     @Override
     public int preload() {
