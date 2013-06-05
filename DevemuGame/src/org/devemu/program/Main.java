@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.devemu.network.inter.InterServer;
 import org.devemu.network.server.GameServer;
+import org.devemu.sql.dao.DAO;
 import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.config.ConfigReader;
 import org.devemu.utils.enums.ServerPop;
@@ -28,8 +29,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();
-		//TODO: Sql init
 		config.init("config.xml");
+		DAO.init();
 		state = ServerState.ONLINE;
 		population = ServerPop.RECOMMENDED;
 		guid = Integer.parseInt((String)getConfigValue(ConfigEnum.GAME_GUID));

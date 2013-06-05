@@ -106,8 +106,8 @@ public class ClientManager {
 		List<String> loc2 = loc1.getParam();
 		loc2.add("" + arg1.getAcc().getPlayers().size());
 		for(Integer loc3 : arg1.getAcc().getPlayers()) {
-			//loc2.add(PlayerManager.toALK(loc3));
-			//TODO: Find player and to ALK
+			Player loc4 = PlayerManager.getById(loc3);
+			loc2.add(PlayerManager.toALK(loc4));
 		}
 		loc1.setParam(loc2);
 		arg1.write(loc1.toString());

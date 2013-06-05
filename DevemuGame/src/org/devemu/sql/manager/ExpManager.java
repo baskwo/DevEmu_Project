@@ -18,9 +18,9 @@ public class ExpManager {
 	public static ExpStep create(ResultSet set) {
         try {
             ExpStep acc = new ExpStep();
-            acc.setLevel(set.getInt("id"));
-            acc.setPlayer(set.getLong("name"));
-            acc.setAlignement(set.getLong("password"));
+            acc.setLevel(set.getInt("level"));
+            acc.setPlayer(set.getLong("player"));
+            acc.setAlignement(set.getLong("alignement"));
             return acc;
         } catch (SQLException ex) {
             ex.printStackTrace();

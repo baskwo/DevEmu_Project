@@ -48,7 +48,7 @@ public class PlayerDAOLoaderId implements DAOLoader<Player> {
         ResultSet resultSet = null;
         try {
             connection = database.getConnection();
-            statement = connection.prepareStatement("SELECT * FROM players WHERE id = ?;");
+            statement = connection.prepareStatement("SELECT * FROM players WHERE guid = ?;");
             statement.setLong(1, (Long)o);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {

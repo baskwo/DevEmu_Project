@@ -215,32 +215,37 @@ public class PlayerManager {
             loc0.setEnergy(set.getInt("energy"));
             
             String loc1 = set.getString("align");
-            if(!loc1.isEmpty()) {
-            	String[] loc2 = loc1.split(";");
-                if(loc2 != null && loc2.length == 5) {
-                	Alignement loc3 = new Alignement();
-                	loc3.setOrdre(Byte.parseByte(loc2[0]));
-                	loc3.setLevel(Integer.parseInt(loc2[1]));
-                	loc3.setGrade(Integer.parseInt(loc2[2]));
-                	loc3.setHonor(Integer.parseInt(loc2[3]));
-                	loc3.setDeshonor(Integer.parseInt(loc2[4]));
-                	loc0.setAlign(loc3);
-                }
+            if(loc1 != null) {
+            	if(!loc1.isEmpty()) {
+            		String[] loc2 = loc1.split(";");
+                    if(loc2 != null && loc2.length == 5) {
+                    	Alignement loc3 = new Alignement();
+                    	loc3.setOrdre(Byte.parseByte(loc2[0]));
+                    	loc3.setLevel(Integer.parseInt(loc2[1]));
+                    	loc3.setGrade(Integer.parseInt(loc2[2]));
+                    	loc3.setHonor(Integer.parseInt(loc2[3]));
+                    	loc3.setDeshonor(Integer.parseInt(loc2[4]));
+                    	loc0.setAlign(loc3);
+                    }
+            	}
             }
             
             
             String loc2 = set.getString("stats");
-            if(!loc2.isEmpty()) {
-            	String[] loc3 = loc2.split(";");
-            	if(loc3 != null) {
-            		for(String loc5 : loc3) {
-            			String[] loc6 = loc5.split(":");
-            			Stats loc7 = new Stats();
-            			loc7.setStatsId(Integer.parseInt(loc6[0]));
-            			loc7.setValue(Integer.parseInt(loc6[1]));
-            			loc0.getStats().put(loc7.getStatsId(), loc7);
-            		}
+            if(loc2 != null) {
+            	if(!loc2.isEmpty()) {
+            		String[] loc3 = loc2.split(";");
+                	if(loc3 != null) {
+                		for(String loc5 : loc3) {
+                			String[] loc6 = loc5.split(":");
+                			Stats loc7 = new Stats();
+                			loc7.setStatsId(Integer.parseInt(loc6[0]));
+                			loc7.setValue(Integer.parseInt(loc6[1]));
+                			loc0.getStats().put(loc7.getStatsId(), loc7);
+                		}
+                	}
             	}
+            	
             }
             return loc0;
         } catch (SQLException ex) {

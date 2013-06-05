@@ -48,7 +48,7 @@ public class ExpDAOLoaderLevel implements DAOLoader<ExpStep> {
         ResultSet resultSet = null;
         try {
             connection = database.getConnection();
-            statement = connection.prepareStatement("SELECT * FROM players WHERE id = ?;");
+            statement = connection.prepareStatement("SELECT * FROM expsteps WHERE level = ?;");
             statement.setLong(1, (Long)o);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {

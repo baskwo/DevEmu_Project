@@ -19,6 +19,7 @@ public class QueueManager implements Runnable {
 	
 	@Override
 	public void run() {
+		try{
 		GameClient loc0 = selector.getFirst();
 		if(loc0 != null) {
 			boolean loc1 = AccountManager.getAboTime(loc0.getAcc()) > 0;
@@ -29,6 +30,7 @@ public class QueueManager implements Runnable {
 				ClientManager.onSelected(loc0);
 			}
 		}
+		}catch(Exception e) {e.printStackTrace();}
 		/*while(true) {
 			try {
 				Thread.sleep(1000);
