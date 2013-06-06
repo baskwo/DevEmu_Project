@@ -10,6 +10,7 @@ public class InterParser {
 		setClient(arg0);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public void parse(ServerPacket arg0) {
 		InterId loc1 = InterId.getId((byte) arg0.getId());
 		switch(loc1) {

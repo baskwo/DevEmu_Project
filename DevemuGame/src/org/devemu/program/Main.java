@@ -27,7 +27,7 @@ public class Main {
 	private static ServerPop population = ServerPop.FULL;
 	private static int guid = 0;
 	private static boolean allowNoSubscribe = true;
-	private static Map<Queue,QueueManager> queues = new TreeMap<Queue,QueueManager>();
+	private static Map<Queue,QueueManager> queues = new TreeMap<>();
 
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();

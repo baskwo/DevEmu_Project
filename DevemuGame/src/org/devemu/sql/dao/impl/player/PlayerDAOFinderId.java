@@ -10,7 +10,7 @@ import org.devemu.sql.entity.Player;
 
 public class PlayerDAOFinderId implements DAOFinder<Player> {
     
-    private final Map<Long, Player> players = new HashMap<Long, Player>(512);
+    private final Map<Long, Player> players = new HashMap<>(512);
     private final Collection<Player> synchronizedplayers = Collections.synchronizedCollection(Collections.unmodifiableCollection(players.values()));
 
     @Override

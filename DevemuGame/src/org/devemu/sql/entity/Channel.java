@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Channel {
 	private String id = "";
-	private Map<Integer,Player> players = new HashMap<Integer,Player>();
+	private Map<Integer,Player> players = new HashMap<>();
 	
 	public Channel(String arg0) {
 		id = arg0;

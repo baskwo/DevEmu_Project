@@ -65,14 +65,14 @@ public class PlayerDAOLoaderId implements DAOLoader<Player> {
     @Override
     public Collection<Player> loadAll() {
         if (!allowLoad) {
-            return new ArrayList<Player>(0);
+            return new ArrayList<>(0);
         }
         
         if (database == null) {
             database = getDb.getDatabase();
         }
         
-        List<Player> players = new ArrayList<Player>(512);
+        List<Player> players = new ArrayList<>(512);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

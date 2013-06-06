@@ -35,7 +35,7 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
     @Override
     public int preload() {
         if (preload == null) {
-            preload = new ArrayList<String>(512);
+            preload = new ArrayList<>(512);
         }
         
         if (!preload.isEmpty()) {
@@ -82,9 +82,9 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
     @Override
     public Collection<Account> load() {
         if (preload == null) {
-            return new ArrayList<Account>(0);
+            return new ArrayList<>(0);
         }
-        List<Account> accounts = new ArrayList<Account>(preload.size());
+        List<Account> accounts = new ArrayList<>(preload.size());
         for (String s : preload) {
             accounts.add(AccountManager.create(s.split(";")));
         }

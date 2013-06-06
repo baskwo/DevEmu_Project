@@ -41,7 +41,7 @@ public class PlayerManager {
 	}
 	
 	public static List<String> toASK(Player arg0) {
-		List<String> loc1 = new ArrayList<String>();
+		List<String> loc1 = new ArrayList<>();
 		//guid|name|level|classe|sexe|gfxid|color1|color2|color3|itemToASK
 		loc1.add("" + arg0.getGuid());
 		loc1.add(arg0.getName());
@@ -70,7 +70,7 @@ public class PlayerManager {
 	}
 	
 	public static List<String> getAsData(Player arg0) {
-		List<String> loc0 = new ArrayList<String>();
+		List<String> loc0 = new ArrayList<>();
 		loc0.add("" + arg0.getKamas());
 		loc0.add("" + arg0.getCapitals());
 		loc0.add("" + arg0.getSpellPoints());

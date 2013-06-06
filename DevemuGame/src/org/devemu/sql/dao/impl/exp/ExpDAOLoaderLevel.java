@@ -65,7 +65,7 @@ public class ExpDAOLoaderLevel implements DAOLoader<ExpStep> {
     @Override
     public Collection<ExpStep> loadAll() {
         if (!allowLoad) {
-            return new ArrayList<ExpStep>(0);
+            return new ArrayList<>(0);
         }
         
         if (database == null) {

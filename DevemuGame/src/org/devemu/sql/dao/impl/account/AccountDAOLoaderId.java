@@ -65,14 +65,14 @@ public class AccountDAOLoaderId implements DAOLoader<Account> {
     @Override
     public Collection<Account> loadAll() {
         if (!allowLoad) {
-            return new ArrayList<Account>(0);
+            return new ArrayList<>(0);
         }
         
         if (database == null) {
             database = getDb.getDatabase();
         }
         
-        List<Account> accounts = new ArrayList<Account>(512);
+        List<Account> accounts = new ArrayList<>(512);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

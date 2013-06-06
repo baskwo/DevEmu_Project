@@ -11,7 +11,7 @@ import org.devemu.network.client.SimpleClient;
 public class Packet {
 	private String identificator = "";//2 letters
 	private String firstParam = "";//After identificator and before the first '|'
-	private List<String> param = new ArrayList<String>();//Param split by '|'
+	private List<String> param = new ArrayList<>();//Param split by '|'
 	private static String[] HEX_CHARS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
 	
 	public static Packet decomp(String arg1) {

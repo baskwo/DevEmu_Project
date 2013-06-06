@@ -10,7 +10,7 @@ public class Account {
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private List<Integer> players = new ArrayList<Integer>();
+	private List<Integer> players = new ArrayList<>();
 	private long aboTime = 0;
 
 	public int getGuid() {

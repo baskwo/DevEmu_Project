@@ -35,7 +35,7 @@ public class BanDAOPreloader implements DAOPreloader<Ban> {
     @Override
     public int preload() {
         if (preload == null) {
-            preload = new ArrayList<String>(512);
+            preload = new ArrayList<>(512);
         }
         
         if (!preload.isEmpty()) {
@@ -82,9 +82,9 @@ public class BanDAOPreloader implements DAOPreloader<Ban> {
     @Override
     public Collection<Ban> load() {
         if (preload == null) {
-            return new ArrayList<Ban>(0);
+            return new ArrayList<>(0);
         }
-        List<Ban> players = new ArrayList<Ban>(preload.size());
+        List<Ban> players = new ArrayList<>(preload.size());
         for (String s : preload) {
             players.add(BanManager.create(s.split(";")));
         }

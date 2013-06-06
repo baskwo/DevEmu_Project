@@ -10,7 +10,7 @@ import org.devemu.sql.entity.Ban;
 
 public class BanDAOFinder implements DAOFinder<Ban> {
     
-    private final Map<Long, Ban> bans = new HashMap<Long, Ban>(512);
+    private final Map<Long, Ban> bans = new HashMap<>(512);
     private final Collection<Ban> synchronizedbans = Collections.synchronizedCollection(Collections.unmodifiableCollection(bans.values()));
 
     @Override

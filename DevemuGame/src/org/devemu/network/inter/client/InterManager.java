@@ -9,7 +9,7 @@ import org.devemu.program.Main;
 import org.devemu.utils.config.ConfigEnum;
 
 public class InterManager {
-	public static List<Integer> waitings = new ArrayList<Integer>();
+	public static List<Integer> waitings = new ArrayList<>();
 	
 	public static void onConnect(InterClient arg0) {
 		ServerPacket loc1 = new ServerPacket();

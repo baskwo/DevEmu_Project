@@ -22,7 +22,7 @@ import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.queue.QueueSelector;
 
 public class ClientManager {
-	public static Map<Integer,RealmClient> waitings = new TreeMap<Integer,RealmClient>();
+	public static Map<Integer,RealmClient> waitings = new TreeMap<>();
 	
 	public static void onVersion(String arg1, RealmClient arg2) {
 		if(arg1.equalsIgnoreCase((String)Main.getConfigValue(ConfigEnum.VERSION))) {
@@ -96,7 +96,7 @@ public class ClientManager {
 				loc5.getParam().add(loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0));
 		}
 		
-		List<Packet> loc7 = new ArrayList<Packet>();
+		List<Packet> loc7 = new ArrayList<>();
 		loc7.add(loc1);
 		loc7.add(loc2);
 		loc7.add(loc3);
@@ -111,7 +111,7 @@ public class ClientManager {
 		loc1.setIdentificator("Ax");
 		loc1.setFirstParam("K" + AccountManager.getAboTime(arg1.getAcc()));
 
-		List<String> loc2 = new ArrayList<String>();
+		List<String> loc2 = new ArrayList<>();
 		for(Entry<Integer,Byte> loc7 : arg1.getAcc().getPlayers().entrySet()) {
 			loc2.add(loc7.getKey() + "," + loc7.getValue());
 		}

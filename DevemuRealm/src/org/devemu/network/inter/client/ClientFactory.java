@@ -7,7 +7,7 @@ import org.devemu.program.Main;
 import org.devemu.utils.config.ConfigEnum;
 
 public class ClientFactory {
-	private static Map<Integer,InterClient> clients = new TreeMap<Integer,InterClient>();
+	private static Map<Integer,InterClient> clients = new TreeMap<>();
 	
 	public static void init() {
 		int loc1 = Integer.parseInt((String)Main.getConfigValue(ConfigEnum.MAX_SERVER));

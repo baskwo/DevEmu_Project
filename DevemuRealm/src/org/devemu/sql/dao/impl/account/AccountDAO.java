@@ -18,16 +18,16 @@ import org.devemu.sql.entity.Account;
 
 public class AccountDAO implements IAccountDAO {
 
-    private final Map<String, DAOFinder<Account>> finders = new HashMap<String, DAOFinder<Account>>(4);
-    private final Map<String, DAOLoader<Account>> loaders = new HashMap<String, DAOLoader<Account>>(4);
+    private final Map<String, DAOFinder<Account>> finders = new HashMap<>(4);
+    private final Map<String, DAOLoader<Account>> loaders = new HashMap<>(4);
     
     private DAOPreloader<Account> preloader = new AccountDAOPreloader();
     
     private boolean load;
     private boolean preload;
     
-    private List<Account> toCreate = new ArrayList<Account>(8);
-    private List<Account> toUpdate = new ArrayList<Account>(8);
+    private List<Account> toCreate = new ArrayList<>(8);
+    private List<Account> toUpdate = new ArrayList<>(8);
     
     private DAOCreator<Account> creator;
     private DAOUpdater<Account> updater;
@@ -119,13 +119,13 @@ public class AccountDAO implements IAccountDAO {
     public void commit() {
         List<Account> create = toCreate;
         if (!create.isEmpty()) {
-            toCreate = new ArrayList<Account>(8);
+            toCreate = new ArrayList<>(8);
             creator.create(create);
         }
         
         List<Account> update = toUpdate;
         if (!update.isEmpty()) {
-            toUpdate = new ArrayList<Account>(8);
+            toUpdate = new ArrayList<>(8);
             updater.update(update);
         }
     }

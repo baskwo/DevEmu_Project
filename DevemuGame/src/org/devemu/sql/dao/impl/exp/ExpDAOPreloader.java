@@ -35,7 +35,7 @@ public class ExpDAOPreloader implements DAOPreloader<ExpStep> {
     @Override
     public int preload() {
         if (preload == null) {
-            preload = new ArrayList<String>(512);
+            preload = new ArrayList<>(512);
         }
         
         if (!preload.isEmpty()) {
@@ -82,9 +82,9 @@ public class ExpDAOPreloader implements DAOPreloader<ExpStep> {
     @Override
     public Collection<ExpStep> load() {
         if (preload == null) {
-            return new ArrayList<ExpStep>(0);
+            return new ArrayList<>(0);
         }
-        List<ExpStep> players = new ArrayList<ExpStep>(preload.size());
+        List<ExpStep> players = new ArrayList<>(preload.size());
         for (String s : preload) {
             players.add(ExpManager.create(s.split(";")));
         }

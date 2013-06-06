@@ -26,17 +26,17 @@ import org.devemu.utils.config.ConfigEnum;
 
 public class PlayerDAO implements IPlayerDAO {
 
-    private final Map<String, DAOFinder<Player>> finders = new HashMap<String, DAOFinder<Player>>(4);
-    private final Map<String, DAOLoader<Player>> loaders = new HashMap<String, DAOLoader<Player>>(4);
+    private final Map<String, DAOFinder<Player>> finders = new HashMap<>(4);
+    private final Map<String, DAOLoader<Player>> loaders = new HashMap<>(4);
     
     private DAOPreloader<Player> preloader = new PlayerDAOPreloader();
     
     private boolean load;
     private boolean preload;
     
-    private List<Player> toCreate = new ArrayList<Player>(8);
-    private List<Player> toUpdate = new ArrayList<Player>(8);
-    private List<Player> toDelete = new ArrayList<Player>(8);
+    private List<Player> toCreate = new ArrayList<>(8);
+    private List<Player> toUpdate = new ArrayList<>(8);
+    private List<Player> toDelete = new ArrayList<>(8);
     
     private DAOCreator<Player> creator;
     private DAOUpdater<Player> updater;
@@ -157,19 +157,19 @@ public class PlayerDAO implements IPlayerDAO {
     public void commit() {
         List<Player> create = toCreate;
         if (!create.isEmpty()) {
-            toCreate = new ArrayList<Player>(8);
+            toCreate = new ArrayList<>(8);
             creator.create(create);
         }
         
         List<Player> update = toUpdate;
         if (!update.isEmpty()) {
-            toUpdate = new ArrayList<Player>(8);
+            toUpdate = new ArrayList<>(8);
             updater.update(update);
         }
         
         List<Player> delete = toDelete;
         if(!delete.isEmpty()) {
-        	toDelete = new ArrayList<Player>(8);
+        	toDelete = new ArrayList<>(8);
         	deleter.delete(delete);
         }
     }
@@ -197,7 +197,7 @@ public class PlayerDAO implements IPlayerDAO {
         }
         
         if (accs == null) {
-            return new ArrayList<Player>(0);
+            return new ArrayList<>(0);
         }
         
         for (Player acc : accs) {

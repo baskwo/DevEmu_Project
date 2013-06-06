@@ -10,7 +10,7 @@ import org.devemu.sql.entity.ExpStep;
 
 public class ExpDAOFinderLevel implements DAOFinder<ExpStep> {
     
-    private final Map<Long, ExpStep> expSteps = new HashMap<Long, ExpStep>(512);
+    private final Map<Long, ExpStep> expSteps = new HashMap<>(512);
     private final Collection<ExpStep> synchronizedexpSteps = Collections.synchronizedCollection(Collections.unmodifiableCollection(expSteps.values()));
 
     @Override

@@ -65,14 +65,14 @@ public class BanDAOLoader implements DAOLoader<Ban> {
     @Override
     public Collection<Ban> loadAll() {
         if (!allowLoad) {
-            return new ArrayList<Ban>(0);
+            return new ArrayList<>(0);
         }
         
         if (database == null) {
             database = getDb.getDatabase();
         }
         
-        List<Ban> players = new ArrayList<Ban>(512);
+        List<Ban> players = new ArrayList<>(512);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

@@ -10,7 +10,7 @@ import org.devemu.sql.entity.Ban;
 
 public class BanManager {
 	public static List<String> getAllBan() {
-		List<String> loc0 = new ArrayList<String>();
+		List<String> loc0 = new ArrayList<>();
 		for(Ban loc1 : DAO.getBanDAO().findAll()) {
 			loc0.add(loc1.getUsername());
 		}

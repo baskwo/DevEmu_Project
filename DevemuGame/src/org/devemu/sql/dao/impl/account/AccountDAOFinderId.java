@@ -10,7 +10,7 @@ import org.devemu.sql.entity.Account;
 
 public class AccountDAOFinderId implements DAOFinder<Account> {
     
-    private final Map<Long, Account> accounts = new HashMap<Long, Account>(512);
+    private final Map<Long, Account> accounts = new HashMap<>(512);
     private final Collection<Account> synchronizedAccounts = Collections.synchronizedCollection(Collections.unmodifiableCollection(accounts.values()));
 
     @Override

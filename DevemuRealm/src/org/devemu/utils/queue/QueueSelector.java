@@ -9,8 +9,8 @@ import org.devemu.sql.entity.manager.AccountManager;
 public class QueueSelector {
 	private static int nextAbo = 0;
 	private static int next = 0;
-	private static List<RealmClient> queue = new ArrayList<RealmClient>();
-	private static List<RealmClient> queueAbo = new ArrayList<RealmClient>();
+	private static List<RealmClient> queue = new ArrayList<>();
+	private static List<RealmClient> queueAbo = new ArrayList<>();
 
 	public static List<RealmClient> getQueue() {
 		return queue;

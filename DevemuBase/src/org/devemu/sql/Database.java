@@ -11,7 +11,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class Database {
     
-    private static final Map<String, Database> databases = new HashMap<String, Database>(8);
+    private static final Map<String, Database> databases = new HashMap<>(8);
     
     private final BasicDataSource source = new BasicDataSource();
 

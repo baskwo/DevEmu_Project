@@ -17,7 +17,7 @@ public class Player {
 	private boolean sexe = false;
 	private int gameGuid = 0;
 	private long xp = 0;
-	private Map<Integer,Stats> stats = new HashMap<Integer,Stats>();
+	private Map<Integer,Stats> stats = new HashMap<>();
 	private long kamas = 0;
 	private int capitals = 0;
 	private int spellPoints = 0;

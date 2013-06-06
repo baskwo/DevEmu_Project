@@ -10,7 +10,7 @@ public class Account {
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private Map<Integer,Byte> players = new TreeMap<Integer,Byte>();
+	private Map<Integer,Byte> players = new TreeMap<>();
 	private long aboTime = 0;
 
 	public int getGuid() {

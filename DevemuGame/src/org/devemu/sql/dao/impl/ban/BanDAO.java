@@ -13,8 +13,8 @@ import org.devemu.sql.entity.Ban;
 
 public class BanDAO implements IBanDAO {
 
-    private final Map<String, DAOFinder<Ban>> finders = new HashMap<String, DAOFinder<Ban>>(4);
-    private final Map<String, DAOLoader<Ban>> loaders = new HashMap<String, DAOLoader<Ban>>(4);
+    private final Map<String, DAOFinder<Ban>> finders = new HashMap<>(4);
+    private final Map<String, DAOLoader<Ban>> loaders = new HashMap<>(4);
     
     private DAOPreloader<Ban> preloader = new BanDAOPreloader();
     
@@ -95,7 +95,7 @@ public class BanDAO implements IBanDAO {
         }
         
         if (accs == null) {
-            return new ArrayList<Ban>(0);
+            return new ArrayList<>(0);
         }
         
         for (Ban acc : accs) {

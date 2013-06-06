@@ -13,8 +13,8 @@ import org.devemu.sql.entity.ExpStep;
 
 public class ExpDAO implements IExpDAO {
 
-    private final Map<String, DAOFinder<ExpStep>> finders = new HashMap<String, DAOFinder<ExpStep>>(4);
-    private final Map<String, DAOLoader<ExpStep>> loaders = new HashMap<String, DAOLoader<ExpStep>>(4);
+    private final Map<String, DAOFinder<ExpStep>> finders = new HashMap<>(4);
+    private final Map<String, DAOLoader<ExpStep>> loaders = new HashMap<>(4);
     
     private DAOPreloader<ExpStep> preloader = new ExpDAOPreloader();
     
@@ -73,7 +73,7 @@ public class ExpDAO implements IExpDAO {
         }
         
         if (accs == null) {
-            return new ArrayList<ExpStep>(0);
+            return new ArrayList<>(0);
         }
         
         for (ExpStep acc : accs) {

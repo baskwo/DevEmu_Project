@@ -7,7 +7,7 @@ import org.devemu.sql.entity.Channel;
 import org.devemu.sql.entity.Player;
 
 public class ChannelManager {
-	private static Map<String,Channel> channels = new HashMap<String,Channel>();
+	private static Map<String,Channel> channels = new HashMap<>();
 	
 	static {
 		channels.put("i", new Channel("i"));
@@ -30,12 +30,12 @@ public class ChannelManager {
 	}
 	
 	public static void sendMessageToMap(String arg0, String arg1) {
-		Channel loc0 = channels.get(arg0);
+		//Channel loc0 = channels.get(arg0);
 		//TODO: Send message to map
 	}
 	
 	public static void sendMessageToFight(String arg0, String arg1) {
-		Channel loc0 = channels.get(arg0);
+		//Channel loc0 = channels.get(arg0);
 		//TODO: Send message to fight
 	}
 }

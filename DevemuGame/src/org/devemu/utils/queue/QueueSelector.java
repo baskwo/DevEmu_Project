@@ -9,8 +9,8 @@ import org.devemu.sql.manager.AccountManager;
 public class QueueSelector {
 	private int nextAbo = 0;
 	private int next = 0;
-	private List<GameClient> queue = new ArrayList<GameClient>();
-	private List<GameClient> queueAbo = new ArrayList<GameClient>();//Haha, fuck noSubscribe
+	private List<GameClient> queue = new ArrayList<>();
+	private List<GameClient> queueAbo = new ArrayList<>();//Haha, fuck noSubscribe
 	
 	public synchronized void addToQueue(GameClient arg0) {
 		if(AccountManager.getAboTime(arg0.getAcc()) > 0) {

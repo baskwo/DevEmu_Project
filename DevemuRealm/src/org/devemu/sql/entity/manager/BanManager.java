@@ -6,7 +6,7 @@ import org.devemu.sql.entity.Ban;
 
 public class BanManager {
 	public static List<String> getAllBan() {
-		List<String> loc0 = new ArrayList<String>();
+		List<String> loc0 = new ArrayList<>();
 		/*Session loc1 = Main.getSqlSession();
 		Query loc2 = loc1.createQuery("from org.ishina.entity.Ban");
 		for(Object loc3 : loc2.list()) {

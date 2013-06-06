@@ -72,7 +72,7 @@ public class AccountDAOLoaderId implements DAOLoader<Account> {
             database = getDb.getDatabase();
         }
         
-        List<Account> accounts = new ArrayList<Account>(512);
+        List<Account> accounts = new ArrayList<>(512);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
