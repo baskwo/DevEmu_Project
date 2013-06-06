@@ -32,7 +32,7 @@ public class Main {
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();
 		Console.printHeader();
-		config.init("config.xml");
+		config.init("config.conf");
 		DAO.init();
 		state = ServerState.ONLINE;
 		population = ServerPop.RECOMMENDED;

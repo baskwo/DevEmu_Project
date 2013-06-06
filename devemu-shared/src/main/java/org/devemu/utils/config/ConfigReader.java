@@ -1,29 +1,24 @@
 package org.devemu.utils.config;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.XMLConfiguration;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 public class ConfigReader {
-	private XMLConfiguration conf = new XMLConfiguration();
+	private Config conf = null;
 
 	public void init(String arg1) {
-		try {
-			conf.setFileName(arg1);
-			conf.load();
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		}
+		conf = ConfigFactory.load(arg1);
 	}
 	
 	public Object get(ConfigEnum arg1) {
-		return conf.getProperty(arg1.name());
+		return conf.getAnyRef("devemu." + arg1.name());
 	}
 
-	public XMLConfiguration getConf() {
+	public Config getConf() {
 		return conf;
 	}
 
-	public void setConf(XMLConfiguration conf) {
+	public void setConf(Config conf) {
 		this.conf = conf;
 	}
 }

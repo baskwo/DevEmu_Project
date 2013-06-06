@@ -19,7 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();
 		Console.printHeader();
-		config.init("config.xml");
+		config.init("config.conf");
 		ClientFactory.init();
 		DAO.init();
 		InterServer.getInstance().start();
