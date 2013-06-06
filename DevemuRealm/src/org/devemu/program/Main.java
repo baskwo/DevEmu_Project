@@ -9,6 +9,7 @@ import org.devemu.network.server.RealmServer;
 import org.devemu.sql.dao.DAO;
 import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.config.ConfigReader;
+import org.devemu.utils.main.Console;
 import org.devemu.utils.queue.QueueManager;
 import org.devemu.utils.timer.SaveTimer;
 
@@ -17,6 +18,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();
+		Console.printHeader();
 		config.init("config.xml");
 		ClientFactory.init();
 		DAO.init();
