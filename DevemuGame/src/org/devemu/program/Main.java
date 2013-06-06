@@ -12,6 +12,7 @@ import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.config.ConfigReader;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
+import org.devemu.utils.main.Console;
 import org.devemu.utils.queue.QueueManager;
 import org.devemu.utils.timer.SaveTimer;
 
@@ -30,6 +31,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		long loc1 = System.nanoTime();
+		Console.printHeader();
 		config.init("config.xml");
 		DAO.init();
 		state = ServerState.ONLINE;
