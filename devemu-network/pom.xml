@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.devemu</groupId>
+    <artifactId>devemu</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+    
+  <artifactId>devemu-network</artifactId>
+  <version>1.0-SNAPSHOT</version>
+    
+  <name>devemu-network</name>
+  <url>http://maven.apache.org</url>
+    
+  <properties>
+  </properties>
+    
+  <dependencies>
+      <dependency>
+          <groupId>org.devemu</groupId>
+          <artifactId>devemu-shared</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.mina</groupId>
+          <artifactId>mina-core</artifactId>
+          <version>${mina-core.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+          <version>${commons-lang.version}</version>
+      </dependency>
+  </dependencies>
+</project>
