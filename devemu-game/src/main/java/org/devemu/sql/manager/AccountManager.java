@@ -42,11 +42,12 @@ public class AccountManager {
             acc.setQuestion(set.getString("question"));
             acc.setAboTime(set.getLong("aboTime"));
             String s = set.getString("players");
-            String[] s1 = Iterables.toArray(Splitter.on(";").split(s), String.class);
+            String[] s1 = Iterables.toArray(Splitter.on(";").omitEmptyStrings().split(s), String.class);
             for (String s2 : s1) {
-                String[] s3 = Iterables.toArray(Splitter.on(":").split(s2), String.class);
-                if(Integer.parseInt(s3[1]) == Main.getGuid())
-                	acc.getPlayers().add(Integer.parseInt(s3[0]));
+                Iterable<String> s3 = Splitter.on(":").split(s2);
+                
+                if(Integer.parseInt(Iterables.get(s3, 1)) == Main.getGuid())
+                	acc.getPlayers().add(Integer.parseInt(Iterables.get(s3, 0)));
             }
             return acc;
         } catch (SQLException ex) {
