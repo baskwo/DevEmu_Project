@@ -3,6 +3,8 @@ package org.devemu.sql.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.devemu.network.server.client.GameClient;
+
 public class Player {
 	private int guid = 0;
 	private String name = "";
@@ -25,6 +27,11 @@ public class Player {
 	private int energy = 0;
 	private Alignement align = new Alignement();
 	private boolean isShowingWings = false;
+	private int mapsId = 0;
+	private GameClient client = null;
+	private int cell = 0;
+	private byte orientation = 0;
+	private int size = 100;
 
 	public int getGuid() {
 		return guid;
@@ -184,5 +191,45 @@ public class Player {
 
 	public void setAlign(Alignement align) {
 		this.align = align;
+	}
+
+	public int getMapsId() {
+		return mapsId;
+	}
+
+	public void setMapsId(int mapsId) {
+		this.mapsId = mapsId;
+	}
+
+	public GameClient getClient() {
+		return client;
+	}
+
+	public void setClient(GameClient client) {
+		this.client = client;
+	}
+
+	public int getCell() {
+		return cell;
+	}
+
+	public void setCell(int cell) {
+		this.cell = cell;
+	}
+
+	public byte getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(byte orientation) {
+		this.orientation = orientation;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 }

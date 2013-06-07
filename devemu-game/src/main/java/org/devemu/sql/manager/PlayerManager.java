@@ -3,6 +3,7 @@ package org.devemu.sql.manager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.devemu.network.server.client.GameClient;
@@ -13,6 +14,8 @@ import org.devemu.sql.entity.ExpStep;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.Stats;
 import org.devemu.utils.constants.StatsID;
+
+import com.google.common.base.Joiner;
 
 public class PlayerManager {
 	public static String toALK(Player arg0) {
@@ -101,6 +104,35 @@ public class PlayerManager {
 	public static int getNextId() {
 		int nextId = DAO.getPlayerDAO().getNextID();
 		return nextId;
+	}
+	
+	public static String getGMData(Player arg0) {
+		List<Object> loc0 = new ArrayList<>();
+		loc0.add(arg0.getCell());
+		loc0.add(arg0.getOrientation());
+		loc0.add(0);//TODO:Found what is it
+		loc0.add(arg0.getGuid());
+		loc0.add(arg0.getName());
+		loc0.add(arg0.getClasse());
+		loc0.add("");//TODO: Title
+		loc0.add(arg0.getGfx() + "^" + arg0.getSize());
+		loc0.add(arg0.isSexe() ? 1 : 0);
+		loc0.add(arg0.getAlign().getOrdre() + "," + "0"+ "," + arg0.getAlign().getGrade() + "," +
+				(arg0.getLevel() + arg0.getGuid()) + "," + (arg0.getAlign().getDeshonor() > 0 ? 1 : 0));
+		loc0.add(arg0.getColors()[0] == -1 ? -1 : Integer.toHexString(arg0.getColors()[0]));
+		loc0.add(arg0.getColors()[1] == -1 ? -1 : Integer.toHexString(arg0.getColors()[1]));
+		loc0.add(arg0.getColors()[2] == -1 ? -1 : Integer.toHexString(arg0.getColors()[2]));
+		loc0.add("");//GMStuff
+		loc0.add(arg0.getLevel() > 99 ? (arg0.getLevel() > 199 ? 2 : 1) : 0);
+		loc0.add("");//Emote
+		loc0.add("");//EmoteTimer
+		loc0.add("");//GuildName
+		loc0.add("");//GuildEmblem
+		loc0.add("");//Speed
+		loc0.add("");//DragoColor
+		loc0.add("");//??
+		
+		return Joiner.on(";").join(loc0.toArray());
 	}
 	
 	public static void generateBaseStats(Player arg0) {
@@ -213,6 +245,7 @@ public class PlayerManager {
             loc0.setSpellPoints(set.getInt("spellPoints"));
             loc0.setPdv(set.getInt("pdv"));
             loc0.setEnergy(set.getInt("energy"));
+            loc0.setCell(set.getInt("cellId"));
             
             String loc1 = set.getString("align");
             if(loc1 != null) {
@@ -247,6 +280,7 @@ public class PlayerManager {
             	}
             	
             }
+            loc0.setMapsId(set.getInt("mapsId"));
             return loc0;
         } catch (SQLException ex) {
             ex.printStackTrace();

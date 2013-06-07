@@ -5,10 +5,12 @@ import org.devemu.sql.Database;
 import org.devemu.sql.dao.impl.IAccountDAO;
 import org.devemu.sql.dao.impl.IBanDAO;
 import org.devemu.sql.dao.impl.IExpDAO;
+import org.devemu.sql.dao.impl.IMapsDAO;
 import org.devemu.sql.dao.impl.IPlayerDAO;
 import org.devemu.sql.dao.impl.account.AccountDAO;
 import org.devemu.sql.dao.impl.ban.BanDAO;
 import org.devemu.sql.dao.impl.exp.ExpDAO;
+import org.devemu.sql.dao.impl.maps.MapsDAO;
 import org.devemu.sql.dao.impl.player.PlayerDAO;
 import org.devemu.utils.config.ConfigEnum;
 
@@ -18,6 +20,7 @@ public class DAO {
     private static IPlayerDAO playerDAO = new PlayerDAO();
     private static IBanDAO banDAO = new BanDAO();
     private static IExpDAO expDAO = new ExpDAO();
+    private static IMapsDAO mapsDAO = new MapsDAO();
 
     private DAO() {
         
@@ -62,5 +65,13 @@ public class DAO {
 
 	public static void setExpDAO(IExpDAO expDAO) {
 		DAO.expDAO = expDAO;
+	}
+
+	public static IMapsDAO getMapsDAO() {
+		return mapsDAO;
+	}
+
+	public static void setMapsDAO(IMapsDAO mapsDAO) {
+		DAO.mapsDAO = mapsDAO;
 	}
 }
