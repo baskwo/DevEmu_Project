@@ -13,20 +13,23 @@ import org.devemu.utils.main.Console;
 import org.devemu.utils.queue.QueueManager;
 import org.devemu.utils.timer.SaveTimer;
 
+import com.google.common.base.Stopwatch;
+
 public class Main {
 	private static ConfigReader config = new ConfigReader();
 
 	public static void main(String[] args) {
-		long loc1 = System.nanoTime();
+		Stopwatch loc1 = new Stopwatch().start();
 		Console.printHeader();
-		config.init("config.xml");
+		config.init("config.conf");
 		ClientFactory.init();
 		DAO.init();
 		InterServer.getInstance().start();
 		RealmServer.getInstance().start();
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new QueueManager(), 0, 1000, TimeUnit.MILLISECONDS);
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new SaveTimer(), 0, 10, TimeUnit.MINUTES);
-		System.out.println("Launched time : " + ((double)(System.nanoTime() - loc1) / 1000000000) + " seconds");
+		loc1.stop();
+		System.out.println("Launched time : " + ((double)(loc1.elapsedTime(TimeUnit.NANOSECONDS))/1000000000) + " seconds");
 	}
 
 	public static Object getConfigValue(ConfigEnum arg1) {

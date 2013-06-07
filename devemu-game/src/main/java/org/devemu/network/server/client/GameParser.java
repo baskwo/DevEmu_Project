@@ -41,6 +41,9 @@ public class GameParser {
 		case "GC":
 			ClientManager.onGameCreation(client, arg1);
 			break;
+		case "GI":
+			ClientManager.onGameInfo(client);
+			break;
 		}
 	}
 

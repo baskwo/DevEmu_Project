@@ -6,8 +6,10 @@ import org.devemu.network.inter.client.InterManager;
 import org.devemu.network.protocol.Packet;
 import org.devemu.program.Main;
 import org.devemu.program.Main.Queue;
+import org.devemu.sql.entity.Maps;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.manager.AccountManager;
+import org.devemu.sql.manager.MapsManager;
 import org.devemu.sql.manager.PlayerManager;
 
 public class ClientManager {
@@ -66,7 +68,9 @@ public class ClientManager {
 	}
 	
 	public static void onSelected(GameClient arg0) {
-		arg0.setPlayer(PlayerManager.getById(arg0.getPlayerIdTemp()));
+		Player loc0 = PlayerManager.getById(arg0.getPlayerIdTemp());
+		loc0.setClient(arg0);
+		arg0.setPlayer(loc0);
 		onJoin(arg0);
 	}
 	
@@ -166,6 +170,13 @@ public class ClientManager {
 	public static void onGameCreation(GameClient arg1, Packet arg2) {
 		//int loc1 = Integer.parseInt(arg2.getFirstParam());//gameType
 		
+		Maps loc0 = MapsManager.get(arg1.getPlayer().getMapsId());
+		
+		if(arg1.getPlayer().isMarchant()) {
+			arg1.getPlayer().setMarchant(false);
+			MapsManager.removeMarchantOnMaps(loc0, arg1.getPlayerIdTemp());
+		}
+		
 		Packet loc2 = new Packet();
 		loc2.setIdentificator("GC");
 		loc2.setFirstParam("K");
@@ -173,10 +184,35 @@ public class ClientManager {
 		loc2.getParam().add(arg1.getPlayer().getName());
 		arg1.write(loc2.toString());
 		
+		
+		
 		Packet loc3 = new Packet();
 		loc3.setIdentificator("As");
 		loc3.setFirstParam(PlayerManager.getXpToString(arg1.getPlayer()));
 		loc3.setParam(PlayerManager.getAsData(arg1.getPlayer()));
 		arg1.write(loc3.toString());
+		
+		Packet loc4 = new Packet();
+		loc4.setIdentificator("GD");
+		loc4.setFirstParam("M");
+		loc4.getParam().add(Integer.toString(loc0.getId()));
+		loc4.getParam().add(loc0.getDate());
+		loc4.getParam().add(loc0.getKey());
+		arg1.write(loc4.toString());
+		
+		Packet loc5 = new Packet();
+		loc5.setIdentificator("fc");
+		loc5.setFirstParam("0");//TODO: NbrFightOnMaps
+		arg1.write(loc5.toString());
+		
+		MapsManager.addPlayerOnMaps(loc0, arg1.getPlayerIdTemp());
+	}
+	
+	public static void onGameInfo(GameClient arg1) {
+		Packet loc1 = new Packet();
+		loc1.setIdentificator("GD");
+		loc1.setFirstParam("K");
+		
+		arg1.write(loc1.toString());
 	}
 }

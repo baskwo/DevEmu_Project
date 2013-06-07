@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.devemu.program.Main;
 import org.devemu.sql.DAOPreloader;
 import org.devemu.sql.Database;
@@ -16,6 +15,8 @@ import org.devemu.sql.GetDatabase;
 import org.devemu.sql.entity.Ban;
 import org.devemu.sql.manager.BanManager;
 import org.devemu.utils.config.ConfigEnum;
+
+import com.google.common.base.Joiner;
 
 public class BanDAOPreloader implements DAOPreloader<Ban> {
 
@@ -54,7 +55,7 @@ public class BanDAOPreloader implements DAOPreloader<Ban> {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM players");
             while (resultSet.next()) {
-                String s = StringUtils.join(new Object[]{';',
+                String s = Joiner.on(";").join(new Object[]{
                         Long.toString(resultSet.getLong("id")), 
                         resultSet.getString("name"), 
                         resultSet.getString("password"), 

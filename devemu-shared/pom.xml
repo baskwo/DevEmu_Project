@@ -23,14 +23,14 @@
             <version>${mina-core.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>${commons-configuration.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>${commons-dbcp.version}</version>
         </dependency>
+        <dependency>
+    		<groupId>com.typesafe</groupId>
+    		<artifactId>config</artifactId>
+    		<version>1.0.1</version>
+		</dependency>
     </dependencies>
 </project>

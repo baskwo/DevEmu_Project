@@ -1,4 +1,4 @@
-package org.devemu.sql.dao.impl.account;
+package org.devemu.sql.dao.impl.maps;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,13 +12,13 @@ import org.devemu.program.Main;
 import org.devemu.sql.DAOPreloader;
 import org.devemu.sql.Database;
 import org.devemu.sql.GetDatabase;
-import org.devemu.sql.entity.Account;
-import org.devemu.sql.manager.AccountManager;
+import org.devemu.sql.entity.Maps;
+import org.devemu.sql.manager.MapsManager;
 import org.devemu.utils.config.ConfigEnum;
 
 import com.google.common.base.Joiner;
 
-public class AccountDAOPreloader implements DAOPreloader<Account> {
+public class MapsDAOPreloader implements DAOPreloader<Maps> {
 
     private List<String> preload;
     private GetDatabase getDb = new GetDatabase() {
@@ -29,7 +29,7 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
     };
     private Database database;
 
-    public AccountDAOPreloader() {
+    public MapsDAOPreloader() {
         
     }
     
@@ -53,7 +53,7 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
         try {
             connection = database.getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM accounts");
+            resultSet = statement.executeQuery("SELECT * FROM maps");
             while (resultSet.next()) {
                 String s = Joiner.on(";").join(new Object[]{
                         Long.toString(resultSet.getLong("id")), 
@@ -81,16 +81,16 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
     }
 
     @Override
-    public Collection<Account> load() {
+    public Collection<Maps> load() {
         if (preload == null) {
-            return new ArrayList<Account>(0);
+            return new ArrayList<Maps>(0);
         }
-        List<Account> accounts = new ArrayList<Account>(preload.size());
+        List<Maps> maps = new ArrayList<Maps>(preload.size());
         for (String s : preload) {
-            accounts.add(AccountManager.create(s.split(";")));
+            maps.add(MapsManager.create(s.split(";")));
         }
         preload.clear();
-        return accounts;
+        return maps;
     }
 
     @Override

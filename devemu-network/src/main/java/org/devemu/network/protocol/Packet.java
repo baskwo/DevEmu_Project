@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.devemu.network.client.SimpleClient;
 
 public class Packet {
@@ -21,7 +19,7 @@ public class Packet {
 		System.out.println(loc5);*/
 		loc1.setIdentificator(arg1.substring(0, 2));
 		if(arg1.contains("|")) {
-			String[] loc4 = StringUtils.split(arg1,"|");
+			String[] loc4 = arg1.split("|");
 			if(loc4[0].length() > 2)
 				loc1.setFirstParam(loc4[0].substring(2));
 			String[] loc2 = Arrays.copyOfRange(loc4, 1, loc4.length);
@@ -61,7 +59,7 @@ public class Packet {
 			char loc5 = arg1.charAt(i);
 			int loc6 = arg1.codePointAt(i);
 			if(loc6 < 32 || (loc6 > 127 || (loc5 == '%' || loc5 == '+'))) {
-				loc1 += StringEscapeUtils.escapeJava(""+loc5);
+				//loc1 += HtmlEscapers.
 				continue;
 			}
 			loc1 += loc5;
@@ -99,6 +97,7 @@ public class Packet {
 		return (loc3 + crypt(loc1,arg1.getHash().getKey(),loc5));
 	}
 	
+	@Override
 	public String toString() {
 		String loc1 = getIdentificator() + getFirstParam();
 		for(String loc2 : getParam()) {
