@@ -29,9 +29,9 @@
           <version>${mina-core.version}</version>
       </dependency>
       <dependency>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-          <version>${commons-lang.version}</version>
-      </dependency>
+    		<groupId>com.google.guava</groupId>
+    		<artifactId>guava</artifactId>
+    		<version>14.0.1</version>
+	  </dependency>
   </dependencies>
 </project>

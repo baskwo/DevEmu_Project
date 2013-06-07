@@ -3,9 +3,11 @@ package org.devemu.sql.entity.manager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
 import org.devemu.sql.dao.DAO;
 import org.devemu.sql.entity.Account;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 
 public class AccountManager {
 	public static Account findByName(String arg0) {
@@ -29,9 +31,9 @@ public class AccountManager {
             acc.setQuestion(set.getString("question"));
             acc.setAboTime(set.getLong("aboTime"));
             String s = set.getString("players");
-            String[] s1 = s.split(";");
+            String[] s1 = Iterables.toArray(Splitter.on(";").split(s), String.class);
             for (String s2 : s1) {
-                String[] s3 = StringUtils.split(s2, ':');
+                String[] s3 = Iterables.toArray(Splitter.on(":").split(s2), String.class);
                 acc.addPlayer(Integer.parseInt(s3[1]));
             }
             return acc;

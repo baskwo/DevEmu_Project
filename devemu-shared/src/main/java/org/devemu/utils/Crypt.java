@@ -1,6 +1,6 @@
 package org.devemu.utils;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Crypt {
 	static char[] alpha = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -9,7 +9,7 @@ public class Crypt {
 	
 	public static String randomString(int arg0) {
 		StringBuilder loc1 = new StringBuilder();
-		Random loc2 = new Random(System.nanoTime());
+		ThreadLocalRandom loc2 = ThreadLocalRandom.current();
 		for(int i = 0; i < arg0; i++) {
 			loc1.append(alpha[loc2.nextInt(alpha.length)]);
 		}
@@ -18,7 +18,7 @@ public class Crypt {
 	
 	public static String randomIntHexString(int arg0) {
 		StringBuilder loc1 = new StringBuilder();
-		Random loc2 = new Random(System.nanoTime());
+		ThreadLocalRandom loc2 = ThreadLocalRandom.current();
 		for(int i = 0; i < arg0; i++) {
 			String loc3 = "" + loc2.nextInt(10) + loc2.nextInt(10);
 			loc1.append(loc3);

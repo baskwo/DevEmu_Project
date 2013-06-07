@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.devemu.program.Main;
 import org.devemu.sql.DAOPreloader;
 import org.devemu.sql.Database;
@@ -16,6 +15,9 @@ import org.devemu.sql.GetDatabase;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.manager.AccountManager;
 import org.devemu.utils.config.ConfigEnum;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 
 public class AccountDAOPreloader implements DAOPreloader<Account> {
 
@@ -54,7 +56,7 @@ public class AccountDAOPreloader implements DAOPreloader<Account> {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM accounts");
             while (resultSet.next()) {
-                String s = StringUtils.join(new Object[]{';',
+                String s = Joiner.on(";").join(new Object[]{
                         Long.toString(resultSet.getLong("id")), 
                         resultSet.getString("name"), 
                         resultSet.getString("password"), 

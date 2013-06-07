@@ -3,10 +3,12 @@ package org.devemu.sql.manager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
 import org.devemu.program.Main;
 import org.devemu.sql.dao.DAO;
 import org.devemu.sql.entity.Account;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 
 public class AccountManager {
 	public static Account findByName(String arg0) {
@@ -40,9 +42,9 @@ public class AccountManager {
             acc.setQuestion(set.getString("question"));
             acc.setAboTime(set.getLong("aboTime"));
             String s = set.getString("players");
-            String[] s1 = s.split(";");
+            String[] s1 = Iterables.toArray(Splitter.on(";").split(s), String.class);
             for (String s2 : s1) {
-                String[] s3 = StringUtils.split(s2, ':');
+                String[] s3 = Iterables.toArray(Splitter.on(":").split(s2), String.class);
                 if(Integer.parseInt(s3[1]) == Main.getGuid())
                 	acc.getPlayers().add(Integer.parseInt(s3[0]));
             }
@@ -62,9 +64,9 @@ public class AccountManager {
         acc.setQuestion(set[4]);
         acc.setAboTime(Long.parseLong(set[5]));
         String s = set[6];
-        String[] s1 = StringUtils.split(s, ';');
+        String[] s1 = Iterables.toArray(Splitter.on(";").split(s), String.class);
         for (String s2 : s1) {
-            String[] s3 = StringUtils.split(s2, ':');
+            String[] s3 = Iterables.toArray(Splitter.on(":").split(s2), String.class);
             if(Integer.parseInt(s3[1]) == Main.getGuid())
             	acc.getPlayers().add(Integer.parseInt(s3[0]));
         }

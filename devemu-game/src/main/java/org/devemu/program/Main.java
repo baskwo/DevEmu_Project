@@ -16,6 +16,8 @@ import org.devemu.utils.main.Console;
 import org.devemu.utils.queue.QueueManager;
 import org.devemu.utils.timer.SaveTimer;
 
+import com.google.common.base.Stopwatch;
+
 public class Main {
 	public enum Queue {
 		TRANSFERT,
@@ -30,7 +32,7 @@ public class Main {
 	private static Map<Queue,QueueManager> queues = new TreeMap<Queue,QueueManager>();
 
 	public static void main(String[] args) {
-		long loc1 = System.nanoTime();
+		Stopwatch loc1 = new Stopwatch().start();
 		Console.printHeader();
 		config.init("config.conf");
 		DAO.init();
@@ -47,7 +49,8 @@ public class Main {
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new SaveTimer(), 0, 10, TimeUnit.MINUTES);
 		InterServer.getInstance().start();
 		GameServer.getInstance().start();
-		System.out.println("Launched time : " + ((double)(System.nanoTime() - loc1) / 1000000000) + " seconds");
+		loc1.stop();
+		System.out.println("Launched time : " + ((double)(loc1.elapsedTime(TimeUnit.NANOSECONDS))/1000000000) + " seconds");
 	}
 	
 	public static QueueManager getQueue(Queue arg0) {
