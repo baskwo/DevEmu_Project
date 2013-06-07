@@ -1,8 +1,9 @@
 package org.devemu.sql.entity;
 
-import java.util.Map;
-import java.util.TreeMap;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
 
+@SuppressWarnings("UnusedDeclaration")
 public class Account {
 	private int guid = 0;
 	private String name = "";
@@ -10,7 +11,7 @@ public class Account {
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private Map<Integer,Byte> players = new TreeMap<Integer,Byte>();
+	private Multiset<Integer> players = TreeMultiset.create();
 	private long aboTime = 0;
 
 	public int getGuid() {
@@ -38,7 +39,7 @@ public class Account {
 	}
 	
 	public boolean isAdmin() {
-		return level > 3 ? true : false;
+		return level > 3;
 	}
 	
 	public int getLevel() {
@@ -73,22 +74,15 @@ public class Account {
 		this.aboTime = aboTime;
 	}
 
-	public Map<Integer,Byte> getPlayers() {
+	public Multiset<Integer> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(Map<Integer,Byte> players) {
+	public void setPlayers(Multiset<Integer> players) {
 		this.players = players;
 	}
 	
 	public void addPlayer(int param1) {
-		if(players.containsKey(param1)) {
-			byte loc1 = players.get(param1);
-			loc1++;
-			players.remove(param1);
-			players.put(param1, loc1);
-		}else{
-			players.put(param1, (byte) 1);
-		}
+        players.add(param1);
 	}
 }

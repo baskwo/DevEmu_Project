@@ -32,5 +32,17 @@
     		<artifactId>config</artifactId>
     		<version>1.0.1</version>
 		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        
+        <!-- unit testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
     </dependencies>
 </project>
