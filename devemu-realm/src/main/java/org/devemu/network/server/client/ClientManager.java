@@ -1,11 +1,6 @@
 package org.devemu.network.server.client;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
+import com.google.common.collect.Multiset;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.network.InterId;
 import org.devemu.network.inter.client.ClientFactory;
@@ -21,8 +16,10 @@ import org.devemu.utils.Crypt;
 import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.queue.QueueSelector;
 
+import java.util.*;
+
 public class ClientManager {
-	public static Map<Integer,RealmClient> waitings = new TreeMap<Integer,RealmClient>();
+	public static Map<Integer,RealmClient> waitings = new TreeMap<>();
 	
 	public static void onVersion(String arg1, RealmClient arg2) {
 		if(arg1.equalsIgnoreCase((String)Main.getConfigValue(ConfigEnum.VERSION))) {
@@ -96,13 +93,7 @@ public class ClientManager {
 				loc5.getParam().add(loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0));
 		}
 		
-		List<Packet> loc7 = new ArrayList<Packet>();
-		loc7.add(loc1);
-		loc7.add(loc2);
-		loc7.add(loc3);
-		loc7.add(loc4);
-		loc7.add(loc5);
-		
+		List<Packet> loc7 = Arrays.asList(loc1, loc2, loc3, loc4, loc5);
 		arg1.write(loc7);
 	}
 	
@@ -111,9 +102,9 @@ public class ClientManager {
 		loc1.setIdentificator("Ax");
 		loc1.setFirstParam("K" + AccountManager.getAboTime(arg1.getAcc()));
 
-		List<String> loc2 = new ArrayList<String>();
-		for(Entry<Integer,Byte> loc7 : arg1.getAcc().getPlayers().entrySet()) {
-			loc2.add(loc7.getKey() + "," + loc7.getValue());
+		List<String> loc2 = new ArrayList<>();
+		for(Multiset.Entry<Integer> loc7 : arg1.getAcc().getPlayers().entrySet()) {
+			loc2.add(loc7.getElement() + "," + loc7.getCount());
 		}
 		loc1.setParam(loc2);
 		arg1.write(loc1.toString());
