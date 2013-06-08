@@ -1,16 +1,65 @@
 package org.devemu.network.protocol;
 
+import com.google.common.collect.Lists;
+import org.devemu.network.client.SimpleClient;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-
-import org.devemu.network.client.SimpleClient;
 
 public class Packet {
 	private String identificator = "";//2 letters
 	private String firstParam = "";//After identificator and before the first '|'
 	private List<String> param = new ArrayList<String>();//Param split by '|'
 	private static String[] HEX_CHARS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+
+    public static final class PacketFactory {
+        private final Packet result = new Packet();
+        private final List<String> params = Lists.newArrayList();
+
+        public PacketFactory identificator(String identificator) {
+            result.setIdentificator(identificator);
+            return this;
+        }
+
+        public PacketFactory firstParam(Object firstParam) {
+            result.setFirstParam(firstParam.toString());
+            return this;
+        }
+
+        public PacketFactory param(Object param) {
+            params.add(param.toString());
+            return this;
+        }
+
+        public PacketFactory params(Collection<String> params) {
+            this.params.addAll(params);
+            return this;
+        }
+
+        public PacketFactory params(Object param1, Object param2, Object... params) {
+            this.params.add(param1.toString());
+            this.params.add(param2.toString());
+            for (Object param : params) {
+                this.params.add(param.toString());
+            }
+            return this;
+        }
+
+        public Packet create() {
+            result.setParam(params);
+            return result;
+        }
+    }
+
+    public static PacketFactory factory() {
+        return new PacketFactory();
+    }
+
+    public static PacketFactory packet() { // convenient method for static import
+        return factory();
+    }
 	
 	public static Packet decomp(String arg1) {
 		Packet loc1 = new Packet();
