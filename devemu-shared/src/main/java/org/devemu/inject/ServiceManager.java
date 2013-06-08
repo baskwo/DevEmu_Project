@@ -49,7 +49,7 @@ public class ServiceManager implements Startable {
                 if (classInfo.getName().equals(serviceClassName)) {
                     Class<?> serviceClass = classInfo.load();
 
-                    if (serviceClass.isAssignableFrom(Startable.class)) {
+                    if (!serviceClass.isAssignableFrom(Startable.class)) {
                         //noinspection unchecked
                         return (Class<? extends Startable>) serviceClass;
                     }

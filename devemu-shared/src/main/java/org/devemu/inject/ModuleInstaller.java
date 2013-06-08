@@ -1,106 +1,76 @@
 package org.devemu.inject;
 
-import com.google.common.collect.Lists;
+import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.typesafe.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.List;
-import java.util.jar.JarFile;
+import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
 
 /**
- * load all jar from a directory and install module specified in manifest by key 'Module-Class'
- *
  * @author Blackrush
  */
 public class ModuleInstaller extends AbstractModule {
     private static final Logger log = LoggerFactory.getLogger(ModuleInstaller.class);
-    private static final String MODULE_CLASS_ATTR = "Module-Class";
 
-    private final String path;
-    private final FilenameFilter fileFilter;
+    private final ClassPath classPath;
+    private final Config config;
 
-    private ModuleInstaller(String path, FilenameFilter fileFilter) {
-        this.path = checkNotNull(path);
-        this.fileFilter = fileFilter;
-    }
-
-    public static ModuleInstaller from(String path, FilenameFilter fileFilter) {
-        return new ModuleInstaller(path, fileFilter);
-    }
-
-    public static ModuleInstaller from(String path) {
-        return from(path, null);
-    }
-
-    private void getNamesAndUrls(File directory, List<String> names, List<URL> urls) {
-        for (File file : directory.listFiles(fileFilter)) {
-            try {
-                JarFile jarfile = new JarFile(file);
-
-                String moduleName = jarfile.getManifest().getMainAttributes().getValue(MODULE_CLASS_ATTR);
-                URL moduleUrl = file.toURI().toURL();
-
-                names.add(moduleName);
-                urls.add(moduleUrl);
-            } catch (Throwable t) {
-                addError(t);
-            }
+    private ModuleInstaller(ClassLoader loader, Config config) {
+        try {
+            this.classPath = ClassPath.from(loader);
+        } catch (IOException e) {
+            throw propagate(e);
         }
+
+        this.config = checkNotNull(config);
     }
 
-    private Collection<Module> loadModules(URLClassLoader classLoader, Collection<String> names) {
-        List<Module> modules = Lists.newArrayList();
+    public static ModuleInstaller of(ClassLoader loader, Config config) {
+        return new ModuleInstaller(loader, config);
+    }
 
-        for (String moduleName : names) {
-            try {
-                Class<?> moduleClass = classLoader.loadClass(moduleName);
-                if (Module.class.isAssignableFrom(moduleClass)) {
-                    Module module = (Module) moduleClass.newInstance();
-                    modules.add(module);
-                } else {
-                    addError("Class \"%s\" is not a module !", moduleClass.getCanonicalName());
+    private Class<? extends Module> findModule(String moduleClassName) {
+        for (ClassPath.ResourceInfo info : classPath.getResources()) {
+            if (info instanceof ClassPath.ClassInfo) {
+                ClassPath.ClassInfo classInfo = (ClassPath.ClassInfo) info;
+
+                if (classInfo.getName().equals(moduleClassName)) {
+                    Class<?> moduleClass = classInfo.load();
+
+                    if (!moduleClass.isAssignableFrom(Module.class)) {
+                        //noinspection unchecked
+                        return (Class<? extends Module>) moduleClass;
+                    }
                 }
-            } catch (Exception e) {
-                addError(e);
             }
         }
 
-        return modules;
-    }
-
-    private Collection<Module> loadModules(File directory) {
-        List<String> names = Lists.newArrayList();
-        List<URL> urls = Lists.newArrayList();
-
-        getNamesAndUrls(directory, names, urls);
-
-        URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
-
-        return loadModules(classLoader, names);
+        return null;
     }
 
     @Override
     protected void configure() {
-        File directory = new File(path);
-        if (!directory.exists()) {
-            addError("unknown %s directory", path);
-        } else if (!directory.isDirectory()) {
-            addError("directory %s is not a directory", path);
-        } else {
-            for (Module module : loadModules(directory)) {
-                install(module);
+        for (String moduleClassName : config.getStringList("modules")) {
+            Class<? extends Module> moduleClass = findModule(moduleClassName);
+            if (moduleClass == null) continue;
 
-                log.info("{} loaded", module.getClass().getCanonicalName());
+            Module module;
+            try {
+                module = moduleClass.newInstance();
+            } catch (InstantiationException|IllegalAccessException e) {
+                addError(e);
+                continue;
             }
+
+            install(module);
+
+            log.debug("module {} installed", moduleClassName);
         }
     }
 }

@@ -1,38 +1,47 @@
 package org.devemu.program;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import org.devemu.network.inter.InterServer;
-import org.devemu.network.inter.client.ClientFactory;
-import org.devemu.network.server.RealmServer;
-import org.devemu.sql.dao.DAO;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.devemu.inject.ConfigModule;
+import org.devemu.inject.JarModuleInstaller;
+import org.devemu.inject.ModuleInstaller;
+import org.devemu.inject.ServiceManager;
+import org.devemu.utils.Stopwatch;
 import org.devemu.utils.config.ConfigEnum;
-import org.devemu.utils.config.ConfigReader;
-import org.devemu.utils.main.Console;
-import org.devemu.utils.queue.QueueManager;
-import org.devemu.utils.timer.SaveTimer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Stopwatch;
+import java.io.File;
 
 public class Main {
-	private static ConfigReader config = new ConfigReader();
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
-		Stopwatch loc1 = new Stopwatch().start();
-		Console.printHeader();
-		config.init("config.conf");
-		ClientFactory.init();
-		DAO.init();
-		InterServer.getInstance().start();
-		RealmServer.getInstance().start();
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new QueueManager(), 0, 1000, TimeUnit.MILLISECONDS);
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new SaveTimer(), 0, 10, TimeUnit.MINUTES);
-		loc1.stop();
-		System.out.println("Launched time : " + ((double)(loc1.elapsedTime(TimeUnit.NANOSECONDS))/1000000000) + " seconds");
-	}
+        final ClassLoader loader = ClassLoader.getSystemClassLoader();
+        final Config config = ConfigFactory.parseFileAnySyntax(new File("./devemu-realm"));
+
+        final Injector inject = Guice.createInjector(
+                ConfigModule.of(config),
+                JarModuleInstaller.from(config.getString("devemu.mods.dir")),
+                ModuleInstaller.of(loader, config.getConfig("devemu.mods"))
+        );
+
+        final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                services.stop();
+            }
+        }));
+
+        try (Stopwatch ignored = Stopwatch.start(log, "successfully started in {} milliseconds")) {
+            services.start();
+        }
+    }
 
 	public static Object getConfigValue(ConfigEnum arg1) {
-		return config.get(arg1);
+        return null; // todo
 	}
 }
