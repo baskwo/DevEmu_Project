@@ -31,39 +31,43 @@ public class ClientManager {
 		}
 	}
 	
-	public static void onAccount(String arg1, RealmClient arg2) {
-		String loc1 = arg1.split("\n")[0];//Username
-		String loc2 = arg1.split("\n")[1];//HashPass
-		
-		Account loc3 = AccountManager.findByName(loc1);
-		Packet loc5 = new Packet();
-		loc5.setIdentificator("Al");
-		loc5.setFirstParam("Ef");
-		if(loc3 != null) {
-			String loc4 = Crypt.cryptAnkama(loc3.getPassword(), arg2.getSalt());
-			if(loc2.equals(loc4)) {
-				arg2.setAcc(loc3);
-				arg2.setState(State.SERVER);
-				QueueSelector.addToQueue(arg2);
-			}else{
-				arg2.write(loc5.toString());
+	public static void onAccount(String input, RealmClient client) {
+        String[] data = input.split("\n");
+        String username = data[0];
+		String hashpass = data[1];
+
+        Packet failure = Packet.factory()
+                .identificator("Al")
+                .firstParam("Ef")
+                .create();
+
+        Account account = AccountManager.findByName(username);
+
+		if (account != null) {
+			String password = Crypt.cryptAnkama(account.getPassword(), client.getSalt());
+
+			if (hashpass.equals(password)) {
+				client.setAcc(account);
+				client.setState(State.SERVER);
+
+				QueueSelector.addToQueue(client);
+			} else {
+				client.write(failure.toString());
 			}
-		}else {
-			arg2.write(loc5.toString());
+		} else {
+			client.write(failure.toString());
 		}
 	}
 	
 	public static void onQueue(RealmClient arg1) {
-		Packet loc2 = new Packet();
-		loc2.setIdentificator("Af");
-		loc2.setFirstParam(""+arg1.getQueue());
-		List<String> loc3 = loc2.getParam();
-		loc3.add(""+QueueSelector.getTotAbo());
-			loc3.add(""+QueueSelector.getTotNonAbo());
-			loc3.add("0"); //Subscriber
-			loc3.add("1"); //QueueID
-			loc2.setParam(loc3);
-			arg1.write(loc2.toString());
+        arg1.write(Packet.factory()
+                .identificator("Af")
+                .firstParam(arg1.getQueue())
+                .params(QueueSelector.getTotAbo(), QueueSelector.getTotNonAbo())
+                .param("0") // subscriber
+                .param("1") // queue id
+                .create()
+                .toString());
 	}
 	
 	public static void onStat(RealmClient arg1) {
