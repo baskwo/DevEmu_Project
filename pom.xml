@@ -34,5 +34,6 @@
         <commons-dbcp.version>1.2.2</commons-dbcp.version>
         <commons-lang.version>2.5</commons-lang.version>
         <guava.version>14.0.1</guava.version>
+        <guice.version>3.0</guice.version>
     </properties>
 </project>
