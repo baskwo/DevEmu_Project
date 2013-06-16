@@ -29,7 +29,6 @@ public class RealmServer implements Startable {
 		return instance;
 	}
 
-
     private NioSocketAcceptor acceptor;
     private final Config config;
 
@@ -51,7 +50,7 @@ public class RealmServer implements Startable {
     @Override
 	public void start() {
 		try {
-			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.laddr"), config.getInt("devemu.service.port")));
+			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.realm.addr"), config.getInt("devemu.service.realm.port")));
             log.debug("successfully started");
 		} catch (IOException e) {
             log.error("start failure", e);

@@ -62,13 +62,13 @@ public class Packet {
     }
 	
 	public static Packet decomp(String arg1) {
-		Packet loc1 = new Packet();
+		Packet loc1 = factory().create();
 		/*int loc3 = Integer.parseInt(arg1.substring(0, 2).toUpperCase(), 16) * 2;
 		String loc5 =  decrypt(arg1.substring(2),arg2.getHash().getKey(),loc3);
 		System.out.println(loc5);*/
 		loc1.setIdentificator(arg1.substring(0, 2));
 		if(arg1.contains("|")) {
-			String[] loc4 = arg1.split("|");
+			String[] loc4 = arg1.split("\\|");
 			if(loc4[0].length() > 2)
 				loc1.setFirstParam(loc4[0].substring(2));
 			String[] loc2 = Arrays.copyOfRange(loc4, 1, loc4.length);

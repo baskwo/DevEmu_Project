@@ -1,6 +1,9 @@
 package org.devemu.sql.entity;
 
-public class Ban {
+import java.io.Serializable;
+
+public class Ban implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int id = 0;
 	private String username = "";
 	private long banTime = 0;

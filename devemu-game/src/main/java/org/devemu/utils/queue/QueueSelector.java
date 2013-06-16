@@ -7,12 +7,12 @@ import org.devemu.network.server.client.GameClient;
 import org.devemu.sql.manager.AccountManager;
 
 public class QueueSelector {
-	private int nextAbo = 0;
-	private int next = 0;
-	private List<GameClient> queue = new ArrayList<GameClient>();
-	private List<GameClient> queueAbo = new ArrayList<GameClient>();//Haha, fuck noSubscribe
+	private static  int nextAbo = 0;
+	private static  int next = 0;
+	private static  List<GameClient> queue = new ArrayList<GameClient>();
+	private static  List<GameClient> queueAbo = new ArrayList<GameClient>();//Haha, fuck noSubscribe
 	
-	public synchronized void addToQueue(GameClient arg0) {
+	public static  synchronized void addToQueue(GameClient arg0) {
 		if(AccountManager.getAboTime(arg0.getAcc()) > 0) {
 			queueAbo.add(arg0);
 			arg0.setQueue(nextAbo);
@@ -26,7 +26,7 @@ public class QueueSelector {
 		arg0.setQueueCur(next+nextAbo);
 	}
 	
-	public synchronized void removeFromQueue(int arg0,boolean arg1) {
+	public static  synchronized void removeFromQueue(int arg0,boolean arg1) {
 		if(arg1) {
 			queueAbo.remove(arg0);
 			nextAbo--;
@@ -56,7 +56,7 @@ public class QueueSelector {
 		}
 	}
 	
-	public GameClient getFirst() {
+	public static  GameClient getFirst() {
 		GameClient loc0 = null;
 		if(!queueAbo.isEmpty())
 			loc0 = queueAbo.get(0);
@@ -65,11 +65,11 @@ public class QueueSelector {
 		return loc0;
 	}
 	
-	public int getTotAbo() {
+	public static  int getTotAbo() {
 		return queueAbo.size();
 	}
 
-	public int getTotNonAbo() {
+	public static  int getTotNonAbo() {
 		return queue.size();
 	}
 }

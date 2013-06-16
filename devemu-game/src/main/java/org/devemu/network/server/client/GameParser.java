@@ -21,7 +21,7 @@ public class GameParser {
 			//TODO: "Agfr" Gift
 			break;
 		case "Af":
-			ClientManager.onQueue(client,client.getState());
+			ClientManager.onQueue(client);
 			break;
 		case "AL":
 			ClientManager.onWantingList(client);

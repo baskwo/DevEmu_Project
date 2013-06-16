@@ -1,5 +1,7 @@
 package org.devemu.network.server;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -11,9 +13,15 @@ import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.devemu.network.protocol.filter.BanFilter;
 import org.devemu.program.Main;
-import org.devemu.utils.config.ConfigEnum;
+import org.devemu.services.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class GameServer {
+import com.google.inject.Inject;
+
+public class GameServer implements Startable{
+	private static final Logger log = LoggerFactory.getLogger(GameServer.class);
+	
 	private NioSocketAcceptor acceptor;
 	private static GameServer instance;
 	
@@ -23,6 +31,7 @@ public class GameServer {
 		return instance;
 	}
 
+	@Inject
 	private GameServer() {
 		acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
@@ -33,9 +42,11 @@ public class GameServer {
 	
 	public void start() {
 		try {
-			acceptor.bind(new InetSocketAddress((String)Main.getConfigValue(ConfigEnum.GAME_IP), Integer.parseInt((String)Main.getConfigValue(ConfigEnum.GAME_PORT))));
+			acceptor.bind(new InetSocketAddress(Main.getConfigValue("devemu.service.game.addr"), Integer.parseInt(Main.getConfigValue("devemu.service.game.port"))));
+			log.debug("successfully started");
 		} catch (IOException e) {
-			e.printStackTrace();
+            log.error("start failure", e);
+            throw propagate(e);
 		}
 	}
 
@@ -45,6 +56,12 @@ public class GameServer {
 
 	public void setAcceptor(NioSocketAcceptor acceptor) {
 		this.acceptor = acceptor;
+	}
+
+	@Override
+	public void stop() {
+		acceptor.unbind();
+        acceptor.dispose(true);
 	}
 
 }

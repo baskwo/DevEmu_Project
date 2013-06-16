@@ -1,6 +1,8 @@
 package org.devemu.network.server.client;
 
 import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
+
 import org.apache.mina.core.session.IoSession;
 import org.devemu.network.InterId;
 import org.devemu.network.inter.client.ClientFactory;
@@ -11,9 +13,9 @@ import org.devemu.network.server.RealmServer;
 import org.devemu.network.server.client.RealmClient.State;
 import org.devemu.program.Main;
 import org.devemu.sql.entity.Account;
+import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.manager.AccountManager;
 import org.devemu.utils.Crypt;
-import org.devemu.utils.config.ConfigEnum;
 import org.devemu.utils.queue.QueueSelector;
 
 import java.util.*;
@@ -22,7 +24,7 @@ public class ClientManager {
 	public static Map<Integer,RealmClient> waitings = new TreeMap<>();
 	
 	public static void onVersion(String arg1, RealmClient arg2) {
-		if(arg1.equalsIgnoreCase((String)Main.getConfigValue(ConfigEnum.VERSION))) {
+		if(arg1.equalsIgnoreCase((String)Main.getConfigValue("devemu.options.realm.vers"))) {
 			arg2.setState(State.ACCOUNT);
 		}else{
 			Packet loc1 = new Packet();
@@ -41,7 +43,7 @@ public class ClientManager {
                 .firstParam("Ef")
                 .create();
 
-        Account account = AccountManager.findByName(username);
+        Account account = Main.getSqlService().findAccountByName(username);
 
 		if (account != null) {
 			String password = Crypt.cryptAnkama(account.getPassword(), client.getSalt());
@@ -81,7 +83,7 @@ public class ClientManager {
 		
 		Packet loc3 = new Packet();
 		loc3.setIdentificator("Ac");
-		loc3.setFirstParam((String)Main.getConfigValue(ConfigEnum.COMMUNITY));
+		loc3.setFirstParam((String)Main.getConfigValue("devemu.options.realm.community"));
 		
 		Packet loc4 = new Packet();
 		loc4.setIdentificator("AQ");
@@ -107,7 +109,11 @@ public class ClientManager {
 		loc1.setFirstParam("K" + AccountManager.getAboTime(arg1.getAcc()));
 
 		List<String> loc2 = new ArrayList<>();
-		for(Multiset.Entry<Integer> loc7 : arg1.getAcc().getPlayers().entrySet()) {
+		Multiset<Integer> loc3 = TreeMultiset.create();
+		for(Player loc4 : arg1.getAcc().getPlayers()) {
+			loc3.add(loc4.getGameGuid());
+		}
+		for(Multiset.Entry<Integer> loc7 : loc3.entrySet()) {
 			loc2.add(loc7.getElement() + "," + loc7.getCount());
 		}
 		loc1.setParam(loc2);
@@ -118,11 +124,11 @@ public class ClientManager {
 	public static void onConnection(Packet arg1, RealmClient arg2) {
 		int loc1 = Integer.parseInt(arg1.getFirstParam());
 		InterClient loc2 = ClientFactory.get(loc1);
-		waitings.put(arg2.getAcc().getGuid(), arg2);
+		waitings.put(arg2.getAcc().getId(), arg2);
 		
 		ServerPacket loc3 = new ServerPacket();
 		loc3.setId(InterId.ACC_WAITING.getId());
-		loc3.getData().putInt(arg2.getAcc().getGuid());
+		loc3.getData().putInt(arg2.getAcc().getId());
 		loc2.write(loc3.toBuff());
 	}
 	
@@ -132,7 +138,7 @@ public class ClientManager {
 		//TODO: UseCryptedIp
 		Packet loc3 = new Packet();
 		loc3.setIdentificator("AY");
-		loc3.setFirstParam("K" + arg1.getIp() + ":" + arg1.getPort() + ";" + arg1.getGuid());
+		loc3.setFirstParam("K" + arg1.getIp() + ":" + arg1.getPort() + ";" + loc1.getAcc().getId());
 		loc1.write(loc3.toString());
 	}
 	

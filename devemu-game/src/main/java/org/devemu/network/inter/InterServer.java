@@ -1,12 +1,20 @@
 package org.devemu.network.inter;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.net.InetSocketAddress;
 
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.devemu.program.Main;
-import org.devemu.utils.config.ConfigEnum;
+import org.devemu.services.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class InterServer {
+import com.google.inject.Inject;
+
+public class InterServer implements Startable {
+	private static final Logger log = LoggerFactory.getLogger(InterServer.class);
+	
 	private NioSocketConnector connector;
 	private static InterServer instance;
 	
@@ -16,13 +24,21 @@ public class InterServer {
 		return instance;
 	}
 	
+	@Inject
 	private InterServer() {
 		connector = new NioSocketConnector();
 		connector.setHandler(new InterHandler());
 	}
 	
+	@Override
 	public void start() {
-		connector.connect(new InetSocketAddress((String)Main.getConfigValue(ConfigEnum.INTER_IP), Integer.parseInt((String)Main.getConfigValue(ConfigEnum.INTER_PORT))));
+		try {
+			connector.connect(new InetSocketAddress(Main.getConfigValue("devemu.service.inter.addr"), Integer.parseInt(Main.getConfigValue("devemu.service.inter.port"))));
+			log.debug("successfully started");
+		} catch (Exception e) {
+            log.error("start failure", e);
+            throw propagate(e);
+		}
 	}
 
 	public NioSocketConnector getConnector() {
@@ -31,5 +47,10 @@ public class InterServer {
 
 	public void setConnector(NioSocketConnector connector) {
 		this.connector = connector;
+	}
+
+	@Override
+	public void stop() {
+		connector.dispose();
 	}
 }

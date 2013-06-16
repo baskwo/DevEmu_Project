@@ -1,16 +1,9 @@
 package org.devemu.sql.manager;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.devemu.network.server.client.GameClient;
 import org.devemu.program.Main;
-import org.devemu.sql.dao.DAO;
-import org.devemu.sql.entity.Alignement;
-import org.devemu.sql.entity.ExpStep;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.Stats;
 import org.devemu.utils.constants.StatsID;
@@ -32,8 +25,8 @@ public class PlayerManager {
 				+ (arg0.isMarchant() ? "1" : "0") + ";"
 				+ ("" + Main.getGuid()) + ";"
 				+ (arg0.isDead() ? "1" : "0") + ";"
-				+ ("" + arg0.getCountDead()) + ";"
-				+ ExpManager.getCount() + ";");
+				+ ("" + arg0.getCountDead()) + ";");
+				//+ ExpManager.getCount() + ";");
 		return loc1;
 	}
 	
@@ -66,9 +59,9 @@ public class PlayerManager {
 	
 	public static String getXpToString(Player arg0) {
 		String loc0 = "";
-		ExpStep loc1 = ExpManager.getExpStepByLevel(arg0.getLevel());
+		/*ExpStep loc1 = ExpManager.getExpStepByLevel(arg0.getLevel());
 		ExpStep loc2 = ExpManager.getExpStepByLevel(arg0.getLevel() + 1);
-		loc0 += arg0.getXp() + "," + loc1.getPlayer() + "," + loc2.getPlayer();
+		loc0 += arg0.getXp() + "," + loc1.getPlayer() + "," + loc2.getPlayer();*/
 		return loc0;
 	}
 	
@@ -94,16 +87,6 @@ public class PlayerManager {
 	
 	public static String getDefaultGfx(Player arg0) {
 		return ("" + arg0.getClasse() + (arg0.isSexe() ? "1" : "0")); 
-	}
-	
-	public static Player getById(int arg0) {
-		Player loc2 = DAO.getPlayerDAO().find(arg0);
-		return loc2;
-	}
-	
-	public static int getNextId() {
-		int nextId = DAO.getPlayerDAO().getNextID();
-		return nextId;
 	}
 	
 	public static String getGMData(Player arg0) {
@@ -219,96 +202,5 @@ public class PlayerManager {
 		arg0.getStats().put(StatsID.STATS_RETDOM, new Stats(StatsID.STATS_RETDOM,0));
 		arg0.getStats().put(StatsID.STATS_TRAPDOM, new Stats(StatsID.STATS_TRAPDOM,0));
 		arg0.getStats().put(StatsID.STATS_TRAPPER, new Stats(StatsID.STATS_TRAPPER,0));
-	}
-	
-	public static void createOnDb(Player arg1,GameClient arg2) {
-		arg2.getAcc().getPlayers().add(arg1.getGuid());
-		DAO.getAccountDAO().update(arg2.getAcc());
-		DAO.getPlayerDAO().create(arg1);
-	}
-	
-	public static Player create(ResultSet set) {
-       try {
-            Player loc0 = new Player();
-            loc0.setGuid(set.getInt("guid"));
-            loc0.setName(set.getString("name"));
-            loc0.setLevel(set.getInt("level"));
-            loc0.setGfx(set.getInt("gfx"));
-            loc0.setMarchant(set.getBoolean("marchant"));
-            loc0.setDead(set.getBoolean("dead"));
-            loc0.setCountDead(set.getInt("countDead"));
-            loc0.setClasse(set.getInt("classe"));
-            loc0.setSexe(set.getBoolean("sexe"));
-            loc0.setXp(set.getLong("xp"));
-            loc0.setKamas(set.getLong("kamas"));
-            loc0.setCapitals(set.getInt("capitals"));
-            loc0.setSpellPoints(set.getInt("spellPoints"));
-            loc0.setPdv(set.getInt("pdv"));
-            loc0.setEnergy(set.getInt("energy"));
-            loc0.setCell(set.getInt("cellId"));
-            
-            String loc1 = set.getString("align");
-            if(loc1 != null) {
-            	if(!loc1.isEmpty()) {
-            		String[] loc2 = loc1.split(";");
-                    if(loc2 != null && loc2.length == 5) {
-                    	Alignement loc3 = new Alignement();
-                    	loc3.setOrdre(Byte.parseByte(loc2[0]));
-                    	loc3.setLevel(Integer.parseInt(loc2[1]));
-                    	loc3.setGrade(Integer.parseInt(loc2[2]));
-                    	loc3.setHonor(Integer.parseInt(loc2[3]));
-                    	loc3.setDeshonor(Integer.parseInt(loc2[4]));
-                    	loc0.setAlign(loc3);
-                    }
-            	}
-            }
-            
-            
-            String loc2 = set.getString("stats");
-            if(loc2 != null) {
-            	if(!loc2.isEmpty()) {
-            		String[] loc3 = loc2.split(";");
-                	if(loc3 != null) {
-                		for(String loc5 : loc3) {
-                			String[] loc6 = loc5.split(":");
-                			Stats loc7 = new Stats();
-                			loc7.setStatsId(Integer.parseInt(loc6[0]));
-                			loc7.setValue(Integer.parseInt(loc6[1]));
-                			loc0.getStats().put(loc7.getStatsId(), loc7);
-                		}
-                	}
-            	}
-            	
-            }
-            loc0.setMapsId(set.getInt("mapsId"));
-            return loc0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-	
-	public static Player create(String[] set) {
-        /*Account loc0 = new Account();
-        loc0.setGuid(Integer.parseInt(set[0]));
-        loc0.setName(set[1]);
-        loc0.setPassword(set[2]);
-        loc0.setPseudo(set[3]);
-        loc0.setQuestion(set[4]);
-        loc0.setAboTime(Long.parseLong(set[5]));
-        String s = set[6];
-        String[] s1 = StringUtils.split(s, ';');
-        for (String s2 : s1) {
-            String[] s3 = StringUtils.split(s2, ':');
-            if(Integer.parseInt(s3[1]) == Main.getGuid())
-            	loc0.getPlayers().add(Integer.parseInt(s3[0]));
-        }*/
-        return null;
-    }
-	
-	public static void deleteOnDb(Player arg1,GameClient arg2) {
-		AccountManager.removePlayer(arg2.getAcc(), arg1.getGuid());
-		DAO.getAccountDAO().update(arg2.getAcc());
-		DAO.getPlayerDAO().delete(arg1);
 	}
 }

@@ -1,24 +1,26 @@
 package org.devemu.sql.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
-	private int guid = 0;
+public class Account implements Serializable{
+	private static final long serialVersionUID = 1L;
+	private int id = 0;
 	private String name = "";
 	private String password = "";
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private List<Integer> players = new ArrayList<Integer>();
+	private List<Player> players = new ArrayList<>();
 	private long aboTime = 0;
 
 	public int getGuid() {
-		return guid;
+		return id;
 	}
 
 	public void setGuid(int guid) {
-		this.guid = guid;
+		this.id = guid;
 	}
 
 	public String getName() {
@@ -65,11 +67,11 @@ public class Account {
 		this.question = question;
 	}
 
-	public List<Integer> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(List<Integer> players) {
+	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
 

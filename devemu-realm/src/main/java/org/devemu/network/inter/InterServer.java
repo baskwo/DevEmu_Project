@@ -1,32 +1,49 @@
 package org.devemu.network.inter;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.devemu.network.inter.client.ClientFactory;
 import org.devemu.program.Main;
-import org.devemu.utils.config.ConfigEnum;
+import org.devemu.services.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class InterServer {
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
+
+public class InterServer implements Startable{
+	private static final Logger log = LoggerFactory.getLogger(InterServer.class);
+	
 	private NioSocketAcceptor acceptor;
 	private static InterServer instance;
+	private final Config config;
 	
 	public static InterServer getInstance() {
 		if(instance == null)
-			instance = new InterServer();
+			instance = new InterServer(null);
 		return instance;
 	}
 	
-	private InterServer() {
+	@Inject
+	private InterServer(Config config) {
+		this.config = config;
 		acceptor = new NioSocketAcceptor();
 		acceptor.setHandler(new InterHandler());
 	}
 	
+	@Override
 	public void start() {
 		try {
-			acceptor.bind(new InetSocketAddress((String)Main.getConfigValue(ConfigEnum.INTER_IP), Integer.parseInt((String)Main.getConfigValue(ConfigEnum.INTER_PORT))));
+			acceptor.bind(new InetSocketAddress((String)Main.getConfigValue("devemu.service.inter.addr"), Integer.parseInt((String)Main.getConfigValue("devemu.service.inter.port"))));
+			ClientFactory.init();
+			log.debug("successfully started");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("start failure", e);
+            throw propagate(e);
 		}
 	}
 
@@ -36,5 +53,11 @@ public class InterServer {
 
 	public void setAcceptor(NioSocketAcceptor acceptor) {
 		this.acceptor = acceptor;
+	}
+
+	@Override
+	public void stop() {
+		acceptor.unbind();
+        acceptor.dispose(true);
 	}
 }

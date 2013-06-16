@@ -1,6 +1,9 @@
 package org.devemu.sql.entity;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int guid = 0;
 	private int gameGuid = 0;
 

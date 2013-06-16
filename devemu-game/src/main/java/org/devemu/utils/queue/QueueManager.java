@@ -1,56 +1,43 @@
 package org.devemu.utils.queue;
 
+import static com.google.common.base.Throwables.propagate;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.devemu.network.server.client.ClientManager;
 import org.devemu.network.server.client.GameClient;
-import org.devemu.program.Main.Queue;
+import org.devemu.services.Startable;
 import org.devemu.sql.manager.AccountManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class QueueManager implements Runnable {
-	//private Thread thread;
-	private QueueSelector selector = new QueueSelector();
-	private Queue type;
-
-	public QueueManager(Queue arg0) {
-		type = arg0;
-		/*thread = new Thread(this);
-		thread.setDaemon(true);
-		thread.start();*/
-	}
+public class QueueManager implements Runnable,Startable {
+	private static final Logger log = LoggerFactory.getLogger(QueueManager.class);
 	
+	@Override
+	public void start() {
+		try {
+			Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this, 0, 1000, TimeUnit.MILLISECONDS);
+			log.debug("successfully started");
+		}catch(Exception e) {
+			log.error("start failure", e);
+            throw propagate(e);
+		}
+	}
+	@Override
+	public void stop() {
+	}
 	@Override
 	public void run() {
 		try{
-		GameClient loc0 = selector.getFirst();
-		if(loc0 != null) {
-			boolean loc1 = AccountManager.getAboTime(loc0.getAcc()) > 0;
-			selector.removeFromQueue(loc0.getQueue(),loc1);
-			if(type == Queue.TRANSFERT) {
-				ClientManager.onCharacterList(loc0);
-			}else{
-				ClientManager.onSelected(loc0);
-			}
-		}
-		}catch(Exception e) {e.printStackTrace();}
-		/*while(true) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			GameClient loc0 = selector.getFirst();
+			GameClient loc0 = QueueSelector.getFirst();
 			if(loc0 != null) {
 				boolean loc1 = AccountManager.getAboTime(loc0.getAcc()) > 0;
-				selector.removeFromQueue(loc0.getQueue(),loc1);
-				if(type == Queue.TRANSFERT) {
-					ClientManager.onCharacterList(loc0);
-				}else{
-					ClientManager.onSelected(loc0);
-				}
+				QueueSelector.removeFromQueue(loc0.getQueue(),loc1);
+				ClientManager.onCharacterList(loc0);
 			}
-		}*/
+		}catch(Exception e) {throw propagate(e);}
 	}
-	
-	public QueueSelector getSelector() {
-		return selector;
-	}
+
 }

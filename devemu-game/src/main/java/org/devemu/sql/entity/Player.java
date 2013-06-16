@@ -1,11 +1,13 @@
 package org.devemu.sql.entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.devemu.network.server.client.GameClient;
 
-public class Player {
+public class Player implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int guid = 0;
 	private String name = "";
 	private int level = 1;//TODO: Better handler of level and exp?

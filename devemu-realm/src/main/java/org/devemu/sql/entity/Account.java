@@ -1,25 +1,27 @@
 package org.devemu.sql.entity;
 
-import com.google.common.collect.Multiset;
-import com.google.common.collect.TreeMultiset;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-@SuppressWarnings("UnusedDeclaration")
-public class Account {
-	private int guid = 0;
+public class Account implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	private int id = 0;
 	private String name = "";
 	private String password = "";
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private Multiset<Integer> players = TreeMultiset.create();
+	private List<Player> players = new ArrayList<>();
 	private long aboTime = 0;
 
-	public int getGuid() {
-		return guid;
+	public int getId() {
+		return id;
 	}
 
-	public void setGuid(int guid) {
-		this.guid = guid;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -74,15 +76,15 @@ public class Account {
 		this.aboTime = aboTime;
 	}
 
-	public Multiset<Integer> getPlayers() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(Multiset<Integer> players) {
+	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
 	
-	public void addPlayer(int param1) {
+	public void addPlayer(Player param1) {
         players.add(param1);
 	}
 }
