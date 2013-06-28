@@ -13,7 +13,6 @@
     <modules>
     <module>devemu-shared</module>
     <module>devemu-game</module>
-    <module>devemu-network</module>
     <module>devemu-realm</module>
   </modules>
 

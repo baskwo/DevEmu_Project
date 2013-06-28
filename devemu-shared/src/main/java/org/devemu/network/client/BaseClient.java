@@ -3,6 +3,13 @@ package org.devemu.network.client;
 import org.apache.mina.core.session.IoSession;
 
 public abstract class BaseClient {
+	public enum State {
+		CONNECT,
+		VERSION,
+		ACCOUNT,
+		SERVER
+	}
+	
 	private IoSession session;
 	
 	public BaseClient(IoSession arg0) {

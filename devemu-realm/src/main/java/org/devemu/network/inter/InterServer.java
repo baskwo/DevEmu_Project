@@ -39,7 +39,6 @@ public class InterServer implements Startable{
 	public void start() {
 		try {
 			acceptor.bind(new InetSocketAddress((String)Main.getConfigValue("devemu.service.inter.addr"), Integer.parseInt((String)Main.getConfigValue("devemu.service.inter.port"))));
-			ClientFactory.init();
 			log.debug("successfully started");
 		} catch (IOException e) {
 			log.error("start failure", e);

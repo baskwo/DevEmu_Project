@@ -1,51 +1,39 @@
 package org.devemu.events;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Arrays.asList;
+import java.util.Set;
 
 /**
  * @author Blackrush
  */
-public class SimpleEventDispatcher extends EventDispatcher {
-    private final Multimap<EventType, Object> subscribers = HashMultimap.create();
+public final class SimpleEventDispatcher extends EventDispatcher {
     private final EventDispatcherStrategy strategy;
+    private final Set<Object> subscribers = Sets.newHashSet();
 
-    public SimpleEventDispatcher(EventDispatcherStrategy strategy) {
-        this.strategy = checkNotNull(strategy);
+    private SimpleEventDispatcher(EventDispatcherStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public static SimpleEventDispatcher create(EventDispatcherStrategy strategy) {
+        return new SimpleEventDispatcher(strategy);
     }
 
     @Override
-    public void subscribe(Object subscriber, Iterable<EventType> types) {
-        for (EventType type : types) {
-            subscribers.put(type, subscriber);
+    public void dispatch(Object event) {
+        for (Object subscriber : subscribers) {
+            strategy.doDispatch(event, subscriber);
         }
-        subscribed(subscriber);
+    }
+
+    @Override
+    public void subscribe(Object subscriber) {
+        subscribers.add(subscriber);
+        strategy.onSubscribed(subscriber);
     }
 
     @Override
     public void unsubscribe(Object subscriber) {
-        for (EventType type : subscribers.keys()) {
-            subscribers.remove(type, subscriber);
-        }
-    }
-
-    @Override
-    public void dispatch(EventInterface event) {
-        for (EventType type : asList(event.getType(), EventType.ALL)) {
-            for (Object subscriber : subscribers.get(type)) {
-                dispatch(event, subscriber);
-            }
-        }
-    }
-
-    protected void subscribed(Object subscriber) {
-        strategy.subscribed(subscriber);
-    }
-
-    protected void dispatch(EventInterface event, Object subscriber) {
-        strategy.dispatch(event, subscriber);
+        subscribers.remove(subscriber);
     }
 }

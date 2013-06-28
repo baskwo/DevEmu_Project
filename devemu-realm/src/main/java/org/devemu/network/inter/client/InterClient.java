@@ -2,7 +2,6 @@ package org.devemu.network.inter.client;
 
 import org.apache.mina.core.session.IoSession;
 import org.devemu.network.client.ServerClient;
-import org.devemu.network.protocol.ServerPacket;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
 
@@ -12,15 +11,10 @@ public class InterClient extends ServerClient{
 	private ServerPop population = ServerPop.FULL;
 	private String ip = "";
 	private int port = 0;
-	private InterParser parser = new InterParser(this);
 	private boolean allowNoSubscribe = true;
 	
 	public InterClient(IoSession arg0) {
 		super(arg0);
-	}
-	
-	public void parse(ServerPacket arg0) {
-		parser.parse(arg0);
 	}
 	
 	public int getGuid() {
@@ -52,12 +46,6 @@ public class InterClient extends ServerClient{
 	}
 	public void setPort(int port) {
 		this.port = port;
-	}
-	public InterParser getParser() {
-		return parser;
-	}
-	public void setParser(InterParser parser) {
-		this.parser = parser;
 	}
 
 	public boolean isAllowNoSubscribe() {

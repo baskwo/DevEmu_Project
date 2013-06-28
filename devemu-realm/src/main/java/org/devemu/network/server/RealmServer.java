@@ -2,12 +2,15 @@ package org.devemu.network.server;
 
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
+
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.LineDelimiter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.devemu.network.protocol.filter.BanFilter;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.message.MessageFactory;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static com.google.common.base.Throwables.propagate;
 
@@ -25,7 +29,7 @@ public class RealmServer implements Startable {
 	
 	public static RealmServer getInstance() {
 		if(instance == null)
-			instance = new RealmServer(null);
+			instance = new RealmServer(null,null,null);
 		return instance;
 	}
 
@@ -33,18 +37,18 @@ public class RealmServer implements Startable {
     private final Config config;
 
     @Inject
-	public RealmServer(Config config) {
+	public RealmServer(Config config,EventDispatcher dispatcher,MessageFactory factory) {
         this.config = config;
 
         acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
-		acceptor.getFilterChain().addLast("ban", new BanFilter());
+		//TODO: BanFilter acceptor.getFilterChain().addLast("ban", new BanFilter());
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(
                 new TextLineCodecFactory(Charset.forName("UTF-8"),
                 LineDelimiter.NUL,
                 new LineDelimiter("\n\0")
         )));
-		acceptor.setHandler(new RealmHandler());
+		acceptor.setHandler(new RealmHandler(dispatcher,factory));
 	}
 
     @Override
@@ -72,4 +76,7 @@ public class RealmServer implements Startable {
 		this.acceptor = acceptor;
 	}
 
+	public Map<Long, IoSession> getManagedSessions() {
+		return acceptor.getManagedSessions();
+	}
 }
