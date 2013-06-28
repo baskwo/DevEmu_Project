@@ -2,8 +2,8 @@ package org.devemu.network.server;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
-import org.devemu.network.protocol.Packet;
 import org.devemu.network.server.client.GameClient;
+import org.devemu.program.Main;
 
 public class GameHandler extends IoHandlerAdapter{
 	
@@ -11,9 +11,9 @@ public class GameHandler extends IoHandlerAdapter{
 		GameClient loc1 = new GameClient(session);
 		session.setAttribute("client", loc1);
 		
-		Packet loc3 = new Packet();
+		/*Packet loc3 = new Packet();
 		loc3.setIdentificator("HG");
-		loc1.write(loc3.toString());
+		loc1.write(loc3.toString());*/
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception{
@@ -24,14 +24,14 @@ public class GameHandler extends IoHandlerAdapter{
 		String loc1 = message.toString();
 		if(session.getAttribute("client") instanceof GameClient) {
 			GameClient loc2 = (GameClient)session.getAttribute("client");
-			System.out.println("Receiving : " + loc1 + " from : " + session.getRemoteAddress().toString());
-			Packet loc3 = Packet.decomp(loc1);
-			loc2.parse(loc3);
+			Main.log("Receiving : " + loc1 + " from : " + session.getRemoteAddress().toString(), GameHandler.class);
+			/*Packet loc3 = Packet.decomp(loc1);
+			loc2.parse(loc3);*/
 		}
 	}
 	
 	public void messageSent(IoSession session, Object message) throws Exception{
 		String loc1 = message.toString();
-		System.out.println("Sending : " + loc1 + " to : " + session.getRemoteAddress().toString());
+		Main.log("Sending : " + loc1 + " to : " + session.getRemoteAddress().toString(), GameHandler.class);
 	}
 }

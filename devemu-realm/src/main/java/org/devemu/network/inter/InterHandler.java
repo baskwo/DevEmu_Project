@@ -5,6 +5,7 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.network.InterId;
 import org.devemu.network.inter.client.InterClient;
+import org.devemu.program.Main;
 import org.devemu.utils.enums.ServerState;
 
 public class InterHandler extends IoHandlerAdapter{
@@ -32,7 +33,7 @@ public class InterHandler extends IoHandlerAdapter{
 		IoBuffer loc1 = (IoBuffer) message;
 		int loc2 = loc1.get() >> 1;
 		
-		System.out.println("Sending : " + InterId.getId((byte) loc2).name() + " to : " + session.getRemoteAddress());
+		Main.log("Sending : " + InterId.getId((byte) loc2).name() + " to : " + session.getRemoteAddress(), InterHandler.class);
 	}
 	
 	@Override

@@ -5,7 +5,6 @@ import static com.google.common.base.Throwables.propagate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.devemu.network.server.client.ClientManager;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.services.Startable;
 import org.devemu.sql.manager.AccountManager;
@@ -35,7 +34,7 @@ public class QueueManager implements Runnable,Startable {
 			if(loc0 != null) {
 				boolean loc1 = AccountManager.getAboTime(loc0.getAcc()) > 0;
 				QueueSelector.removeFromQueue(loc0.getQueue(),loc1);
-				ClientManager.onCharacterList(loc0);
+				//ClientManager.onCharacterList(loc0);
 			}
 		}catch(Exception e) {throw propagate(e);}
 	}

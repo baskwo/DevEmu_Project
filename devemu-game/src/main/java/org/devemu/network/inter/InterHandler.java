@@ -5,7 +5,7 @@ import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.network.InterId;
 import org.devemu.network.inter.client.InterClient;
-import org.devemu.network.protocol.ServerPacket;
+import org.devemu.program.Main;
 
 public class InterHandler extends IoHandlerAdapter{
 	public void sessionCreated(IoSession session) throws Exception {
@@ -14,18 +14,18 @@ public class InterHandler extends IoHandlerAdapter{
 	
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		if(message instanceof IoBuffer) {
-			ServerPacket loc1 = ServerPacket.decomp((IoBuffer)message);
-			System.out.println("Receiving : " + InterId.getId((byte) loc1.getId()).name() + " from : " + session.getRemoteAddress());
-			if(session.getAttribute("client") instanceof InterClient)
-				((InterClient)session.getAttribute("client")).parse(loc1);
+			IoBuffer o = (IoBuffer)message;
+			byte b = o.get();
+			int id = b >> 1;
+			boolean isAdmin = (b & 0x01) != 0;
+			//TODO: Handle
 		}
 	}
 	
 	public void messageSent(IoSession session, Object message) throws Exception {
 		IoBuffer loc1 = (IoBuffer) message;
 		int loc2 = loc1.get() >> 1;
-		
-		System.out.println("Sending : " + InterId.getId((byte) loc2).name() + " to : " + session.getRemoteAddress());
+		Main.log("Sending : " + InterId.getId((byte) loc2).name() + " to : " + session.getRemoteAddress(), InterHandler.class);
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {

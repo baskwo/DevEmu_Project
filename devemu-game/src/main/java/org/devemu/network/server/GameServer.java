@@ -11,7 +11,6 @@ import org.apache.mina.filter.codec.textline.LineDelimiter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.devemu.network.protocol.filter.BanFilter;
 import org.devemu.program.Main;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ public class GameServer implements Startable{
 	private GameServer() {
 		acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
-		acceptor.getFilterChain().addLast("ban", new BanFilter());
+		//TODO: BanFilter acceptor.getFilterChain().addLast("ban", new BanFilter());
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("ISO-8859-1"),LineDelimiter.NUL, new LineDelimiter("\n\0"))));
 		acceptor.setHandler(new GameHandler());
 	}
