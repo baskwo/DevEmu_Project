@@ -93,7 +93,7 @@ public class PlayerManager {
 		List<Object> loc0 = new ArrayList<>();
 		loc0.add(arg0.getCell());
 		loc0.add(arg0.getOrientation());
-		loc0.add(0);//TODO:Found what is it
+		loc0.add(0);//TODO:Found what it is
 		loc0.add(arg0.getGuid());
 		loc0.add(arg0.getName());
 		loc0.add(arg0.getClasse());

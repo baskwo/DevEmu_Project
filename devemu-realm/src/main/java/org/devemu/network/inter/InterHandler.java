@@ -3,44 +3,55 @@ package org.devemu.network.inter;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
-import org.devemu.network.InterId;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.event.event.inter.InterClientEvent;
+import org.devemu.network.inter.client.ClientFactory;
 import org.devemu.network.inter.client.InterClient;
+import org.devemu.network.message.InterMessage;
+import org.devemu.network.message.InterMessageFactory;
 import org.devemu.program.Main;
 import org.devemu.utils.enums.ServerState;
 
+import com.google.inject.Inject;
+
 public class InterHandler extends IoHandlerAdapter{
-	@Override
-	public void sessionCreated(IoSession session) throws Exception{
-		/*ServerPacket loc1 = new ServerPacket();
-		loc1.setId(InterId.CONNECT.getId());
-		session.write(loc1.toBuff());
-		ClientManager.refreshServer();*/
+	private EventDispatcher dispatcher;
+	private InterMessageFactory factory;
+	
+	@Inject
+	public InterHandler(EventDispatcher dispatcher,InterMessageFactory factory) {
+		this.dispatcher = dispatcher;
+		this.factory = factory;
 	}
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception{
 		if(message instanceof IoBuffer) {
 			IoBuffer o = (IoBuffer)message;
-			byte b = o.get();
-			int id = b >> 1;
-			boolean isAdmin = (b & 0x01) != 0;
-			//TODO: Handle
+			int id = o.get();
+			Main.log("Receiving : " + id + " from : " + session.getRemoteAddress(), InterHandler.class);
+			InterClient server = ClientFactory.get(o.get());
+			InterMessage packet = factory.getMessage(""+id);
+			packet.getIn().put(o).flip();
+			packet.deserialize();
+			
+			this.dispatcher.dispatch(new InterClientEvent(server,packet));
 		}
 	}
 	
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception{
 		IoBuffer loc1 = (IoBuffer) message;
-		int loc2 = loc1.get() >> 1;
+		int loc2 = loc1.get();
 		
-		Main.log("Sending : " + InterId.getId((byte) loc2).name() + " to : " + session.getRemoteAddress(), InterHandler.class);
+		Main.log("Sending : " + loc2 + " to : " + session.getRemoteAddress(), InterHandler.class);
 	}
 	
 	@Override
 	public void sessionClosed(IoSession session) throws Exception{
 		if(session.getAttribute("client") instanceof InterClient) {
 			((InterClient)session.getAttribute("client")).setState(ServerState.OFFLINE);
-			//ClientManager.refreshServer();
+			ClientFactory.refreshServer();
 		}
 		session.close(true);
 	}

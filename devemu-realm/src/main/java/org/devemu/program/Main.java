@@ -16,6 +16,7 @@ import org.devemu.inject.ModuleInstaller;
 import org.devemu.inject.ServiceManager;
 import org.devemu.network.event.LoginEventDispatcherStrategy;
 import org.devemu.network.inter.client.ClientFactory;
+import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
@@ -44,7 +45,7 @@ public class Main {
                 ConfigModule.of(config),
                 JarModuleInstaller.from(config.getString("devemu.mods.dir")),
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
-                MessageModule.of(new MessageFactory(), loader),
+                MessageModule.of(new MessageFactory(), new InterMessageFactory(),loader),
                 DispatcherModule.of(SimpleEventDispatcher.create(new LoginEventDispatcherStrategy()),loader),
                 new MyBatisModule() {
 
@@ -56,7 +57,6 @@ public class Main {
                         addMapperClass(BanMapper.class);
                         addMapperClass(PlayerMapper.class);
                         bind(SqlService.class).to(SqlServiceImpl.class);
-                        
                         environmentId("development");
                     }
 

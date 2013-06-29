@@ -1,21 +1,21 @@
 package org.devemu.network.event.event.inter;
 
-import org.devemu.network.server.client.RealmClient;
+import org.devemu.network.inter.client.InterClient;
 
 public class InterClientEvent {
-	private final RealmClient client;
+	private final InterClient server;
     private final Object message;
     
-    public InterClientEvent(RealmClient client, Object message) {
-    	this.client = client;
+    public InterClientEvent(InterClient server, Object message) {
+    	this.server = server;
     	this.message = message;
     }
 
-	public RealmClient getClient() {
-		return client;
-	}
-
 	public Object getMessage() {
 		return message;
+	}
+
+	public InterClient getServer() {
+		return server;
 	}
 }

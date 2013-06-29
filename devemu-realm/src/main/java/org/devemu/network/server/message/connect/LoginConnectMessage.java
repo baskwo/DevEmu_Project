@@ -5,7 +5,7 @@ import org.devemu.network.message.Packet;
 import org.devemu.network.message.Message;
 
 @Packet(state = State.CONNECT)
-public class ConnectionMessage extends Message {
+public class LoginConnectMessage extends Message {
 	
 	public String salt = "";
 

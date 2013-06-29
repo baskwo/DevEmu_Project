@@ -4,7 +4,7 @@ import org.devemu.events.Subscribe;
 import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.event.event.login.ClientLoginEvent;
 import org.devemu.network.server.client.RealmClient;
-import org.devemu.network.server.message.connect.ConnectionMessage;
+import org.devemu.network.server.message.connect.LoginConnectMessage;
 import org.devemu.network.server.message.login.LoginAccountMessage;
 import org.devemu.network.server.message.login.LoginVersionMessage;
 import org.devemu.network.server.message.login.agreed.AccountInfoMessage;
@@ -23,7 +23,7 @@ import com.google.common.collect.TreeMultiset;
 public class LoginEventHandler {
 	
 	@Subscribe(ClientLoginEvent.class)
-	public void onConnectionOpened(RealmClient client,ConnectionMessage message) {
+	public void onConnectionOpened(RealmClient client,LoginConnectMessage message) {
 		message.salt = client.getSalt();
 		message.serialize();
 		client.setState(State.VERSION);
@@ -35,7 +35,7 @@ public class LoginEventHandler {
 		if(message.version.equals(Main.getConfigValue("devemu.options.realm.vers")))
 			client.setState(State.ACCOUNT);
 		else {
-			//TODO: Error Message
+			//TODO: Error
 		}
 	}
 	

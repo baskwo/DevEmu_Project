@@ -2,10 +2,14 @@ package org.devemu.program;
 
 import java.io.File;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.devemu.events.EventDispatcher;
 import org.devemu.inject.ConfigModule;
 import org.devemu.inject.JarModuleInstaller;
+import org.devemu.inject.MessageModule;
 import org.devemu.inject.ModuleInstaller;
 import org.devemu.inject.ServiceManager;
+import org.devemu.network.message.InterMessageFactory;
+import org.devemu.network.message.MessageFactory;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
 import org.devemu.sql.mapper.AccountMapper;
@@ -14,6 +18,7 @@ import org.devemu.sql.mapper.PlayerMapper;
 import org.devemu.utils.Stopwatch;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
+import org.devemu.utils.queue.QueueManager;
 import org.mybatis.guice.MyBatisModule;
 import org.mybatis.guice.datasource.dbcp.BasicDataSourceProvider;
 import org.slf4j.Logger;
@@ -21,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -43,6 +47,8 @@ public class Main {
                 ConfigModule.of(config),
                 JarModuleInstaller.from(config.getString("devemu.mods.dir")),
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
+                MessageModule.of(new MessageFactory(), new InterMessageFactory(), loader),
+               // DispatcherModule.of(SimpleEventDispatcher.create(new LoginEventDispatcherStrategy()),loader),
                 new MyBatisModule() {
 
                     @Override
@@ -53,10 +59,6 @@ public class Main {
                         addMapperClass(MapsMapper.class);
                         addMapperClass(PlayerMapper.class);
                         bind(SqlService.class).to(SqlServiceImpl.class);
-                        bind(String.class).annotatedWith(Names.named("JDBC.url")).toInstance(config.getString("devemu.service.db.url"));
-                        bind(String.class).annotatedWith(Names.named("JDBC.driver")).toInstance(config.getString("devemu.service.db.driver"));
-                        bind(String.class).annotatedWith(Names.named("JDBC.username")).toInstance(config.getString("devemu.service.db.user"));
-                        bind(String.class).annotatedWith(Names.named("JDBC.password")).toInstance(config.getString("devemu.service.db.pass"));
                         environmentId("development");
                     }
 
@@ -64,6 +66,8 @@ public class Main {
         );
 
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
+        
+        new QueueManager(getInstanceFromInjector(EventDispatcher.class), getInstanceFromInjector(MessageFactory.class)).start();
         
         setGuid(config.getInt("devemu.options.game.guid"));
         setAllowNoSubscribe(config.getBoolean("devemu.options.game.allowNoSubscribe"));
@@ -83,6 +87,10 @@ public class Main {
 
 	public static SqlService getSqlService() {
         return inject.getInstance(SqlService.class);
+	}
+	
+	public static <T> T getInstanceFromInjector(Class<T> instance) {
+		return inject.getInstance(instance);
 	}
 	
 	public static void log(String message,Class<?> logging) {

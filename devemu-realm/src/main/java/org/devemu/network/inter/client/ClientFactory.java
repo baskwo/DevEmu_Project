@@ -17,6 +17,10 @@ public class ClientFactory {
 		}
 	}
 	
+	public static void refreshServer() {
+		
+	}
+	
 	public static InterClient get(int arg0) {
 		return clients.get(arg0);
 	}
