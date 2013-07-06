@@ -2,10 +2,20 @@ package org.devemu.network.server;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.event.event.game.GameClientEvent;
+import org.devemu.network.message.MessageFactory;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.program.Main;
 
 public class GameHandler extends IoHandlerAdapter{
+	private EventDispatcher dispatcher;
+	private MessageFactory factory;
+	
+	public GameHandler(EventDispatcher dispatcher,MessageFactory factory) {
+		this.dispatcher = dispatcher;
+		this.factory = factory;
+	}
 	
 	public void sessionCreated(IoSession session) throws Exception{
 		GameClient loc1 = new GameClient(session);
@@ -25,8 +35,7 @@ public class GameHandler extends IoHandlerAdapter{
 		if(session.getAttribute("client") instanceof GameClient) {
 			GameClient loc2 = (GameClient)session.getAttribute("client");
 			Main.log("Receiving : " + loc1 + " from : " + session.getRemoteAddress().toString(), GameHandler.class);
-			/*Packet loc3 = Packet.decomp(loc1);
-			loc2.parse(loc3);*/
+			dispatcher.dispatch(new GameClientEvent(loc2,factory.getMessage(loc1.substring(0, 2))));
 		}
 	}
 	

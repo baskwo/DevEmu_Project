@@ -29,7 +29,11 @@ public class RealmServer implements Startable {
 	
 	public static RealmServer getInstance() {
 		if(instance == null)
-			instance = new RealmServer(null,null,null);
+			try {
+				instance = RealmServer.class.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw propagate(e);
+			}
 		return instance;
 	}
 

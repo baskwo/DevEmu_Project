@@ -11,5 +11,5 @@ import org.devemu.network.client.BaseClient.State;
 @Target(ElementType.TYPE)
 public @interface Packet {
 	String id() default "";
-	State state();
+	State state() default State.NULL;
 }

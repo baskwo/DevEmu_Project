@@ -24,6 +24,16 @@ public class MessageFactory {
 		return o;
 	}
 	
+	public Message getMessage(String id) {
+		Message o;
+		try {
+			o = cache.get(id, State.NULL).newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw propagate(e);
+		}
+		return o;
+	}
+	
 	public Message getMessage(String id,State state) {
 		Message o;
 		try {

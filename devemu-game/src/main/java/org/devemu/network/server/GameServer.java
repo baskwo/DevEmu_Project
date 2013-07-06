@@ -11,37 +11,45 @@ import org.apache.mina.filter.codec.textline.LineDelimiter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.devemu.program.Main;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.message.MessageFactory;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.typesafe.config.Config;
 
 public class GameServer implements Startable{
 	private static final Logger log = LoggerFactory.getLogger(GameServer.class);
 	
 	private NioSocketAcceptor acceptor;
 	private static GameServer instance;
+	private Config config;
 	
 	public static GameServer getInstance() {
 		if(instance == null)
-			instance = new GameServer();
+			try {
+				instance = GameServer.class.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw propagate(e);
+			}
 		return instance;
 	}
 
 	@Inject
-	private GameServer() {
+	private GameServer(Config config,EventDispatcher dispatcher,MessageFactory factory) {
+		this.config = config;
 		acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
 		//TODO: BanFilter acceptor.getFilterChain().addLast("ban", new BanFilter());
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("ISO-8859-1"),LineDelimiter.NUL, new LineDelimiter("\n\0"))));
-		acceptor.setHandler(new GameHandler());
+		acceptor.setHandler(new GameHandler(dispatcher,factory));
 	}
 	
 	public void start() {
 		try {
-			acceptor.bind(new InetSocketAddress(Main.getConfigValue("devemu.service.game.addr"), Integer.parseInt(Main.getConfigValue("devemu.service.game.port"))));
+			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.game.addr"), config.getInt("devemu.service.game.port")));
 			log.debug("successfully started");
 		} catch (IOException e) {
             log.error("start failure", e);

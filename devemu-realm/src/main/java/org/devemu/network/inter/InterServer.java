@@ -25,7 +25,11 @@ public class InterServer implements Startable{
 	
 	public static InterServer getInstance() {
 		if(instance == null)
-			instance = new InterServer(null,null,null);
+			try {
+				instance = InterServer.class.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw propagate(e);
+			}
 		return instance;
 	}
 	

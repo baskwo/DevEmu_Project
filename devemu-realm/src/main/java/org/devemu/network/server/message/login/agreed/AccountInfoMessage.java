@@ -54,7 +54,6 @@ public class AccountInfoMessage extends Message {
 			else
 				output += "|" + loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0);
 		}
-		output += '\000';
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import static com.google.common.base.Throwables.propagate;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.message.InterMessageFactory;
 import org.devemu.program.Main;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
@@ -20,14 +22,18 @@ public class InterServer implements Startable {
 	
 	public static InterServer getInstance() {
 		if(instance == null)
-			instance = new InterServer();
+			try {
+				instance = InterServer.class.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw propagate(e);
+			}
 		return instance;
 	}
 	
 	@Inject
-	private InterServer() {
+	private InterServer(EventDispatcher dispatcher,InterMessageFactory factory) {
 		connector = new NioSocketConnector();
-		connector.setHandler(new InterHandler());
+		connector.setHandler(new InterHandler(dispatcher,factory));
 	}
 	
 	@Override

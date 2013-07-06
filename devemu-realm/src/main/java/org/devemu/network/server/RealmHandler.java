@@ -1,7 +1,5 @@
 package org.devemu.network.server;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.events.EventDispatcher;
@@ -13,13 +11,14 @@ import org.devemu.network.server.client.RealmClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Stopwatch;
+import com.google.inject.Inject;
 
 public class RealmHandler extends IoHandlerAdapter{
 	private static final Logger log = LoggerFactory.getLogger(RealmHandler.class);
 	private EventDispatcher dispatcher;
 	private MessageFactory factory;
 	
+	@Inject
 	public RealmHandler(EventDispatcher dispatcher,MessageFactory factory) {
 		this.dispatcher = dispatcher;
 		this.factory = factory;

@@ -3,21 +3,38 @@ package org.devemu.network.inter;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
+import org.devemu.events.EventDispatcher;
+import org.devemu.network.event.event.inter.InterClientEvent;
 import org.devemu.network.inter.client.InterClient;
+import org.devemu.network.message.InterMessage;
+import org.devemu.network.message.InterMessageFactory;
 import org.devemu.program.Main;
 
 public class InterHandler extends IoHandlerAdapter{
+	private EventDispatcher dispatcher;
+	private InterMessageFactory factory;
+	
+	public InterHandler(EventDispatcher dispatcher,InterMessageFactory factory) {
+		this.dispatcher = dispatcher;
+		this.factory = factory;
+	}
+	
 	public void sessionCreated(IoSession session) throws Exception {
-		session.setAttribute("client",new InterClient(session));
+		session.setAttribute(this,new InterClient(session));
 	}
 	
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		if(message instanceof IoBuffer) {
 			IoBuffer o = (IoBuffer)message;
-			byte b = o.get();
-			int id = b >> 1;
-			boolean isAdmin = (b & 0x01) != 0;
-			//TODO: Handle
+			int id = o.get();
+			
+			InterClient client = (InterClient) session.getAttribute(this);
+			
+			InterMessage packet = factory.getMessage(""+id);
+			packet.getIn().put(o).flip();
+			packet.deserialize();
+			
+			this.dispatcher.dispatch(new InterClientEvent(client,packet));
 		}
 	}
 	

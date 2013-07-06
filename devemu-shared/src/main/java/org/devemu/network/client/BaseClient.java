@@ -7,7 +7,8 @@ public abstract class BaseClient {
 		CONNECT,
 		VERSION,
 		ACCOUNT,
-		SERVER
+		SERVER,
+		NULL
 	}
 	
 	private IoSession session;

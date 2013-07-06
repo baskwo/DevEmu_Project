@@ -1,13 +1,17 @@
 package org.devemu.program;
 
 import java.io.File;
+
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.devemu.events.EventDispatcher;
+import org.devemu.events.SimpleEventDispatcher;
 import org.devemu.inject.ConfigModule;
+import org.devemu.inject.DispatcherModule;
 import org.devemu.inject.JarModuleInstaller;
 import org.devemu.inject.MessageModule;
 import org.devemu.inject.ModuleInstaller;
 import org.devemu.inject.ServiceManager;
+import org.devemu.network.event.GameEventDispatcherStrategy;
 import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
 import org.devemu.sql.SqlService;
@@ -48,7 +52,7 @@ public class Main {
                 JarModuleInstaller.from(config.getString("devemu.mods.dir")),
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
                 MessageModule.of(new MessageFactory(), new InterMessageFactory(), loader),
-               // DispatcherModule.of(SimpleEventDispatcher.create(new LoginEventDispatcherStrategy()),loader),
+                DispatcherModule.of(SimpleEventDispatcher.create(new GameEventDispatcherStrategy()),loader),
                 new MyBatisModule() {
 
                     @Override
