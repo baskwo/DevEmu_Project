@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.devemu.events.EventDispatcher;
 import org.devemu.network.message.InterMessageFactory;
-import org.devemu.program.Main;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,8 @@ public class InterServer implements Startable{
 	@Override
 	public void start() {
 		try {
-			acceptor.bind(new InetSocketAddress((String)Main.getConfigValue("devemu.service.inter.addr"), Integer.parseInt((String)Main.getConfigValue("devemu.service.inter.port"))));
+			instance = this;
+			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.inter.addr"), config.getInt("devemu.service.inter.port")));
 			log.debug("successfully started");
 		} catch (IOException e) {
 			log.error("start failure", e);

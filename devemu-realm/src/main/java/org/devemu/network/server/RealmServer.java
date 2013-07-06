@@ -11,6 +11,7 @@ import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.devemu.events.EventDispatcher;
 import org.devemu.network.message.MessageFactory;
+import org.devemu.program.Main;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,7 @@ public class RealmServer implements Startable {
 	
 	public static RealmServer getInstance() {
 		if(instance == null)
-			try {
-				instance = RealmServer.class.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				throw propagate(e);
-			}
+			instance = Main.getInstanceFromInjector(RealmServer.class);
 		return instance;
 	}
 
@@ -43,7 +40,6 @@ public class RealmServer implements Startable {
     @Inject
 	public RealmServer(Config config,EventDispatcher dispatcher,MessageFactory factory) {
         this.config = config;
-
         acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
 		//TODO: BanFilter acceptor.getFilterChain().addLast("ban", new BanFilter());
@@ -58,6 +54,7 @@ public class RealmServer implements Startable {
     @Override
 	public void start() {
 		try {
+			instance = this;
 			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.realm.addr"), config.getInt("devemu.service.realm.port")));
             log.debug("successfully started");
 		} catch (IOException e) {

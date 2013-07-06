@@ -20,7 +20,14 @@ public class InterHandler extends IoHandlerAdapter{
 	}
 	
 	public void sessionCreated(IoSession session) throws Exception {
-		session.setAttribute(this,new InterClient(session));
+		InterClient client = new InterClient(session);
+		session.setAttribute(this,client);
+	}
+	
+	public void sessionOpened(IoSession session) throws Exception{
+		InterClient client = (InterClient) session.getAttribute(this);
+		InterMessage o = factory.getMessage("1");
+		dispatcher.dispatch(new InterClientEvent(client,o));
 	}
 	
 	public void messageReceived(IoSession session, Object message) throws Exception {

@@ -49,6 +49,7 @@ public class GameServer implements Startable{
 	
 	public void start() {
 		try {
+			instance = this;
 			acceptor.bind(new InetSocketAddress(config.getString("devemu.service.game.addr"), config.getInt("devemu.service.game.port")));
 			log.debug("successfully started");
 		} catch (IOException e) {

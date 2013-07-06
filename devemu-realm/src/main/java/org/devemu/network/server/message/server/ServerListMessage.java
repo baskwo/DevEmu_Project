@@ -1,25 +1,29 @@
 package org.devemu.network.server.message.server;
 
 import org.devemu.network.client.BaseClient.State;
+import org.devemu.network.inter.client.ClientFactory;
+import org.devemu.network.inter.client.InterClient;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.Packet;
 
-import com.google.common.collect.Multiset;
-
-@Packet(id="Ax",state = State.SERVER)
+@Packet(id="AH",state = State.SERVER)
 public class ServerListMessage extends Message {
-	public Multiset<Integer> list;
-	public long aboTime;
 
 	@Override
 	public void serialize() {
-		output = "AxK" + aboTime + "|";
-		for(Multiset.Entry<Integer> loc7 : list.entrySet()) {
-			output += (loc7.getElement() + "," + loc7.getCount() + "|");
+		output = "AH";
+		boolean loc0 = true;
+		for(InterClient loc8 : ClientFactory.getClients().values()) {
+			if(loc0) {
+				output += loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0);
+				loc0 = false;
+			}
+			else
+				output += "|" + loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0);
 		}
 	}
 
 	@Override
-	public void deserialize() {
-	}
+	public void deserialize() {}
+
 }

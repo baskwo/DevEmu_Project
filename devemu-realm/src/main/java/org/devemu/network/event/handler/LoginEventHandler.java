@@ -9,7 +9,7 @@ import org.devemu.network.server.message.login.LoginAccountMessage;
 import org.devemu.network.server.message.login.LoginVersionMessage;
 import org.devemu.network.server.message.login.agreed.AccountInfoMessage;
 import org.devemu.network.server.message.queue.QueueMessage;
-import org.devemu.network.server.message.server.ServerListMessage;
+import org.devemu.network.server.message.server.ServerPersoListMessage;
 import org.devemu.program.Main;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.Player;
@@ -78,7 +78,7 @@ public class LoginEventHandler {
 	}
 	
 	@Subscribe(ClientLoginEvent.class)
-	public void onServerList(RealmClient client, ServerListMessage message) {
+	public void onServerList(RealmClient client, ServerPersoListMessage message) {
 		Multiset<Integer> loc3 = TreeMultiset.create();
 		for(Player loc4 : client.getAcc().getPlayers()) {
 			loc3.add(loc4.getGameGuid());

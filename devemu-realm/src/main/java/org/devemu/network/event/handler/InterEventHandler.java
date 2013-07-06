@@ -20,11 +20,11 @@ public class InterEventHandler {
 	public void onConnection(RealmClient client, ServerConnectionMessage message) {
 		InterClient loc0 = ClientFactory.get(message.serverId);
 		waitings.put(client.getAcc().getId(), client);
+		//TODO:Waiting packet
 	}
 	
 	@Subscribe(InterClientEvent.class)
 	public void onServerConnect(InterClient server, ServerConnectMessage message) {
-		server.setGuid(message.serverId);
 		server.setState(message.state);
 		server.setPopulation(message.population);
 		server.setAllowNoSubscribe(message.allowNoSubscribe);

@@ -3,6 +3,11 @@ package org.devemu.network.inter.client;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.mina.core.session.IoSession;
+import org.devemu.network.client.BaseClient.State;
+import org.devemu.network.server.RealmServer;
+import org.devemu.network.server.client.RealmClient;
+import org.devemu.network.server.message.server.ServerListMessage;
 import org.devemu.program.Main;
 
 public class ClientFactory {
@@ -18,7 +23,14 @@ public class ClientFactory {
 	}
 	
 	public static void refreshServer() {
-		
+		ServerListMessage o = new ServerListMessage();
+		o.serialize();
+		for(IoSession i : RealmServer.getInstance().getManagedSessions().values()) {
+			RealmClient client = (RealmClient) i.getAttribute(RealmServer.getInstance().getAcceptor().getHandler());
+			if(client.getState() == State.SERVER) {
+				i.write(o.output);
+			}
+		}
 	}
 	
 	public static InterClient get(int arg0) {
