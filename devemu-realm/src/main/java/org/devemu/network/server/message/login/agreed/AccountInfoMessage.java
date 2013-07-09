@@ -1,10 +1,9 @@
 package org.devemu.network.server.message.login.agreed;
 
 import org.devemu.network.client.BaseClient.State;
-import org.devemu.network.inter.client.ClientFactory;
-import org.devemu.network.inter.client.InterClient;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.Packet;
+import org.devemu.network.server.message.server.ServerListMessage;
 import org.devemu.program.Main;
 
 @Packet(id="Al", state = State.SERVER)
@@ -43,17 +42,10 @@ public class AccountInfoMessage extends Message {
 		output = "Alk" + (isAdmin ? "1" : "0") + '\000' +
 				 "Ad" + pseudo + '\000' +
 				 "Ac" + Main.getConfigValue("devemu.options.realm.community") + '\000' +
-				 "AQ" + question.replace(" ", "+") + '\000' +
-				 "AH";
-		boolean loc0 = true;
-		for(InterClient loc8 : ClientFactory.getClients().values()) {
-			if(loc0) {
-				output += loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0);
-				loc0 = false;
-			}
-			else
-				output += "|" + loc8.getGuid() + ";" + loc8.getState().getState() + ";" + loc8.getPopulation().getPopulation() + ";" + (loc8.isAllowNoSubscribe() ? 1 : 0);
-		}
+				 "AQ" + question.replace(" ", "+") + '\000';
+		ServerListMessage o = new ServerListMessage();
+		o.serialize();
+		output += o.output;
 	}
 
 	@Override

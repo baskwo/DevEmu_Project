@@ -26,8 +26,12 @@ public class InterHandler extends IoHandlerAdapter{
 		if(message instanceof IoBuffer) {
 			IoBuffer o = (IoBuffer)message;
 			int id = o.get();
+			int serv = o.get();
 			Main.log("Receiving : " + id + " from : " + session.getRemoteAddress(), InterHandler.class);
-			InterClient server = ClientFactory.get(o.get());
+			InterClient server = ClientFactory.get(serv);
+			if(server.getSession() == null)
+				server.setSession(session);
+			session.setAttribute(this, server);
 			InterMessage packet = factory.getMessage(""+id);
 			packet.getIn().put(o).flip();
 			packet.deserialize();
@@ -46,8 +50,8 @@ public class InterHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void sessionClosed(IoSession session) throws Exception{
-		if(session.getAttribute("client") instanceof InterClient) {
-			((InterClient)session.getAttribute("client")).setState(ServerState.OFFLINE);
+		if(session.getAttribute(this) instanceof InterClient) {
+			((InterClient)session.getAttribute(this)).setState(ServerState.OFFLINE);
 			ClientFactory.refreshServer();
 		}
 		session.close(true);

@@ -35,6 +35,8 @@ public class InterHandler extends IoHandlerAdapter{
 			IoBuffer o = (IoBuffer)message;
 			int id = o.get();
 			
+			Main.log("Receiving : " + id + " from : " + session.getRemoteAddress(), InterHandler.class);
+			
 			InterClient client = (InterClient) session.getAttribute(this);
 			
 			InterMessage packet = factory.getMessage(""+id);
