@@ -11,7 +11,9 @@ import org.devemu.network.server.client.RealmClient;
 import org.devemu.network.server.message.connect.ServerConnectAgreeMessage;
 import org.devemu.network.server.message.connect.ServerConnectMessage;
 import org.devemu.network.server.message.server.ServerConnectionMessage;
+import org.devemu.network.server.message.server.ServerInfoMessage;
 import org.devemu.network.server.message.transfert.ServerWaitingMessage;
+import org.devemu.network.server.message.transfert.WaitingAgreedMessage;
 
 import com.google.common.collect.HashBiMap;
 
@@ -45,5 +47,22 @@ public class InterEventHandler {
 		
 		
 		ClientFactory.refreshServer();
+	}
+	
+	@Subscribe(InterClientEvent.class)
+	public void onWaiting(InterClient server, WaitingAgreedMessage message) {
+		if(!waitings.containsKey(message.aId)) {
+			//error
+			return;
+		}
+		RealmClient client = waitings.get(message.aId);
+		
+		ServerInfoMessage o = new ServerInfoMessage();
+		o.ip = server.getIp();
+		o.port = server.getPort();
+		o.id = server.getGuid();
+		
+		o.serialize();
+		client.write(o.output);
 	}
 }

@@ -4,11 +4,11 @@ import org.devemu.events.Subscribe;
 import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.event.event.login.ClientLoginEvent;
 import org.devemu.network.server.client.RealmClient;
-import org.devemu.network.server.message.connect.LoginConnectMessage;
 import org.devemu.network.server.message.login.LoginAccountMessage;
 import org.devemu.network.server.message.login.LoginVersionMessage;
 import org.devemu.network.server.message.login.agreed.AccountInfoMessage;
 import org.devemu.network.server.message.queue.QueueMessage;
+import org.devemu.network.server.message.server.ServerListMessage;
 import org.devemu.network.server.message.server.ServerPersoListMessage;
 import org.devemu.program.Main;
 import org.devemu.sql.entity.Account;
@@ -21,14 +21,6 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
 public class LoginEventHandler {
-	
-	@Subscribe(ClientLoginEvent.class)
-	public void onConnectionOpened(RealmClient client,LoginConnectMessage message) {
-		message.salt = client.getSalt();
-		message.serialize();
-		client.setState(State.VERSION);
-		client.write(message.output);
-	}
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onVersion(RealmClient client, LoginVersionMessage message) {
@@ -75,6 +67,10 @@ public class LoginEventHandler {
 		
 		message.serialize();
 		client.write(message.output);
+		
+		ServerListMessage o = new ServerListMessage();
+		o.serialize();
+		client.write(o.output);
 	}
 	
 	@Subscribe(ClientLoginEvent.class)

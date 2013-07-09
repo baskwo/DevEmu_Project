@@ -39,13 +39,10 @@ public class AccountInfoMessage extends Message {
 
 	@Override
 	public void serialize() {
-		output = "Alk" + (isAdmin ? "1" : "0") + '\000' +
+		output += "Alk" + (isAdmin ? "1" : "0") + '\000' +
 				 "Ad" + pseudo + '\000' +
 				 "Ac" + Main.getConfigValue("devemu.options.realm.community") + '\000' +
-				 "AQ" + question.replace(" ", "+") + '\000';
-		ServerListMessage o = new ServerListMessage();
-		o.serialize();
-		output += o.output;
+				 "AQ" + question.replace(" ", "+");
 	}
 
 	@Override

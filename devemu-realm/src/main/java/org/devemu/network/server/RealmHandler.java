@@ -8,6 +8,7 @@ import org.devemu.network.event.event.login.ClientLoginEvent;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.MessageFactory;
 import org.devemu.network.server.client.RealmClient;
+import org.devemu.network.server.message.connect.LoginConnectMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +34,11 @@ public class RealmHandler extends IoHandlerAdapter{
 	@Override
 	public void sessionOpened(IoSession session) throws Exception{
 		RealmClient loc1 = (RealmClient)session.getAttribute(this);
-		Message o = this.factory.getMessage(loc1.getState());
-		this.dispatcher.dispatch(new ClientLoginEvent(loc1,o));
+		LoginConnectMessage o = new LoginConnectMessage();
+		o.salt = loc1.getSalt();
+		o.serialize();
+		loc1.setState(State.VERSION);
+		loc1.write(o.output);
 	}
 	
 	@Override
