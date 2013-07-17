@@ -17,8 +17,10 @@ import org.devemu.network.message.MessageFactory;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
 import org.devemu.sql.mapper.AccountMapper;
+import org.devemu.sql.mapper.AlignmentMapper;
 import org.devemu.sql.mapper.MapsMapper;
 import org.devemu.sql.mapper.PlayerMapper;
+import org.devemu.sql.mapper.StatsMapper;
 import org.devemu.utils.Stopwatch;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
@@ -62,6 +64,8 @@ public class Main {
                         addMapperClass(AccountMapper.class);
                         addMapperClass(MapsMapper.class);
                         addMapperClass(PlayerMapper.class);
+                        addMapperClass(StatsMapper.class);
+                        addMapperClass(AlignmentMapper.class);
                         bind(SqlService.class).to(SqlServiceImpl.class);
                         environmentId("development");
                     }

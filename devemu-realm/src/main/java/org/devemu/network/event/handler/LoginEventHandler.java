@@ -33,8 +33,11 @@ public class LoginEventHandler {
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onAccount(RealmClient client, LoginAccountMessage message) {
-		Account account = Main.getSqlService().findAccountByName(message.username);
-
+		Account account = null;
+		
+		if(message.username != "")
+			account = Main.getSqlService().findAccountByName(message.username);
+		
 		if (account != null) {
 			String password = Crypt.cryptAnkama(account.getPassword(), client.getSalt());
 

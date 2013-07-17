@@ -33,8 +33,9 @@ public class LoginAccountMessage extends Message {
 	@Override
 	public void deserialize() {
 		String[] infos = input.split("\n");
-		username = infos[0];
-		passHash = infos[1];
+		if(infos.length == 2) {
+			username = infos[0];
+			passHash = infos[1];
+		}
 	}
-
 }

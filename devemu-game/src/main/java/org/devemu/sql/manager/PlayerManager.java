@@ -18,7 +18,8 @@ public class PlayerManager {
 				+ arg0.getName() + ";"
 				+ arg0.getLevel() + ";"
 				+ (arg0.getGfx() == -1 ? getDefaultGfx(arg0) : arg0.getGfx()) + ";");
-		for(int loc2 : arg0.getColors()) {
+		for(int i = 0; i < 3; i++) {
+			int loc2 = arg0.getColor(i);
 			loc1 += ((loc2 != -1 ? Integer.toHexString(loc2) : "-1") + ";");
 		}
 		loc1 += ((itemToALK(arg0)) + ";"
@@ -44,7 +45,8 @@ public class PlayerManager {
 		loc1.add("" + arg0.getLevel());
 		loc1.add(arg0.isSexe() ? "1" : "0");
 		loc1.add(arg0.getGfx() == -1 ? getDefaultGfx(arg0) : ("" + arg0.getGfx()));
-		for(int loc2 : arg0.getColors()) {
+		for(int i = 0; i < 3; i++) {
+			int loc2 = arg0.getColor(i);
 			loc1.add(loc2 != -1 ? Integer.toHexString(loc2) : "-1");
 		}
 		loc1.add(itemToASK(arg0));
@@ -102,9 +104,9 @@ public class PlayerManager {
 		loc0.add(arg0.isSexe() ? 1 : 0);
 		loc0.add(arg0.getAlign().getOrdre() + "," + "0"+ "," + arg0.getAlign().getGrade() + "," +
 				(arg0.getLevel() + arg0.getGuid()) + "," + (arg0.getAlign().getDeshonor() > 0 ? 1 : 0));
-		loc0.add(arg0.getColors()[0] == -1 ? -1 : Integer.toHexString(arg0.getColors()[0]));
-		loc0.add(arg0.getColors()[1] == -1 ? -1 : Integer.toHexString(arg0.getColors()[1]));
-		loc0.add(arg0.getColors()[2] == -1 ? -1 : Integer.toHexString(arg0.getColors()[2]));
+		loc0.add(arg0.getColor(0) == -1 ? -1 : Integer.toHexString(arg0.getColor(0)));
+		loc0.add(arg0.getColor(1) == -1 ? -1 : Integer.toHexString(arg0.getColor(1)));
+		loc0.add(arg0.getColor(2) == -1 ? -1 : Integer.toHexString(arg0.getColor(2)));
 		loc0.add("");//GMStuff
 		loc0.add(arg0.getLevel() > 99 ? (arg0.getLevel() > 199 ? 2 : 1) : 0);
 		loc0.add("");//Emote

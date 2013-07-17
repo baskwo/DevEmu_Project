@@ -6,13 +6,15 @@ import java.util.Map;
 
 import org.devemu.network.server.client.GameClient;
 
+import com.google.common.collect.Maps;
+
 public class Player implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int guid = 0;
 	private String name = "";
 	private int level = 1;//TODO: Better handler of level and exp?
 	private int gfx = -1;
-	private int[] colors = {-1,-1,-1};
+	private String colors = "-1,-1,-1";
 	//private Map<Byte,Item> items = new HashMap<Byte,Item>();
 	private boolean marchant = false;
 	private boolean dead = false;
@@ -21,13 +23,13 @@ public class Player implements Serializable{
 	private boolean sexe = false;
 	private int gameGuid = 0;
 	private long xp = 0;
-	private Map<Integer,Stats> stats = new HashMap<Integer,Stats>();
+	private Map<Integer,Stats> stats = Maps.newHashMap();
 	private long kamas = 0;
 	private int capitals = 0;
 	private int spellPoints = 0;
 	private int pdv = 0;
 	private int energy = 0;
-	private Alignement align = new Alignement();
+	private Alignment align = new Alignment();
 	private boolean isShowingWings = false;
 	private int mapsId = 0;
 	private GameClient client = null;
@@ -57,14 +59,6 @@ public class Player implements Serializable{
 
 	public void setGfx(int gfx) {
 		this.gfx = gfx;
-	}
-
-	public int[] getColors() {
-		return colors;
-	}
-
-	public void setColors(int[] colors) {
-		this.colors = colors;
 	}
 
 	public int getCountDead() {
@@ -187,11 +181,11 @@ public class Player implements Serializable{
 		this.isShowingWings = isShowingWings;
 	}
 
-	public Alignement getAlign() {
+	public Alignment getAlign() {
 		return align;
 	}
 
-	public void setAlign(Alignement align) {
+	public void setAlign(Alignment align) {
 		this.align = align;
 	}
 
@@ -233,5 +227,17 @@ public class Player implements Serializable{
 
 	public void setSize(int size) {
 		this.size = size;
+	}
+
+	public String getColors() {
+		return colors;
+	}
+
+	public void setColors(String colors) {
+		this.colors = colors;
+	}
+	
+	public int getColor(int index) {
+		return Integer.parseInt(colors.split(",")[index]);
 	}
 }

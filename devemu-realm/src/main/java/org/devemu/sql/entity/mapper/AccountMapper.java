@@ -18,7 +18,8 @@ public interface AccountMapper {
 	
 	@Select(SELECT_BY_ID)
 	@Results(value = {
-			@Result(property = "id", column = "id")
+			@Result(property = "id", column = "id"),
+			@Result(property = "players", column = "id", javaType=ArrayList.class, many=@Many(select = "org.devemu.sql.entity.mapper.PlayerMapper.getPlayersByAccountId"))
 	})
     Account getAccountById(@Param("accId") String accId);
 	

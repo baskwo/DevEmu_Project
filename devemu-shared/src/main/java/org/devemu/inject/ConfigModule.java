@@ -64,11 +64,13 @@ public class ConfigModule extends AbstractModule {
     }
 
     private final TypeListener fieldInjector = new TypeListener() {
-        public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+        @Override
+		public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
             final List<Field> fields = findFields(type);
 
             encounter.register(new MembersInjector<I>() {
-                public void injectMembers(I instance) {
+                @Override
+				public void injectMembers(I instance) {
                     inject(instance, fields);
                 }
             });

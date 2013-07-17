@@ -32,7 +32,8 @@ public final class ThreadedEventDispatcher extends EventDispatcher {
     @Override
     public void dispatch(final Object event) {
         worker.execute(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 for (Object subscriber : subscribers) {
                     strategy.doDispatch(event, subscriber);
                 }
@@ -43,7 +44,8 @@ public final class ThreadedEventDispatcher extends EventDispatcher {
     @Override
     public void subscribe(final Object subscriber) {
         worker.execute(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 subscribers.add(subscriber);
                 strategy.onSubscribed(subscriber);
             }
@@ -53,7 +55,8 @@ public final class ThreadedEventDispatcher extends EventDispatcher {
     @Override
     public void unsubscribe(final Object subscriber) {
         worker.execute(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 subscribers.remove(subscriber);
             }
         });

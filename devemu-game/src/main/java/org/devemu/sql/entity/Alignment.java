@@ -2,21 +2,14 @@ package org.devemu.sql.entity;
 
 import java.io.Serializable;
 
-public class Alignement implements Serializable{
+public class Alignment implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private int id = 0;
 	private byte ordre = 0;
 	private int level = 0;
 	private int honor = 0;
 	private int deshonor = 0;
 	private int grade = 0;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public byte getOrdre() {
 		return ordre;
 	}

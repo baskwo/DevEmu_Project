@@ -1,5 +1,7 @@
 package org.devemu.network.server;
 
+import static com.google.common.base.Throwables.propagate;
+
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.events.EventDispatcher;
@@ -29,11 +31,6 @@ public class RealmHandler extends IoHandlerAdapter{
 	public void sessionCreated(IoSession session) throws Exception{
 		RealmClient loc1 = new RealmClient(session);
 		session.setAttribute(this, loc1);
-	}
-	
-	@Override
-	public void sessionOpened(IoSession session) throws Exception{
-		RealmClient loc1 = (RealmClient)session.getAttribute(this);
 		LoginConnectMessage o = new LoginConnectMessage();
 		o.salt = loc1.getSalt();
 		o.serialize();
@@ -43,17 +40,29 @@ public class RealmHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void sessionClosed(IoSession session) throws Exception{
+		//TODO:Save
 		session.close(true);
 	}
 	
 	@Override
 	public void exceptionCaught(IoSession session,Throwable cause) throws Exception{
-		cause.printStackTrace();
+		boolean isMessageError = false;
+		for(StackTraceElement e : cause.getStackTrace()) {
+			if(e.getMethodName().contains("getMessage")) {
+				isMessageError = true;
+				break;
+			}
+		}
+		if(isMessageError)
+			log.error("Message not found : {}",session.getAttribute("lastMessage"));
+		else
+			throw propagate(cause);
 	}
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception{
 		String loc1 = message.toString();
+		session.setAttribute("lastMessage",loc1.substring(0, 2));
 		if(session.getAttribute(this) instanceof RealmClient) {
 			RealmClient loc2 = (RealmClient)session.getAttribute(this);
 			log.debug("Receiving : {} from : {}",loc1,session.getRemoteAddress().toString());
@@ -62,6 +71,10 @@ public class RealmHandler extends IoHandlerAdapter{
 				o = this.factory.getMessage(loc1.substring(0, 2),loc2.getState());
 			else
 				o = this.factory.getMessage(loc2.getState());
+			if(o == null) {
+				log.debug("Message not found {}",loc1.substring(0,2));
+				return;
+			}
 			o.setInput(loc1);
 			o.deserialize();
 			this.dispatcher.dispatch(new ClientLoginEvent(loc2,o));

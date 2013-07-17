@@ -1,8 +1,9 @@
 package org.devemu.sql.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class Account implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -12,7 +13,7 @@ public class Account implements Serializable{
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
-	private List<Player> players = new ArrayList<>();
+	private List<Player> players = Lists.newArrayList();
 	private long aboTime = 0;
 
 	public int getGuid() {

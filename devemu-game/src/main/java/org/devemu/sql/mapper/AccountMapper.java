@@ -12,12 +12,12 @@ import org.devemu.sql.entity.Account;
 
 @CacheNamespace(implementation=org.mybatis.caches.ehcache.EhcacheCache.class)
 public interface AccountMapper {
-	final String SELECT_BY_ID = "SELECT * FROM accounts WHERE id = #{accId}";
+	final String SELECT_BY_ID = "SELECT * FROM accounts WHERE id = #{id}";
 	
 	@Select(SELECT_BY_ID)
 	@Results({
 		@Result(property = "id", column = "id"),
-        @Result(property = "players", column = "id", javaType=ArrayList.class, many=@Many(select = "org.devemu.sql.entity.mapper.PlayerMapper.getPlayersByAccountId"))
+        @Result(property = "players", column = "id", javaType=ArrayList.class, many=@Many(select = "org.devemu.sql.mapper.PlayerMapper.getPlayersByAccountId"))
     })
-    Account getAccountById(@Param("accId") String accId);
+    Account getAccountById(@Param("id") String id);
 }
