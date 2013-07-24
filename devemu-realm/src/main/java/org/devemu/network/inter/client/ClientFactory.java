@@ -14,11 +14,11 @@ public class ClientFactory {
 	private static Map<Integer,InterClient> clients = new TreeMap<Integer,InterClient>();
 	
 	public static void init() {
-		int loc1 = Integer.parseInt((String)Main.getConfigValue("devemu.options.game.maxServ"));
-		for(int i = 1; i <= loc1; i++) {
-			InterClient loc0 = new InterClient(null);
-			loc0.setGuid(i);
-			clients.put(i,loc0);
+		int size = Integer.parseInt((String)Main.getConfigValue("devemu.options.game.maxServ"));
+		for(int i = 1; i <= size; i++) {
+			InterClient client = new InterClient(null);
+			client.setGuid(i);
+			clients.put(i,client);
 		}
 	}
 	

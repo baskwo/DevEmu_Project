@@ -5,7 +5,7 @@ import org.devemu.network.client.ServerClient;
 
 public class InterClient extends ServerClient{
 	
-	public InterClient(IoSession arg0) {
-		super(arg0);
+	public InterClient(IoSession session) {
+		super(session);
 	}
 }

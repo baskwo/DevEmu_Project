@@ -11,10 +11,9 @@ public class RealmClient extends SimpleClient{
 	private State state = State.CONNECT;
 	private Account acc = null;
 	private int queue = 0;
-	private int queueCur = 0;
 	
-	public RealmClient(IoSession arg1) {
-		super(arg1);
+	public RealmClient(IoSession session) {
+		super(session);
 		salt = Crypt.randomString(32);
 		getHash().setId(1);
 	}
@@ -53,13 +52,5 @@ public class RealmClient extends SimpleClient{
 
 	public void setQueue(int queue) {
 		this.queue = queue;
-	}
-
-	public int getQueueCur() {
-		return queueCur;
-	}
-
-	public void setQueueCur(int queueCur) {
-		this.queueCur = queueCur;
 	}
 }

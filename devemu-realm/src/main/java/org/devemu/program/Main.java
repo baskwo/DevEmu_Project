@@ -63,7 +63,10 @@ public class Main {
                 }
         );
         
-        new QueueManager(getInstanceFromInjector(EventDispatcher.class), getInstanceFromInjector(MessageFactory.class)).start();
+        QueueManager queue = new QueueManager();
+        inject.injectMembers(queue);
+        queue.start();
+        
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
         ClientFactory.init();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

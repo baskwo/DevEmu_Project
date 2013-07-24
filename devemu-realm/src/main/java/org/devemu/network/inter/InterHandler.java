@@ -1,7 +1,5 @@
 package org.devemu.network.inter;
 
-import static com.google.common.base.Throwables.propagate;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
@@ -11,6 +9,7 @@ import org.devemu.network.inter.client.ClientFactory;
 import org.devemu.network.inter.client.InterClient;
 import org.devemu.network.message.InterMessage;
 import org.devemu.network.message.InterMessageFactory;
+import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.program.Main;
 import org.devemu.utils.enums.ServerState;
 import org.slf4j.Logger;
@@ -31,7 +30,6 @@ public class InterHandler extends IoHandlerAdapter{
 		if(message instanceof IoBuffer) {
 			IoBuffer o = (IoBuffer)message;
 			int id = o.get();
-			session.setAttribute("lastMessage",id);
 			int serv = o.get();
 			Main.log("Receiving : " + id + " from : " + session.getRemoteAddress(), InterHandler.class);
 			InterClient server = ClientFactory.get(serv);
@@ -52,10 +50,10 @@ public class InterHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception{
-		IoBuffer loc1 = (IoBuffer) message;
-		int loc2 = loc1.get();
+		IoBuffer buff = (IoBuffer) message;
+		int id = buff.get();
 		
-		Main.log("Sending : " + loc2 + " to : " + session.getRemoteAddress(), InterHandler.class);
+		Main.log("Sending : " + id + " to : " + session.getRemoteAddress(), InterHandler.class);
 	}
 	
 	@Override
@@ -72,16 +70,10 @@ public class InterHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void exceptionCaught(IoSession session,Throwable cause) throws Exception {
-		boolean isMessageError = false;
-		for(StackTraceElement e : cause.getStackTrace()) {
-			if(e.getMethodName().contains("getMessage")) {
-				isMessageError = true;
-				break;
-			}
+		if(cause.getCause() instanceof MessageNotFoundException) {
+			log.error("Message not found : {}", cause.getMessage());
+		}else if(Main.getConfigValue("devemu.options.other.debug").equals("true")){
+			cause.printStackTrace();
 		}
-		if(isMessageError)
-			log.error("Message not found : {}",session.getAttribute("lastMessage"));
-		else
-			throw propagate(cause);
 	}
 }

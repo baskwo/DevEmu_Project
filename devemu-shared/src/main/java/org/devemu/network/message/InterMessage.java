@@ -37,12 +37,12 @@ public abstract class InterMessage {
 	}
 	
 	public String readString() {
-		String loc1 = "";
+		String out = "";
 		try {
-			loc1 = in.getPrefixedString(Charset.forName("ISO-8859-1").newDecoder());
+			out = in.getPrefixedString(Charset.forName("ISO-8859-1").newDecoder());
 		} catch (CharacterCodingException e) {
 			e.printStackTrace();
 		}
-		return loc1;
+		return out;
 	}
 }

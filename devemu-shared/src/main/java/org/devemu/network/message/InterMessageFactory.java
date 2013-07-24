@@ -14,6 +14,9 @@ private final HashMap<String, Class<? extends InterMessage>> cache = Maps.newHas
 	}
 	
 	public InterMessage getMessage(String id) {
+		if(!cache.containsKey(id)) {
+			throw propagate(new MessageNotFoundException("ID : " + id));
+		}
 		InterMessage o;
 		try {
 			o = cache.get(id).newInstance();

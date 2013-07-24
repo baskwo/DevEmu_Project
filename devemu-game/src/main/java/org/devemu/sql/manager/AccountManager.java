@@ -1,21 +1,30 @@
 package org.devemu.sql.manager;
 
 import org.devemu.sql.entity.Account;
+import org.devemu.sql.entity.Player;
 
 public class AccountManager {
-	public static long getAboTime(Account arg0) {
-		if(arg0.getAboTime() == 0)
+	public static long getAboTime(Account acc) {
+		if(acc.getAboTime() == 0)
 			return 0;
-		return (arg0.getAboTime() - System.currentTimeMillis());
+		return (acc.getAboTime() - System.currentTimeMillis());
 	}
 	
-	public static void removePlayer(Account arg1,int arg2) {
-		if(arg1.getPlayers().contains(arg2)) {
-			for(int i = 0; i < arg1.getPlayers().size(); i++) {
-				if(arg1.getPlayers().get(i).getGuid() == arg2) {
-					arg1.getPlayers().remove(i);
+	public static void removePlayer(Account acc,int pId) {
+		if(acc.getPlayers().contains(pId)) {
+			for(int i = 0; i < acc.getPlayers().size(); i++) {
+				if(acc.getPlayers().get(i).getGuid() == pId) {
+					acc.getPlayers().remove(i);
 				}
 			}
 		}
+	}
+	
+	public static Player getPlayer(int pId, Account acc) {
+		for(Player p : acc.getPlayers()) {
+			if(p.getGuid() == pId)
+				return p;
+		}
+		return null;
 	}
 }

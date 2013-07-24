@@ -18,31 +18,29 @@ import com.google.inject.Inject;
 public class QueueManager extends AbstractScheduledService{
 	private static final Logger log = LoggerFactory.getLogger(QueueManager.class);
 	
-	private EventDispatcher dispatcher;
-	private MessageFactory factory;
-	
 	@Inject
-	public QueueManager(EventDispatcher dispatcher,MessageFactory factory) {
-		this.dispatcher = dispatcher;
-		this.factory = factory;
-	}
+	private EventDispatcher dispatcher;
+	@Inject
+	private MessageFactory factory;
 	
 	@Override
 	public void startUp() {
+		log.debug("QueueManager starUp");
 	}
 
 	@Override
 	public void shutDown() {
+		log.debug("QueueManager shutdown");
 	}
 
 	@Override
 	protected void runOneIteration() throws Exception {
 		try {
-			RealmClient loc0 = QueueSelector.getFirst();
-			if(loc0 != null) {
-				boolean loc1 = AccountManager.getAboTime(loc0.getAcc()) > 0;
-				QueueSelector.removeFromQueue(loc0.getQueue(),loc1);
-				dispatcher.dispatch(new ClientLoginEvent(loc0,factory.getMessage("Al", loc0.getState())));
+			RealmClient client = QueueSelector.getFirst();
+			if(client != null) {
+				boolean isSubscribe = AccountManager.getAboTime(client.getAcc()) > 0;
+				QueueSelector.removeFromQueue(client.getQueue(),isSubscribe);
+				dispatcher.dispatch(new ClientLoginEvent(client,factory.getMessage("Al", client.getState())));
 			}
 		}catch(Exception e) {
 			throw propagate(e);

@@ -4,8 +4,8 @@ import org.devemu.sql.entity.Maps;
 import org.devemu.sql.entity.Player;
 
 public class MapsManager {
-	public static void removeMarchantOnMaps(Maps arg0, Player arg1) {
-		arg0.getMarchantsOnMaps().remove((Object)arg1);
+	public static void removeMarchantOnMaps(Maps map, Player p) {
+		map.getMarchantsOnMaps().remove((Object)p);
 		/*Packet loc1 = new Packet();
 		loc1.setIdentificator("GD");
 		loc1.getParam().add("-" + arg1);
@@ -14,8 +14,8 @@ public class MapsManager {
 			loc2.write(loc1.toString());*/
 	}
 	
-	public static void addPlayerOnMaps(Maps arg0, Player arg1) {
-		arg0.getPlayersOnMaps().add(arg1);
+	public static void addPlayerOnMaps(Maps map, Player p) {
+		map.getPlayersOnMaps().add(p);
 		/*Packet loc1 = new Packet();
 		loc1.setIdentificator("GM");
 		loc1.getParam().add("+" + PlayerManager.getGMData(arg1));

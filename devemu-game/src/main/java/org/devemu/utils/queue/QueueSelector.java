@@ -2,74 +2,88 @@ package org.devemu.utils.queue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.sql.manager.AccountManager;
 
+import com.google.common.collect.Maps;
+
 public class QueueSelector {
-	private static  int nextAbo = 0;
-	private static  int next = 0;
-	private static  List<GameClient> queue = new ArrayList<GameClient>();
-	private static  List<GameClient> queueAbo = new ArrayList<GameClient>();//Haha, fuck noSubscribe
+	private static Map<State,QueueSelector> selectors = Maps.newHashMap();
 	
-	public static  synchronized void addToQueue(GameClient arg0) {
-		if(AccountManager.getAboTime(arg0.getAcc()) > 0) {
-			queueAbo.add(arg0);
-			arg0.setQueue(nextAbo);
+	private int nextAbo = 0;
+	private int next = 0;
+	private List<GameClient> queue = new ArrayList<GameClient>();
+	private List<GameClient> queueAbo = new ArrayList<GameClient>();//Haha, fuck noSubscribe
+	
+	public static void init() {
+		selectors.put(State.TRANSFERT, new QueueSelector());
+		selectors.put(State.SELECTING, new QueueSelector());
+	}
+	
+	public static QueueSelector getSelector(State state) {
+		return selectors.get(state);
+	}
+	
+	public synchronized void addToQueue(GameClient client) {
+		if(AccountManager.getAboTime(client.getAcc()) > 0) {
+			queueAbo.add(client);
+			client.setQueue(nextAbo);
 			nextAbo++;
 		}
 		else {
-			queue.add(arg0);
-			arg0.setQueue(next);
+			queue.add(client);
+			client.setQueue(next);
 			next++;
 		}
-		arg0.setQueueCur(next+nextAbo);
 	}
 	
-	public static  synchronized void removeFromQueue(int arg0,boolean arg1) {
-		if(arg1) {
-			queueAbo.remove(arg0);
+	public synchronized void removeFromQueue(int index,boolean isSubscribe) {
+		if(isSubscribe) {
+			queueAbo.remove(index);
 			nextAbo--;
-			for(GameClient loc1 : queueAbo) {
-				if(loc1.getQueue() < arg0)
+			for(GameClient client : queueAbo) {
+				if(client.getQueue() < index)
 					continue;
-				else if(loc1.getQueue() == arg0)
-					loc1.setQueue(0);
+				else if(client.getQueue() == index)
+					client.setQueue(0);
 				else {
-					int loc2 = loc1.getQueue();
-					loc1.setQueue(loc2--);
+					int pos = client.getQueue();
+					client.setQueue(pos--);
 				}
 			}
 		}else{
-			queue.remove(arg0);
+			queue.remove(index);
 			next--;
-			for(GameClient loc1 : queue) {
-				if(loc1.getQueue() < arg0)
+			for(GameClient client : queue) {
+				if(client.getQueue() < index)
 					continue;
-				else if(loc1.getQueue() == arg0)
-					loc1.setQueue(0);
+				else if(client.getQueue() == index)
+					client.setQueue(0);
 				else {
-					int loc2 = loc1.getQueue();
-					loc1.setQueue(loc2--);
+					int pos = client.getQueue();
+					client.setQueue(pos--);
 				}
 			}
 		}
 	}
 	
-	public static  GameClient getFirst() {
-		GameClient loc0 = null;
+	public GameClient getFirst() {
+		GameClient client = null;
 		if(!queueAbo.isEmpty())
-			loc0 = queueAbo.get(0);
+			client = queueAbo.get(0);
 		else if(!queue.isEmpty())
-			loc0 = queue.get(0);
-		return loc0;
+			client = queue.get(0);
+		return client;
 	}
 	
-	public static  int getTotAbo() {
+	public int getTotAbo() {
 		return queueAbo.size();
 	}
 
-	public static  int getTotNonAbo() {
+	public int getTotNonAbo() {
 		return queue.size();
 	}
 }

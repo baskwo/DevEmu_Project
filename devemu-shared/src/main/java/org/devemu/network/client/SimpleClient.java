@@ -6,8 +6,8 @@ import org.devemu.network.CryptKey;
 public class SimpleClient extends BaseClient {
 	private CryptKey hash = new CryptKey();
 	
-	public SimpleClient(IoSession arg1) {
-		super(arg1);
+	public SimpleClient(IoSession session) {
+		super(session);
 	}
 
 	public CryptKey getHash() {

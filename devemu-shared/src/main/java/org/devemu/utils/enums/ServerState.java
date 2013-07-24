@@ -7,18 +7,18 @@ public enum ServerState {
 	
 	private final byte state;
 	
-	private ServerState(byte arg0) {
-		state = arg0;
+	private ServerState(byte state) {
+		this.state = state;
 	}
 	
 	public byte getState() {
 		return this.state;
 	}
 	
-	public static ServerState get(int arg0) {
-		if(arg0 == 1)
+	public static ServerState get(int state) {
+		if(state == 1)
 			return ONLINE;
-        else if(arg0 == 2)
+        else if(state == 2)
         	return SAVING;
         else
         	return OFFLINE;

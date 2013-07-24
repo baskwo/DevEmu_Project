@@ -13,8 +13,8 @@ public class InterClient extends ServerClient{
 	private int port = 0;
 	private boolean allowNoSubscribe = true;
 	
-	public InterClient(IoSession arg0) {
-		super(arg0);
+	public InterClient(IoSession session) {
+		super(session);
 	}
 	
 	public int getGuid() {

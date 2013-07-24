@@ -16,57 +16,56 @@ public class QueueSelector {
 		return queue;
 	}
 	
-	public static synchronized void addToQueue(RealmClient arg0) {
-		if(AccountManager.getAboTime(arg0.getAcc()) > 0) {
-			queueAbo.add(arg0);
-			arg0.setQueue(nextAbo);
+	public static synchronized void addToQueue(RealmClient client) {
+		if(AccountManager.getAboTime(client.getAcc()) > 0) {
+			queueAbo.add(client);
+			client.setQueue(nextAbo);
 			nextAbo++;
 		}
 		else {
-			queue.add(arg0);
-			arg0.setQueue(next);
+			queue.add(client);
+			client.setQueue(next);
 			next++;
 		}
-		arg0.setQueueCur(next+nextAbo);
 	}
 	
-	public static synchronized void removeFromQueue(int arg0,boolean arg1) {
-		if(arg1) {
-			queueAbo.remove(arg0);
+	public static synchronized void removeFromQueue(int index,boolean isSubscribe) {
+		if(isSubscribe) {
+			queueAbo.remove(index);
 			nextAbo--;
-			for(RealmClient loc1 : queueAbo) {
-				if(loc1.getQueue() < arg0)
+			for(RealmClient client : queueAbo) {
+				if(client.getQueue() < index)
 					continue;
-				else if(loc1.getQueue() == arg0)
-					loc1.setQueue(0);
+				else if(client.getQueue() == index)
+					client.setQueue(0);
 				else {
-					int loc2 = loc1.getQueue();
-					loc1.setQueue(loc2--);
+					int pos = client.getQueue();
+					client.setQueue(pos--);
 				}
 			}
 		}else{
-			queue.remove(arg0);
+			queue.remove(index);
 			next--;
-			for(RealmClient loc1 : queue) {
-				if(loc1.getQueue() < arg0)
+			for(RealmClient client : queue) {
+				if(client.getQueue() < index)
 					continue;
-				else if(loc1.getQueue() == arg0)
-					loc1.setQueue(0);
+				else if(client.getQueue() == index)
+					client.setQueue(0);
 				else {
-					int loc2 = loc1.getQueue();
-					loc1.setQueue(loc2--);
+					int pos = client.getQueue();
+					client.setQueue(pos--);
 				}
 			}
 		}
 	}
 	
 	public static RealmClient getFirst() {
-		RealmClient loc0 = null;
+		RealmClient client = null;
 		if(!queueAbo.isEmpty())
-			loc0 = queueAbo.get(0);
+			client = queueAbo.get(0);
 		else if(!queue.isEmpty())
-			loc0 = queue.get(0);
-		return loc0;
+			client = queue.get(0);
+		return client;
 	}
 	
 	public static int getTotAbo() {

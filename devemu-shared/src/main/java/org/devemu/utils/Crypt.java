@@ -7,39 +7,39 @@ public class Crypt {
                            't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                            'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','-','_'};
 	
-	public static String randomString(int arg0) {
-		StringBuilder loc1 = new StringBuilder();
-		ThreadLocalRandom loc2 = ThreadLocalRandom.current();
-		for(int i = 0; i < arg0; i++) {
-			loc1.append(alpha[loc2.nextInt(alpha.length)]);
+	public static String randomString(int size) {
+		StringBuilder builder = new StringBuilder();
+		ThreadLocalRandom rand = ThreadLocalRandom.current();
+		for(int i = 0; i < size; i++) {
+			builder.append(alpha[rand.nextInt(alpha.length)]);
 		}
-		return loc1.toString();
+		return builder.toString();
 	}
 	
-	public static String randomIntHexString(int arg0) {
-		StringBuilder loc1 = new StringBuilder();
-		ThreadLocalRandom loc2 = ThreadLocalRandom.current();
-		for(int i = 0; i < arg0; i++) {
-			String loc3 = "" + loc2.nextInt(10) + loc2.nextInt(10);
-			loc1.append(loc3);
+	public static String randomIntHexString(int size) {
+		StringBuilder builder = new StringBuilder();
+		ThreadLocalRandom rand = ThreadLocalRandom.current();
+		for(int i = 0; i < size; i++) {
+			String hex = "" + rand.nextInt(10) + rand.nextInt(10);
+			builder.append(hex);
 		}
-		return loc1.toString();
+		return builder.toString();
 	}
 	
-	public static String cryptAnkama(String arg0, String arg1) {
-		String loc1 = "#1";
-		char loc2;
-		char loc3;
-		int loc4 = 0;
-		int loc5 = 0;
-		for(int i = 0; i < arg0.length(); i++) {
-			loc2 = arg0.charAt(i);
-			loc3 = arg1.charAt(i);
-			loc4 = loc2 / 16;
-			loc5 = loc2 % 16;
-			loc1 += alpha[(loc4 + loc3) % alpha.length];
-			loc1 += alpha[(loc5 + loc3) % alpha.length];
+	public static String cryptAnkama(String pass, String salt) {
+		String out = "#1";
+		char passC;
+		char saltC;
+		int n = 0;
+		int m = 0;
+		for(int i = 0; i < pass.length(); i++) {
+			passC = pass.charAt(i);
+			saltC = salt.charAt(i);
+			n = passC / 16;
+			m = passC % 16;
+			out += alpha[(n + saltC) % alpha.length];
+			out += alpha[(m + saltC) % alpha.length];
 		}
-		return loc1;
+		return out;
 	}
 }

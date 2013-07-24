@@ -9,18 +9,18 @@ public enum ServerPop {
 
     private final byte population;
 
-    private ServerPop(byte arg0) {
-        population = arg0;
+    private ServerPop(byte pop) {
+        population = pop;
     }
 
-    public static ServerPop get(int arg0) {
-        if (arg0 == 1)
+    public static ServerPop get(int pop) {
+        if (pop == 1)
             return AVERAGE;
-        else if (arg0 == 2)
+        else if (pop == 2)
             return HIGH;
-        else if (arg0 == 3)
+        else if (pop == 3)
             return LOW;
-        else if (arg0 == 4)
+        else if (pop == 4)
             return FULL;
         return RECOMMENDED;
     }

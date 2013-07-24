@@ -1,13 +1,12 @@
 package org.devemu.network.server;
 
-import static com.google.common.base.Throwables.propagate;
-
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.events.EventDispatcher;
 import org.devemu.network.event.event.game.GameClientEvent;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.MessageFactory;
+import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.network.server.message.connect.ClientConnectMessage;
 import org.devemu.program.Main;
@@ -25,8 +24,8 @@ public class GameHandler extends IoHandlerAdapter{
 	}
 	
 	public void sessionCreated(IoSession session) throws Exception{
-		GameClient loc1 = new GameClient(session);
-		session.setAttribute("client", loc1);
+		GameClient client = new GameClient(session);
+		session.setAttribute("client", client);
 		
 		ClientConnectMessage o = new ClientConnectMessage();
 		o.serialize();
@@ -40,38 +39,31 @@ public class GameHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void exceptionCaught(IoSession session,Throwable cause) throws Exception{
-		boolean isMessageError = false;
-		for(StackTraceElement e : cause.getStackTrace()) {
-			if(e.getMethodName().contains("getMessage")) {
-				isMessageError = true;
-				break;
-			}
+		if(cause.getCause() instanceof MessageNotFoundException) {
+			log.error("Message not found : {}", cause.getMessage());
+		}else if(Main.getConfigValue("devemu.options.other.debug").equals("true")){
+			cause.printStackTrace();
 		}
-		if(isMessageError)
-			log.error("Message not found : {}",session.getAttribute("lastMessage"));
-		else
-			throw propagate(cause);
 	}
 	
 	public void messageReceived(IoSession session, Object message) throws Exception{
-		String loc1 = message.toString();
-		session.setAttribute("lastMessage",loc1.substring(0, 2));
+		String in = message.toString();
 		if(session.getAttribute("client") instanceof GameClient) {
-			GameClient loc2 = (GameClient)session.getAttribute("client");
-			Main.log("Receiving : " + loc1 + " from : " + session.getRemoteAddress().toString(), GameHandler.class);
-			Message o = factory.getMessage(loc1.substring(0, 2));
+			GameClient client = (GameClient)session.getAttribute("client");
+			Main.log("Receiving : " + in + " from : " + session.getRemoteAddress().toString(), GameHandler.class);
+			Message o = factory.getMessage(in.substring(0, 2));
 			if(o == null) {
-				log.debug("Message not found {}",loc1.substring(0,2));
+				log.debug("Message not found {}",in.substring(0,2));
 				return;
 			}
-			o.setInput(loc1);
+			o.setInput(in);
 			o.deserialize();
-			dispatcher.dispatch(new GameClientEvent(loc2,o));
+			dispatcher.dispatch(new GameClientEvent(client,o));
 		}
 	}
 	
 	public void messageSent(IoSession session, Object message) throws Exception{
-		String loc1 = message.toString();
-		Main.log("Sending : " + loc1 + " to : " + session.getRemoteAddress().toString(), GameHandler.class);
+		String out = message.toString();
+		Main.log("Sending : " + out + " to : " + session.getRemoteAddress().toString(), GameHandler.class);
 	}
 }

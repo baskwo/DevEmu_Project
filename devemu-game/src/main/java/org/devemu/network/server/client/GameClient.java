@@ -10,11 +10,11 @@ public class GameClient extends SimpleClient {
 	private Account acc;
 	private Player player;
 	private int queue = 0;
-	private int queueCur = 0;
 	private String identification = "";
+	private State state = State.TRANSFERT;
 	
-	public GameClient(IoSession arg1) {
-		super(arg1);
+	public GameClient(IoSession session) {
+		super(session);
 		getHash().setId(2);
 	}
 	
@@ -38,14 +38,6 @@ public class GameClient extends SimpleClient {
 		this.queue = queue;
 	}
 
-	public int getQueueCur() {
-		return queueCur;
-	}
-
-	public void setQueueCur(int queueCur) {
-		this.queueCur = queueCur;
-	}
-
 	public Player getPlayer() {
 		return player;
 	}
@@ -60,5 +52,13 @@ public class GameClient extends SimpleClient {
 
 	public void setIdentification(String identification) {
 		this.identification = identification;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 }

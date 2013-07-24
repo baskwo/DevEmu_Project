@@ -56,14 +56,14 @@ public class LoginEventHandler {
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onQueue(RealmClient client, QueueMessage message) {
-		message.currentPos = client.getQueueCur();
+		message.currentPos = client.getQueue();
 		message.subscriber = AccountManager.getAboTime(client.getAcc()) > 0 ? true : false;
 		message.serialize();
 		client.write(message.output);
 	}
 	
 	@Subscribe(ClientLoginEvent.class)
-	public void onStat(RealmClient client, AccountInfoMessage message) {
+	public void onInfo(RealmClient client, AccountInfoMessage message) {
 		message.isAdmin = client.getAcc().isAdmin();
 		message.pseudo = client.getAcc().getPseudo();
 		message.question = client.getAcc().getQuestion();
@@ -78,11 +78,11 @@ public class LoginEventHandler {
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onServerList(RealmClient client, ServerPersoListMessage message) {
-		Multiset<Integer> loc3 = TreeMultiset.create();
-		for(Player loc4 : client.getAcc().getPlayers()) {
-			loc3.add(loc4.getGameGuid());
+		Multiset<Integer> set = TreeMultiset.create();
+		for(Player p : client.getAcc().getPlayers()) {
+			set.add(p.getGameGuid());
 		}
-		message.list = loc3;
+		message.list = set;
 		message.aboTime = AccountManager.getAboTime(client.getAcc());
 		message.serialize();
 		client.write(message.output);

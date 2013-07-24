@@ -8,13 +8,15 @@ public abstract class BaseClient {
 		VERSION,
 		ACCOUNT,
 		SERVER,
+		TRANSFERT,
+		SELECTING,
 		NULL
 	}
 	
 	private IoSession session;
 	
-	public BaseClient(IoSession arg0) {
-		session = arg0;
+	public BaseClient(IoSession session) {
+		session = session;
 	}
 	
 	public void write(Object arg1) {

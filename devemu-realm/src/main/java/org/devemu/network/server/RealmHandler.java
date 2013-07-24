@@ -1,7 +1,5 @@
 package org.devemu.network.server;
 
-import static com.google.common.base.Throwables.propagate;
-
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.devemu.events.EventDispatcher;
@@ -9,8 +7,10 @@ import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.event.event.login.ClientLoginEvent;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.MessageFactory;
+import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.RealmClient;
 import org.devemu.network.server.message.connect.LoginConnectMessage;
+import org.devemu.program.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +29,13 @@ public class RealmHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception{
-		RealmClient loc1 = new RealmClient(session);
-		session.setAttribute(this, loc1);
+		RealmClient client = new RealmClient(session);
+		session.setAttribute(this, client);
 		LoginConnectMessage o = new LoginConnectMessage();
-		o.salt = loc1.getSalt();
+		o.salt = client.getSalt();
 		o.serialize();
-		loc1.setState(State.VERSION);
-		loc1.write(o.output);
+		client.setState(State.VERSION);
+		client.write(o.output);
 	}
 	
 	@Override
@@ -46,44 +46,33 @@ public class RealmHandler extends IoHandlerAdapter{
 	
 	@Override
 	public void exceptionCaught(IoSession session,Throwable cause) throws Exception{
-		boolean isMessageError = false;
-		for(StackTraceElement e : cause.getStackTrace()) {
-			if(e.getMethodName().contains("getMessage")) {
-				isMessageError = true;
-				break;
-			}
+		if(cause.getCause() instanceof MessageNotFoundException) {
+			log.error("Message not found : {}", cause.getMessage());
+		}else if(Main.getConfigValue("devemu.options.other.debug").equals("true")){
+			cause.printStackTrace();
 		}
-		if(isMessageError)
-			log.error("Message not found : {}",session.getAttribute("lastMessage"));
-		else
-			throw propagate(cause);
 	}
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception{
-		String loc1 = message.toString();
-		session.setAttribute("lastMessage",loc1.substring(0, 2));
+		String in = message.toString();
 		if(session.getAttribute(this) instanceof RealmClient) {
-			RealmClient loc2 = (RealmClient)session.getAttribute(this);
-			log.debug("Receiving : {} from : {}",loc1,session.getRemoteAddress().toString());
+			RealmClient client = (RealmClient)session.getAttribute(this);
+			log.debug("Receiving : {} from : {}",in,session.getRemoteAddress().toString());
 			Message o;
-			if(loc2.getState() == State.SERVER)
-				o = this.factory.getMessage(loc1.substring(0, 2),loc2.getState());
+			if(client.getState() == State.SERVER)
+				o = this.factory.getMessage(in.substring(0, 2),client.getState());
 			else
-				o = this.factory.getMessage(loc2.getState());
-			if(o == null) {
-				log.debug("Message not found {}",loc1.substring(0,2));
-				return;
-			}
-			o.setInput(loc1);
+				o = this.factory.getMessage(client.getState());
+			o.setInput(in);
 			o.deserialize();
-			this.dispatcher.dispatch(new ClientLoginEvent(loc2,o));
+			this.dispatcher.dispatch(new ClientLoginEvent(client,o));
 		}
 	}
 	
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception{
-		String loc1 = message.toString();
-		log.debug("Sending : {} to : {}",loc1,session.getRemoteAddress().toString());
+		String out = message.toString();
+		log.debug("Sending : {} to : {}",out,session.getRemoteAddress().toString());
 	}
 }

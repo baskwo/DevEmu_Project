@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import org.devemu.events.InvokerInterface;
 import org.devemu.events.ReflectEventDispatcherStrategy;
 import org.devemu.network.event.event.game.GameClientEvent;
+import org.devemu.network.event.event.game.GameClientReuseEvent;
 import org.devemu.network.event.event.inter.InterClientEvent;
 
 /**
@@ -15,7 +16,7 @@ public class GameEventDispatcherStrategy extends
 	
 	@Override
     protected InvokerInterface buildInvoker(Class<?> target, Method method) {
-        if (GameClientEvent.class.equals(target))
+        if (GameClientEvent.class.equals(target) || GameClientReuseEvent.class.equals(target))
             return new GameEventInvoker(method);
         else if(InterClientEvent.class.equals(target))
         	return new InterEventInvoker(method);

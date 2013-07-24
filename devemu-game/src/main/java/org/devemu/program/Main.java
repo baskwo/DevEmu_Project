@@ -3,7 +3,6 @@ package org.devemu.program;
 import java.io.File;
 
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.devemu.events.EventDispatcher;
 import org.devemu.events.SimpleEventDispatcher;
 import org.devemu.inject.ConfigModule;
 import org.devemu.inject.DispatcherModule;
@@ -75,7 +74,9 @@ public class Main {
 
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
         
-        new QueueManager(getInstanceFromInjector(EventDispatcher.class), getInstanceFromInjector(MessageFactory.class)).start();
+        QueueManager queue = new QueueManager();
+        inject.injectMembers(queue);
+        queue.start();
         
         setGuid(config.getInt("devemu.options.game.guid"));
         setAllowNoSubscribe(config.getBoolean("devemu.options.game.allowNoSubscribe"));

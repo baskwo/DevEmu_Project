@@ -4,9 +4,9 @@ import org.devemu.sql.entity.Account;
 
 public class AccountManager {
 	
-	public static long getAboTime(Account arg0) {
-		if(arg0.getAboTime() == 0)
+	public static long getAboTime(Account acc) {
+		if(acc.getAboTime() == 0)
 			return 0;
-		return (arg0.getAboTime() - System.currentTimeMillis());
+		return (acc.getAboTime() - System.currentTimeMillis());
 	}
 }

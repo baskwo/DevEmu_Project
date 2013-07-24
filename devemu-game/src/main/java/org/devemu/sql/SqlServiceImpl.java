@@ -23,7 +23,8 @@ public class SqlServiceImpl implements SqlService{
 
 	@Transactional
 	public Account findAccountById(String accId) {
-		return this.accMapper.getAccountById(accId);
+		Account acc = this.accMapper.getAccountById(accId);
+		return acc;
 	}
 
 	@Transactional

@@ -4,7 +4,7 @@ import org.apache.mina.core.session.IoSession;
 
 public class ServerClient extends BaseClient {
 
-	public ServerClient(IoSession arg0) {
-		super(arg0);
+	public ServerClient(IoSession session) {
+		super(session);
 	}
 }

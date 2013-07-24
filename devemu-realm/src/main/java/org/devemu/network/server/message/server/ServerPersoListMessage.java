@@ -13,9 +13,9 @@ public class ServerPersoListMessage extends Message {
 
 	@Override
 	public void serialize() {
-		output = "AxK" + aboTime + "|";
+		output = "AxK" + aboTime;
 		for(Multiset.Entry<Integer> loc7 : list.entrySet()) {
-			output += (loc7.getElement() + "," + loc7.getCount() + "|");
+			output += "|" + (loc7.getElement() + "," + loc7.getCount());
 		}
 	}
 

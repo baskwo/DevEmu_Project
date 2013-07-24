@@ -26,6 +26,9 @@ public interface PlayerMapper {
 
 	
 	@Select(SELECT_BY_ID)
+	@Results({
+		@Result(property = "guid", column = "guid")
+	})
     Player getPlayerById(@Param("guid") String playerId);
 	
 	@Delete(DELETE_BY_ID)
@@ -40,6 +43,7 @@ public interface PlayerMapper {
 	
 	@Select(SELECT_BY_ACCOUNT_ID)
 	@Results({
+		@Result(property = "guid", column = "guid"),
         @Result(property = "stats", column = "guid", javaType=HashMap.class, many=@Many(select = "org.devemu.sql.mapper.StatsMapper.getStatsByPlayerId")),
         @Result(property = "align", column = "guid", javaType=Alignment.class, one=@One(select = "org.devemu.sql.mapper.AlignmentMapper.getAlignmentByPlayerId")),
     })

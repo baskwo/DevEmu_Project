@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import org.devemu.events.InvokerInterface;
 import org.devemu.network.client.BaseClient;
 import org.devemu.network.event.event.game.GameClientEvent;
+import org.devemu.network.event.event.game.GameClientReuseEvent;
+import org.devemu.network.event.event.game.GameEvent;
 import org.devemu.network.message.Message;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -34,9 +36,13 @@ public class GameEventInvoker implements InvokerInterface {
 
 	@Override
 	public Object invoke(Object o, Object subscriber) {
-		checkArgument(o instanceof GameClientEvent, "event is not a ClientLoginEvent");
+		checkArgument(o instanceof GameClientEvent || o instanceof GameClientReuseEvent, "event is not a GameLoginEvent");
 
-		GameClientEvent event = (GameClientEvent) o;
+		GameEvent event = null;
+		if(o instanceof GameClientEvent)
+			event = (GameClientEvent)o;
+		else if(o instanceof GameClientReuseEvent)
+			event = (GameClientReuseEvent)o;
 
         if (!messageClass.isAssignableFrom(event.getMessage().getClass())) {
             return null;

@@ -15,6 +15,9 @@ public class MessageFactory {
 	}
 	
 	public Message getMessage(State state) {
+		if(!cache.contains("", state)) {
+			throw propagate(new MessageNotFoundException("ID : , State : "+state.name()));
+		}
 		Message o;
 		try {
 			o = cache.get("", state).newInstance();
@@ -25,6 +28,9 @@ public class MessageFactory {
 	}
 	
 	public Message getMessage(String id) {
+		if(!cache.contains(id, State.NULL)) {
+			throw propagate(new MessageNotFoundException("ID : " + id + ", State : null"));
+		}
 		Message o;
 		try {
 			o = cache.get(id, State.NULL).newInstance();
@@ -34,7 +40,10 @@ public class MessageFactory {
 		return o;
 	}
 	
-	public Message getMessage(String id,State state) {
+	public Message getMessage(String id,State state) throws MessageNotFoundException {
+		if(!cache.contains(id, state)) {
+			throw propagate(new MessageNotFoundException("ID : " + id + ", State : " + state.name()));
+		}
 		Message o;
 		try {
 			o = cache.get(id, state).newInstance();
