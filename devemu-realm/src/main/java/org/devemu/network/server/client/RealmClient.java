@@ -18,6 +18,11 @@ public class RealmClient extends SimpleClient{
 		getHash().setId(1);
 	}
 	
+	public RealmClient() {
+		salt = Crypt.randomString(32);
+		getHash().setId(1);
+	}
+	
 	public boolean isCrypt() {
 		return getHash().getHash().length() > 0 ? true : false;
 	}

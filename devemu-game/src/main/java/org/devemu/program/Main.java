@@ -9,10 +9,12 @@ import org.devemu.inject.DispatcherModule;
 import org.devemu.inject.JarModuleInstaller;
 import org.devemu.inject.MessageModule;
 import org.devemu.inject.ModuleInstaller;
+import org.devemu.inject.QueueModule;
 import org.devemu.inject.ServiceManager;
 import org.devemu.network.event.GameEventDispatcherStrategy;
 import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
+import org.devemu.queue.QueueObject;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
 import org.devemu.sql.mapper.AccountMapper;
@@ -23,7 +25,8 @@ import org.devemu.sql.mapper.StatsMapper;
 import org.devemu.utils.Stopwatch;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
-import org.devemu.utils.queue.QueueManager;
+import org.devemu.utils.queue.SelectionQueueListener;
+import org.devemu.utils.queue.TransfertQueueListener;
 import org.mybatis.guice.MyBatisModule;
 import org.mybatis.guice.datasource.dbcp.BasicDataSourceProvider;
 import org.slf4j.Logger;
@@ -54,6 +57,8 @@ public class Main {
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
                 MessageModule.of(new MessageFactory(), new InterMessageFactory(), loader),
                 DispatcherModule.of(SimpleEventDispatcher.create(new GameEventDispatcherStrategy()),loader),
+                QueueModule.of(new QueueObject("selection",SelectionQueueListener.class),
+            				new QueueObject("transfert",TransfertQueueListener.class)),
                 new MyBatisModule() {
 
                     @Override
@@ -73,10 +78,6 @@ public class Main {
         );
 
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
-        
-        QueueManager queue = new QueueManager();
-        inject.injectMembers(queue);
-        queue.start();
         
         setGuid(config.getInt("devemu.options.game.guid"));
         setAllowNoSubscribe(config.getBoolean("devemu.options.game.allowNoSubscribe"));

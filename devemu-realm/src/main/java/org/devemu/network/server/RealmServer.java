@@ -9,8 +9,6 @@ import org.apache.mina.filter.codec.textline.LineDelimiter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.firewall.ConnectionThrottleFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.devemu.events.EventDispatcher;
-import org.devemu.network.message.MessageFactory;
 import org.devemu.program.Main;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
@@ -38,7 +36,7 @@ public class RealmServer implements Startable {
     private final Config config;
 
     @Inject
-	public RealmServer(Config config,EventDispatcher dispatcher,MessageFactory factory) {
+	public RealmServer(Config config,RealmHandler handler) {
         this.config = config;
         acceptor = new NioSocketAcceptor();
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter());
@@ -48,7 +46,7 @@ public class RealmServer implements Startable {
                 LineDelimiter.NUL,
                 new LineDelimiter("\n\0")
         )));
-		acceptor.setHandler(new RealmHandler(dispatcher,factory));
+		acceptor.setHandler(handler);
 	}
 
     @Override

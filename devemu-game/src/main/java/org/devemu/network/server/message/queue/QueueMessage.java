@@ -3,11 +3,15 @@ package org.devemu.network.server.message.queue;
 import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.Packet;
-import org.devemu.program.Main;
-import org.devemu.utils.queue.QueueSelector;
+import org.devemu.queue.QueueListener;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 @Packet(id="Af")
 public class QueueMessage extends Message {
+	@Inject @Named("selection") QueueListener sListener;
+	@Inject @Named("transfert") QueueListener tListener;
 	
 	public int currentPos;
 	public boolean subscriber;
@@ -31,8 +35,13 @@ public class QueueMessage extends Message {
 
 	@Override
 	public void serialize() {
-		output = "Af" + currentPos + "|" + QueueSelector.getSelector(state).getTotAbo() + "|" +
-				QueueSelector.getSelector(state).getTotNonAbo() + "|" + (subscriber ? "1" : "0") + "|" + Main.getGuid();
+		if(state == State.TRANSFERT) {
+			output = "Af" + currentPos + "|" + tListener.getQueueAbo().size() + "|" +
+					tListener.getQueue().size() + "|" + (subscriber ? "1" : "0") + "|1";
+		}else{
+			output = "Af" + currentPos + "|" + sListener.getQueueAbo().size() + "|" +
+					sListener.getQueue().size() + "|" + (subscriber ? "1" : "0") + "|2";
+		}
 	}
 
 	@Override

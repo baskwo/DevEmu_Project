@@ -9,6 +9,8 @@ public class SimpleClient extends BaseClient {
 	public SimpleClient(IoSession session) {
 		super(session);
 	}
+	
+	public SimpleClient() {}
 
 	public CryptKey getHash() {
 		return hash;

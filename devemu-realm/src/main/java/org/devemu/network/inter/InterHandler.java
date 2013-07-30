@@ -15,11 +15,14 @@ import org.devemu.utils.enums.ServerState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 public class InterHandler extends IoHandlerAdapter{
 	private static final Logger log = LoggerFactory.getLogger(InterHandler.class);
 	private EventDispatcher dispatcher;
 	private InterMessageFactory factory;
 	
+	@Inject
 	public InterHandler(EventDispatcher dispatcher,InterMessageFactory factory) {
 		this.dispatcher = dispatcher;
 		this.factory = factory;

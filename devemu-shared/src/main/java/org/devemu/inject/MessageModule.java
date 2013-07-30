@@ -18,6 +18,7 @@ import com.google.inject.AbstractModule;
 public class MessageModule extends AbstractModule{
 	MessageFactory factory;
 	InterMessageFactory iFactory;
+	ClassPath path;
 	
 	public static MessageModule of(MessageFactory factory,InterMessageFactory iFactory,ClassLoader loader) {
 		return new MessageModule(factory,iFactory,loader);
@@ -27,7 +28,7 @@ public class MessageModule extends AbstractModule{
 		this.factory = factory;
 		this.iFactory = iFactory;
 		try {
-			init(ClassPath.from(loader));
+			path = ClassPath.from(loader);
 		} catch (IOException e) {
 			throw propagate(e);
 		}
@@ -37,6 +38,7 @@ public class MessageModule extends AbstractModule{
 	protected void configure() {
 		bind(MessageFactory.class).toInstance(factory);
 		bind(InterMessageFactory.class).toInstance(iFactory);
+		init(path);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -49,9 +51,10 @@ public class MessageModule extends AbstractModule{
                 	Class<? extends Message> messageClass = (Class<? extends Message>) eventClass;
                 	Packet packet = messageClass.getAnnotation(Packet.class);
                 	if(packet != null) {
+                		bind(messageClass);
                 		String id = packet.id();
                 		State state = packet.state();
-                		factory.addMessage(id, state, messageClass);
+                		factory.addMessage(id, state, getProvider(messageClass));
                 	}else{
                 		continue;
                 	}
@@ -59,8 +62,9 @@ public class MessageModule extends AbstractModule{
                 	Class<? extends InterMessage> messageClass = (Class<? extends InterMessage>) eventClass;
                 	InterPacket packet = messageClass.getAnnotation(InterPacket.class);
                 	if(packet != null) {
+                		bind(messageClass);
                 		String id = packet.id();
-                		iFactory.addMessage(id, messageClass);
+                		iFactory.addMessage(id, getProvider(messageClass));
                 	}else{
                 		continue;
                 	}

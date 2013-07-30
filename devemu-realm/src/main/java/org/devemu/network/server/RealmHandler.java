@@ -15,21 +15,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class RealmHandler extends IoHandlerAdapter{
 	private static final Logger log = LoggerFactory.getLogger(RealmHandler.class);
 	private EventDispatcher dispatcher;
 	private MessageFactory factory;
+	private Provider<RealmClient> clientProvider;
 	
 	@Inject
-	public RealmHandler(EventDispatcher dispatcher,MessageFactory factory) {
+	public RealmHandler(EventDispatcher dispatcher,MessageFactory factory, Provider<RealmClient> provider) {
 		this.dispatcher = dispatcher;
 		this.factory = factory;
+		this.clientProvider = provider;
 	}
 	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception{
-		RealmClient client = new RealmClient(session);
+		RealmClient client = clientProvider.get();
+		client.setSession(session);
 		session.setAttribute(this, client);
 		LoginConnectMessage o = new LoginConnectMessage();
 		o.salt = client.getSalt();

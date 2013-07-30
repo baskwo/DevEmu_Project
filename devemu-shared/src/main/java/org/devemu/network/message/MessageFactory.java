@@ -6,11 +6,12 @@ import org.devemu.network.client.BaseClient.State;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.inject.Provider;
 
 public class MessageFactory {
-	private final Table<String, State, Class<? extends Message>> cache = HashBasedTable.create();
+	private final Table<String, State, Provider<? extends Message>> cache = HashBasedTable.create();
 	
-	public void addMessage(String id, State state, Class<? extends Message> messageClass) {
+	public void addMessage(String id, State state, Provider<? extends Message> messageClass) {
 		cache.put(id, state, messageClass);
 	}
 	
@@ -18,12 +19,7 @@ public class MessageFactory {
 		if(!cache.contains("", state)) {
 			throw propagate(new MessageNotFoundException("ID : , State : "+state.name()));
 		}
-		Message o;
-		try {
-			o = cache.get("", state).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw propagate(e);
-		}
+		Message o = cache.get("", state).get();
 		return o;
 	}
 	
@@ -31,12 +27,7 @@ public class MessageFactory {
 		if(!cache.contains(id, State.NULL)) {
 			throw propagate(new MessageNotFoundException("ID : " + id + ", State : null"));
 		}
-		Message o;
-		try {
-			o = cache.get(id, State.NULL).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw propagate(e);
-		}
+		Message o = cache.get(id, State.NULL).get();
 		return o;
 	}
 	
@@ -44,12 +35,7 @@ public class MessageFactory {
 		if(!cache.contains(id, state)) {
 			throw propagate(new MessageNotFoundException("ID : " + id + ", State : " + state.name()));
 		}
-		Message o;
-		try {
-			o = cache.get(id, state).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw propagate(e);
-		}
+		Message o = cache.get(id, state).get();
 		return o;
 	}
 }

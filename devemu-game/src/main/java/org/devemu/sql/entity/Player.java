@@ -1,7 +1,6 @@
 package org.devemu.sql.entity;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.devemu.network.server.client.GameClient;

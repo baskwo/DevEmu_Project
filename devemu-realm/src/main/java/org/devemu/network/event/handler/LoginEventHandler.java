@@ -15,7 +15,6 @@ import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.Player;
 import org.devemu.sql.entity.manager.AccountManager;
 import org.devemu.utils.Crypt;
-import org.devemu.utils.queue.QueueSelector;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
@@ -44,8 +43,8 @@ public class LoginEventHandler {
 			if (message.passHash.equals(password)) {
 				client.setAcc(account);
 				client.setState(State.SERVER);
-
-				QueueSelector.addToQueue(client);
+				
+				message.listener.add(client);
 			} else {
 				//TODO: Error
 			}

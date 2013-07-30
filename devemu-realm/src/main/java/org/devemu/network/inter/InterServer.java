@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.devemu.events.EventDispatcher;
-import org.devemu.network.message.InterMessageFactory;
 import org.devemu.services.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +31,10 @@ public class InterServer implements Startable{
 	}
 	
 	@Inject
-	private InterServer(Config config,EventDispatcher dispatcher,InterMessageFactory factory) {
+	private InterServer(Config config,InterHandler handler) {
 		this.config = config;
 		acceptor = new NioSocketAcceptor();
-		acceptor.setHandler(new InterHandler(dispatcher,factory));
+		acceptor.setHandler(handler);
 	}
 	
 	@Override

@@ -10,7 +10,6 @@ import org.devemu.network.server.message.account.RegionalVersionMessage;
 import org.devemu.network.server.message.game.select.SelectingCharacterMessage;
 import org.devemu.network.server.message.queue.QueueMessage;
 import org.devemu.sql.manager.AccountManager;
-import org.devemu.utils.queue.QueueSelector;
 
 public class GameEventHandler {
 	@Subscribe(GameClientEvent.class)
@@ -22,7 +21,7 @@ public class GameEventHandler {
 	
 	@Subscribe(GameClientEvent.class)
 	public void onCharacterWaitingList(GameClient client, CharacterListMessage message) {
-		QueueSelector.getSelector(State.TRANSFERT).addToQueue(client);
+		message.listener.add(client);
 	}
 	
 	@Subscribe(GameClientReuseEvent.class)
@@ -46,7 +45,7 @@ public class GameEventHandler {
 	@Subscribe(GameClientEvent.class)
 	public void onSelectingWaiting(GameClient client, SelectingCharacterMessage message) {
 		client.setPlayer(AccountManager.getPlayer(message.playerId, client.getAcc()));
-		QueueSelector.getSelector(State.SELECTING).addToQueue(client);
+		message.listener.add(client);
 	}
 	
 	@Subscribe(GameClientReuseEvent.class)

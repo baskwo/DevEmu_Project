@@ -11,6 +11,13 @@ import org.devemu.utils.constants.StatsID;
 import com.google.common.base.Joiner;
 
 public class PlayerManager {
+	
+	public static Stats getStat(Player p, int sId) {
+		if(!p.getStats().containsKey(sId))
+			p.getStats().put(sId, StatsManager.getBaseStat(p.getClasse(), sId));
+		return p.getStats().get(sId);
+	}
+	
 	public static String toALK(Player p) {
 		String out = "";
 		//guid;name;level;gfx;colors0;colors1;colors2;stuffALK;isSeller;gameId;isDead;DeathCount;levelMax;

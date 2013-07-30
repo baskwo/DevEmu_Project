@@ -16,8 +16,10 @@ public abstract class BaseClient {
 	private IoSession session;
 	
 	public BaseClient(IoSession session) {
-		session = session;
+		this.session = session;
 	}
+	
+	public BaseClient() {}
 	
 	public void write(Object arg1) {
 		getSession().write(arg1);
