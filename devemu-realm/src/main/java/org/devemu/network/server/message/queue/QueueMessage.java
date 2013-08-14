@@ -3,17 +3,13 @@ package org.devemu.network.server.message.queue;
 import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.Packet;
-import org.devemu.queue.QueueListener;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 @Packet(id="Af",state = State.SERVER)
 public class QueueMessage extends Message {
-	@Inject @Named("login") QueueListener listener;
-	
 	public int currentPos;
 	public boolean subscriber;
+	public int aboSize;
+	public int nonAboSize;
 
 	public boolean isSubscriber() {
 		return subscriber;
@@ -33,8 +29,8 @@ public class QueueMessage extends Message {
 
 	@Override
 	public void serialize() {
-		output = "Af" + currentPos + "|" + listener.getQueueAbo().size() + "|" +
-				listener.getQueue().size() + "|" + (subscriber ? "1" : "0") + "|1";
+		output = "Af" + currentPos + "|" + aboSize + "|" +
+				nonAboSize + "|" + (subscriber ? "1" : "0") + "|1";
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package org.devemu.sql.manager;
+package org.devemu.utils.helper;
 
 import java.util.Map;
 
@@ -6,11 +6,13 @@ import org.devemu.sql.entity.Channel;
 import org.devemu.sql.entity.Player;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 
-public class ChannelManager {
-	private static Map<String,Channel> channels = Maps.newHashMap();
+public class ChannelHelper {
+	private Map<String,Channel> channels = Maps.newHashMap();
 	
-	static {
+	@Inject
+	public ChannelHelper() {
 		channels.put("i", new Channel("i"));
 		channels.put("*", new Channel("*"));
 		channels.put("#$p", new Channel("#$p"));
@@ -20,22 +22,22 @@ public class ChannelManager {
 		channels.put(":", new Channel(":"));
 	}
 	
-	public static void addPlayer(String chann, Player p) {
+	public void addPlayer(String chann, Player p) {
 		Channel channel = channels.get(chann);
 		channel.getPlayers().put(p.getGuid(), p);
 	}
 	
-	public static void remPlayer(String chann, int pId) {
+	public void remPlayer(String chann, int pId) {
 		Channel channel = channels.get(chann);
 		channel.getPlayers().remove(pId);
 	}
 	
-	public static void sendMessageToMap(String chann, String message) {
+	public void sendMessageToMap(String chann, String message) {
 		Channel channel = channels.get(chann);
 		//TODO: Send message to map
 	}
 	
-	public static void sendMessageToFight(String chann, String message) {
+	public void sendMessageToFight(String chann, String message) {
 		Channel channel = channels.get(chann);
 		//TODO: Send message to fight
 	}

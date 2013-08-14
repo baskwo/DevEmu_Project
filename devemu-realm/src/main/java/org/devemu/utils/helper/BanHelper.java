@@ -1,10 +1,10 @@
-package org.devemu.sql.entity.manager;
+package org.devemu.utils.helper;
 
 import org.devemu.sql.entity.Ban;
 
-public class BanManager {
+public class BanHelper {
 	
-	public static long getBanTime(Ban ban) {
+	public long getBanTime(Ban ban) {
 		if(ban.getBanTime() == 0)
 			return 0;
 		return (ban.getBanTime() - System.currentTimeMillis());

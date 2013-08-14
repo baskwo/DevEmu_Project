@@ -9,9 +9,15 @@ import org.devemu.network.server.message.account.CharacterListMessage;
 import org.devemu.network.server.message.account.RegionalVersionMessage;
 import org.devemu.network.server.message.game.select.SelectingCharacterMessage;
 import org.devemu.network.server.message.queue.QueueMessage;
-import org.devemu.sql.manager.AccountManager;
+import org.devemu.queue.QueueListener;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class GameEventHandler {
+	@Inject @Named("selection") QueueListener sListener;
+	@Inject @Named("transfert") QueueListener tListener;
+	
 	@Subscribe(GameClientEvent.class)
 	public void onRegional(GameClient client, RegionalVersionMessage message) {
 		message.regionalId = 0;
@@ -21,12 +27,12 @@ public class GameEventHandler {
 	
 	@Subscribe(GameClientEvent.class)
 	public void onCharacterWaitingList(GameClient client, CharacterListMessage message) {
-		message.listener.add(client);
+		tListener.add(client);
 	}
 	
 	@Subscribe(GameClientReuseEvent.class)
 	public void onCharacterList(GameClient client, CharacterListMessage message) {
-		message.aboTime = AccountManager.getAboTime(client.getAcc());
+		message.aboTime = client.getAccHelper().getAboTime(client.getAcc());
 		message.players = client.getAcc().getPlayers();
 		message.serialize();
 		client.write(message.output);
@@ -36,16 +42,24 @@ public class GameEventHandler {
 	@Subscribe(GameClientEvent.class)
 	public void onQueue(GameClient client, QueueMessage message) {
 		message.currentPos = client.getQueue();
-		message.subscriber = AccountManager.getAboTime(client.getAcc()) > 0 ? true : false;
-		message.state = client.getState();
+		message.subscriber = client.getAccHelper().getAboTime(client.getAcc()) > 0 ? true : false;
+		if(client.getState() == State.TRANSFERT) {
+			message.aboSize = tListener.getQueueAbo().size();
+			message.nonAboSize = tListener.getQueue().size();
+			message.queueId = 1;
+		}else{
+			message.aboSize = sListener.getQueueAbo().size();
+			message.nonAboSize = sListener.getQueue().size();
+			message.queueId = 2;
+		}
 		message.serialize();
 		client.write(message.output);
 	}
 	
 	@Subscribe(GameClientEvent.class)
 	public void onSelectingWaiting(GameClient client, SelectingCharacterMessage message) {
-		client.setPlayer(AccountManager.getPlayer(message.playerId, client.getAcc()));
-		message.listener.add(client);
+		client.setPlayer(client.getAccHelper().getPlayer(message.playerId, client.getAcc()));
+		sListener.add(client);
 	}
 	
 	@Subscribe(GameClientReuseEvent.class)

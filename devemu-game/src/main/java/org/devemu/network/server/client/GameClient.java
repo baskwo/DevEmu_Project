@@ -1,9 +1,11 @@
 package org.devemu.network.server.client;
 
-import org.apache.mina.core.session.IoSession;
 import org.devemu.network.client.SimpleClient;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.Player;
+import org.devemu.utils.helper.AccountHelper;
+
+import com.google.inject.Inject;
 
 public class GameClient extends SimpleClient {
 	
@@ -12,9 +14,11 @@ public class GameClient extends SimpleClient {
 	private int queue = 0;
 	private String identification = "";
 	private State state = State.TRANSFERT;
+	private AccountHelper accHelper;
 	
-	public GameClient(IoSession session) {
-		super(session);
+	@Inject
+	public GameClient(AccountHelper aHelper) {
+		accHelper = aHelper;
 		getHash().setId(2);
 	}
 	
@@ -60,5 +64,13 @@ public class GameClient extends SimpleClient {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public AccountHelper getAccHelper() {
+		return accHelper;
+	}
+
+	public void setAccHelper(AccountHelper accHelper) {
+		this.accHelper = accHelper;
 	}
 }

@@ -21,11 +21,12 @@ public class DispatcherModule extends AbstractModule {
 	private static final Logger log = LoggerFactory.getLogger(DispatcherModule.class);
 	
 	private EventDispatcher dispatcher;
+	private ClassPath path;
 	
 	public DispatcherModule(EventDispatcher dispatcher,ClassLoader loader) {
 		this.dispatcher = checkNotNull(dispatcher);
 		try {
-			init(ClassPath.from(loader));
+			path = ClassPath.from(loader);
 		} catch (IOException e) {
 			throw propagate(e);
 		}
@@ -34,6 +35,7 @@ public class DispatcherModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventDispatcher.class).toInstance(dispatcher);
+		init(path);
 	}
 	
 	private void init(ClassPath classPath) {
@@ -42,7 +44,9 @@ public class DispatcherModule extends AbstractModule {
             	ClassPath.ClassInfo classInfo = (ClassPath.ClassInfo) info;
                 Class<?> eventClass = classInfo.load();
                 try {
-					dispatcher.subscribe(eventClass.newInstance());
+                	Object event = eventClass.newInstance();
+                	requestInjection(event);
+					dispatcher.subscribe(event);
 					log.debug("{} subscribe to dispatcher",eventClass.getName());
 				} catch (InstantiationException
 						| IllegalAccessException e) {

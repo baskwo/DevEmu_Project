@@ -51,7 +51,6 @@ public class MessageModule extends AbstractModule{
                 	Class<? extends Message> messageClass = (Class<? extends Message>) eventClass;
                 	Packet packet = messageClass.getAnnotation(Packet.class);
                 	if(packet != null) {
-                		bind(messageClass);
                 		String id = packet.id();
                 		State state = packet.state();
                 		factory.addMessage(id, state, getProvider(messageClass));
@@ -62,7 +61,6 @@ public class MessageModule extends AbstractModule{
                 	Class<? extends InterMessage> messageClass = (Class<? extends InterMessage>) eventClass;
                 	InterPacket packet = messageClass.getAnnotation(InterPacket.class);
                 	if(packet != null) {
-                		bind(messageClass);
                 		String id = packet.id();
                 		iFactory.addMessage(id, getProvider(messageClass));
                 	}else{

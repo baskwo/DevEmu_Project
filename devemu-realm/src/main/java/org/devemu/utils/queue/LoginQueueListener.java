@@ -7,7 +7,6 @@ import org.devemu.network.message.MessageFactory;
 import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.RealmClient;
 import org.devemu.queue.QueueListener;
-import org.devemu.sql.entity.manager.AccountManager;
 
 import com.google.inject.Inject;
 
@@ -29,7 +28,7 @@ public class LoginQueueListener extends QueueListener {
 		boolean state = false;
 		if(object instanceof RealmClient) {
 			RealmClient client = (RealmClient) object;
-			if(AccountManager.getAboTime(client.getAcc()) > 0) {
+			if(client.getAccHelper().getAboTime(client.getAcc()) > 0) {
 				queueAbo.add(object);
 				client.setQueue(nextAbo);
 				nextAbo++;
@@ -50,7 +49,7 @@ public class LoginQueueListener extends QueueListener {
 		if(object instanceof RealmClient) {
 			RealmClient client = (RealmClient) object;
 			int index = client.getQueue();
-			boolean isSubscribe = AccountManager.getAboTime(client.getAcc()) > 0;
+			boolean isSubscribe = client.getAccHelper().getAboTime(client.getAcc()) > 0;
 			if(isSubscribe) {
 				queueAbo.remove(index);
 				nextAbo--;

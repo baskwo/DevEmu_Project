@@ -1,6 +1,5 @@
 package org.devemu.program;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.typesafe.config.Config;
@@ -10,24 +9,26 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.devemu.events.SimpleEventDispatcher;
 import org.devemu.inject.ConfigModule;
 import org.devemu.inject.DispatcherModule;
+import org.devemu.inject.HelperModule;
 import org.devemu.inject.JarModuleInstaller;
 import org.devemu.inject.MessageModule;
 import org.devemu.inject.ModuleInstaller;
 import org.devemu.inject.QueueModule;
 import org.devemu.inject.ServiceManager;
 import org.devemu.network.event.LoginEventDispatcherStrategy;
-import org.devemu.network.inter.InterHandler;
 import org.devemu.network.inter.client.ClientFactory;
 import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
-import org.devemu.network.server.RealmHandler;
-import org.devemu.queue.QueueObject;
+import org.devemu.queue.QueueListener;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
 import org.devemu.sql.entity.mapper.AccountMapper;
 import org.devemu.sql.entity.mapper.BanMapper;
 import org.devemu.sql.entity.mapper.PlayerMapper;
+import org.devemu.utils.Pair;
 import org.devemu.utils.Stopwatch;
+import org.devemu.utils.helper.AccountHelper;
+import org.devemu.utils.helper.BanHelper;
 import org.devemu.utils.queue.LoginQueueListener;
 import org.mybatis.guice.MyBatisModule;
 import org.mybatis.guice.datasource.dbcp.BasicDataSourceProvider;
@@ -41,6 +42,7 @@ public class Main {
     private static Injector inject;
     private static Config config;
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
         final ClassLoader loader = ClassLoader.getSystemClassLoader();
         config = ConfigFactory.parseFileAnySyntax(new File("./devemu-realm"));
@@ -51,7 +53,7 @@ public class Main {
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
                 MessageModule.of(new MessageFactory(), new InterMessageFactory(),loader),
                 DispatcherModule.of(SimpleEventDispatcher.create(new LoginEventDispatcherStrategy()),loader),
-                QueueModule.of(new QueueObject("login",LoginQueueListener.class)),
+                QueueModule.of(new Pair<String,Class<? extends QueueListener>>("login",LoginQueueListener.class)),
                 new MyBatisModule() {
 
                     @Override
@@ -66,11 +68,11 @@ public class Main {
                     }
 
                 },
-                new AbstractModule() {
+                new HelperModule() {
 					@Override
-					protected void configure() {
-						bind(RealmHandler.class);
-						bind(InterHandler.class);
+					public void initialize() {
+						add(AccountHelper.class);
+						add(BanHelper.class);
 					}
                 }
         );

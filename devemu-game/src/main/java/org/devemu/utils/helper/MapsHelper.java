@@ -1,10 +1,10 @@
-package org.devemu.sql.manager;
+package org.devemu.utils.helper;
 
 import org.devemu.sql.entity.Maps;
 import org.devemu.sql.entity.Player;
 
-public class MapsManager {
-	public static void removeMarchantOnMaps(Maps map, Player p) {
+public class MapsHelper {
+	public void removeMarchantOnMaps(Maps map, Player p) {
 		map.getMarchantsOnMaps().remove((Object)p);
 		/*Packet loc1 = new Packet();
 		loc1.setIdentificator("GD");
@@ -14,7 +14,7 @@ public class MapsManager {
 			loc2.write(loc1.toString());*/
 	}
 	
-	public static void addPlayerOnMaps(Maps map, Player p) {
+	public void addPlayerOnMaps(Maps map, Player p) {
 		map.getPlayersOnMaps().add(p);
 		/*Packet loc1 = new Packet();
 		loc1.setIdentificator("GM");

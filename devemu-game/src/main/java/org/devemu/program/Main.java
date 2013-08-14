@@ -4,17 +4,21 @@ import java.io.File;
 
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.devemu.events.SimpleEventDispatcher;
+import org.devemu.file.FileProvider;
+import org.devemu.file.provider.StatsFileProvider;
 import org.devemu.inject.ConfigModule;
 import org.devemu.inject.DispatcherModule;
+import org.devemu.inject.HelperModule;
 import org.devemu.inject.JarModuleInstaller;
 import org.devemu.inject.MessageModule;
 import org.devemu.inject.ModuleInstaller;
 import org.devemu.inject.QueueModule;
 import org.devemu.inject.ServiceManager;
+import org.devemu.inject.StatsModule;
 import org.devemu.network.event.GameEventDispatcherStrategy;
 import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
-import org.devemu.queue.QueueObject;
+import org.devemu.queue.QueueListener;
 import org.devemu.sql.SqlService;
 import org.devemu.sql.SqlServiceImpl;
 import org.devemu.sql.mapper.AccountMapper;
@@ -22,9 +26,16 @@ import org.devemu.sql.mapper.AlignmentMapper;
 import org.devemu.sql.mapper.MapsMapper;
 import org.devemu.sql.mapper.PlayerMapper;
 import org.devemu.sql.mapper.StatsMapper;
+import org.devemu.utils.Pair;
 import org.devemu.utils.Stopwatch;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
+import org.devemu.utils.helper.AccountHelper;
+import org.devemu.utils.helper.BanHelper;
+import org.devemu.utils.helper.ChannelHelper;
+import org.devemu.utils.helper.MapsHelper;
+import org.devemu.utils.helper.PlayerHelper;
+import org.devemu.utils.helper.StatsHelper;
 import org.devemu.utils.queue.SelectionQueueListener;
 import org.devemu.utils.queue.TransfertQueueListener;
 import org.mybatis.guice.MyBatisModule;
@@ -47,6 +58,7 @@ public class Main {
 	private static int guid = 0;
 	private static boolean allowNoSubscribe = true;
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		final ClassLoader loader = ClassLoader.getSystemClassLoader();
         config = ConfigFactory.parseFileAnySyntax(new File("./devemu-game"));
@@ -57,10 +69,10 @@ public class Main {
                 ModuleInstaller.of(loader, config.getConfig("devemu.mods")),
                 MessageModule.of(new MessageFactory(), new InterMessageFactory(), loader),
                 DispatcherModule.of(SimpleEventDispatcher.create(new GameEventDispatcherStrategy()),loader),
-                QueueModule.of(new QueueObject("selection",SelectionQueueListener.class),
-            				new QueueObject("transfert",TransfertQueueListener.class)),
+                QueueModule.of(new Pair<String,Class<? extends QueueListener>>("transfert",TransfertQueueListener.class),
+                			new Pair<String,Class<? extends QueueListener>>("selection",SelectionQueueListener.class)),
+                StatsModule.of(new Pair<String,FileProvider>("stats",StatsFileProvider.from("./static/stats.data"))),
                 new MyBatisModule() {
-
                     @Override
                     protected void initialize() {
                         bindDataSourceProviderType(BasicDataSourceProvider.class);
@@ -74,7 +86,18 @@ public class Main {
                         environmentId("development");
                     }
 
-                }
+                },
+                new HelperModule() {
+					@Override
+					public void initialize() {
+						add(AccountHelper.class);
+						add(BanHelper.class);
+						add(ChannelHelper.class);
+						add(MapsHelper.class);
+						add(PlayerHelper.class);
+						add(StatsHelper.class);
+					}
+				}
         );
 
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));

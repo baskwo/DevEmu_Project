@@ -8,19 +8,20 @@ import org.devemu.network.message.MessageFactory;
 import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.queue.QueueListener;
-import org.devemu.sql.manager.AccountManager;
+import org.devemu.utils.helper.AccountHelper;
 
 import com.google.inject.Inject;
 
 import static com.google.common.base.Throwables.propagate;
 
 public class TransfertQueueListener extends QueueListener {
-	
+	AccountHelper accHelper;
 	EventDispatcher dispatcher;
 	MessageFactory factory;
 	
 	@Inject
-	public TransfertQueueListener(EventDispatcher dispatcher, MessageFactory factory) {
+	public TransfertQueueListener(AccountHelper aHelper,EventDispatcher dispatcher, MessageFactory factory) {
+		accHelper = aHelper;
 		this.dispatcher = dispatcher;
 		this.factory = factory;
 	}
@@ -30,7 +31,7 @@ public class TransfertQueueListener extends QueueListener {
 		boolean state = false;
 		if(object instanceof GameClient) {
 			GameClient client = (GameClient) object;
-			if(AccountManager.getAboTime(client.getAcc()) > 0) {
+			if(accHelper.getAboTime(client.getAcc()) > 0) {
 				queueAbo.add(object);
 				client.setQueue(nextAbo);
 				nextAbo++;
@@ -51,7 +52,7 @@ public class TransfertQueueListener extends QueueListener {
 		if(object instanceof GameClient) {
 			GameClient client = (GameClient) object;
 			int index = client.getQueue();
-			boolean isSubscribe = AccountManager.getAboTime(client.getAcc()) > 0;
+			boolean isSubscribe = accHelper.getAboTime(client.getAcc()) > 0;
 			if(isSubscribe) {
 				queueAbo.remove(index);
 				nextAbo--;

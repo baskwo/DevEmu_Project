@@ -11,15 +11,18 @@ import org.devemu.network.server.message.queue.QueueMessage;
 import org.devemu.network.server.message.server.ServerListMessage;
 import org.devemu.network.server.message.server.ServerPersoListMessage;
 import org.devemu.program.Main;
+import org.devemu.queue.QueueListener;
 import org.devemu.sql.entity.Account;
 import org.devemu.sql.entity.Player;
-import org.devemu.sql.entity.manager.AccountManager;
 import org.devemu.utils.Crypt;
 
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class LoginEventHandler {
+	@Inject @Named("login") QueueListener listener;
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onVersion(RealmClient client, LoginVersionMessage message) {
@@ -44,7 +47,7 @@ public class LoginEventHandler {
 				client.setAcc(account);
 				client.setState(State.SERVER);
 				
-				message.listener.add(client);
+				listener.add(client);
 			} else {
 				//TODO: Error
 			}
@@ -56,7 +59,9 @@ public class LoginEventHandler {
 	@Subscribe(ClientLoginEvent.class)
 	public void onQueue(RealmClient client, QueueMessage message) {
 		message.currentPos = client.getQueue();
-		message.subscriber = AccountManager.getAboTime(client.getAcc()) > 0 ? true : false;
+		message.subscriber = client.getAccHelper().getAboTime(client.getAcc()) > 0 ? true : false;
+		message.aboSize = listener.getQueueAbo().size();
+		message.nonAboSize = listener.getQueue().size();
 		message.serialize();
 		client.write(message.output);
 	}
@@ -82,7 +87,7 @@ public class LoginEventHandler {
 			set.add(p.getGameGuid());
 		}
 		message.list = set;
-		message.aboTime = AccountManager.getAboTime(client.getAcc());
+		message.aboTime = client.getAccHelper().getAboTime(client.getAcc());
 		message.serialize();
 		client.write(message.output);
 	}

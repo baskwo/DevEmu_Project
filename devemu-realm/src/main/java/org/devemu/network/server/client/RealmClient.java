@@ -1,9 +1,12 @@
 package org.devemu.network.server.client;
 
-import org.apache.mina.core.session.IoSession;
 import org.devemu.network.client.SimpleClient;
 import org.devemu.sql.entity.Account;
 import org.devemu.utils.Crypt;
+import org.devemu.utils.helper.AccountHelper;
+import org.devemu.utils.helper.BanHelper;
+
+import com.google.inject.Inject;
 
 public class RealmClient extends SimpleClient{
 	
@@ -11,14 +14,13 @@ public class RealmClient extends SimpleClient{
 	private State state = State.CONNECT;
 	private Account acc = null;
 	private int queue = 0;
+	private AccountHelper accHelper;
+	private BanHelper banHelper;
 	
-	public RealmClient(IoSession session) {
-		super(session);
-		salt = Crypt.randomString(32);
-		getHash().setId(1);
-	}
-	
-	public RealmClient() {
+	@Inject
+	public RealmClient(AccountHelper aHelp, BanHelper bHelp) {
+		accHelper = aHelp;
+		banHelper = bHelp;
 		salt = Crypt.randomString(32);
 		getHash().setId(1);
 	}
@@ -57,5 +59,21 @@ public class RealmClient extends SimpleClient{
 
 	public void setQueue(int queue) {
 		this.queue = queue;
+	}
+
+	public AccountHelper getAccHelper() {
+		return accHelper;
+	}
+
+	public void setAccHelper(AccountHelper accHelper) {
+		this.accHelper = accHelper;
+	}
+
+	public BanHelper getBanHelper() {
+		return banHelper;
+	}
+
+	public void setBanHelper(BanHelper banHelper) {
+		this.banHelper = banHelper;
 	}
 }
