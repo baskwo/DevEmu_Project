@@ -1,4 +1,4 @@
-package org.devemu.utils.helper;
+package org.devemu.sql.entity.helper;
 
 import org.devemu.sql.entity.Maps;
 import org.devemu.sql.entity.Player;

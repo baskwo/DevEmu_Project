@@ -1,4 +1,4 @@
-package org.devemu.utils.helper;
+package org.devemu.sql.entity.helper;
 
 import java.util.Map;
 
@@ -6,12 +6,10 @@ import org.devemu.sql.entity.Channel;
 import org.devemu.sql.entity.Player;
 
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
 
 public class ChannelHelper {
 	private Map<String,Channel> channels = Maps.newHashMap();
 	
-	@Inject
 	public ChannelHelper() {
 		channels.put("i", new Channel("i"));
 		channels.put("*", new Channel("*"));

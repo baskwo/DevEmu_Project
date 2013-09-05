@@ -1,17 +1,14 @@
-package org.devemu.utils.helper;
+package org.devemu.sql.entity.helper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.devemu.program.Main;
 import org.devemu.sql.entity.Player;
-import org.devemu.sql.entity.Stats;
-import org.devemu.utils.constants.StatsID;
 
 import com.google.common.base.Joiner;
 
 public class PlayerHelper {
-	
 	public String toALK(Player p) {
 		String out = "";
 		//guid;name;level;gfx;colors0;colors1;colors2;stuffALK;isSeller;gameId;isDead;DeathCount;levelMax;

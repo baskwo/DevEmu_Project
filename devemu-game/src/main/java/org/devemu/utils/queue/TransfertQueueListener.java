@@ -8,7 +8,7 @@ import org.devemu.network.message.MessageFactory;
 import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.GameClient;
 import org.devemu.queue.QueueListener;
-import org.devemu.utils.helper.AccountHelper;
+import org.devemu.sql.entity.helper.AccountHelper;
 
 import com.google.inject.Inject;
 

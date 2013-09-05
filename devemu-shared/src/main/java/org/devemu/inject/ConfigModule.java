@@ -5,7 +5,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.MembersInjector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
-import com.google.inject.name.Names;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import com.typesafe.config.Config;
@@ -32,10 +31,6 @@ public class ConfigModule extends AbstractModule {
     protected void configure() {
         bind(Config.class).toInstance(config);
         bindListener(Matchers.any(), fieldInjector);
-        bind(String.class).annotatedWith(Names.named("JDBC.url")).toInstance(config.getString("devemu.service.db.url"));
-        bind(String.class).annotatedWith(Names.named("JDBC.driver")).toInstance(config.getString("devemu.service.db.driver"));
-        bind(String.class).annotatedWith(Names.named("JDBC.username")).toInstance(config.getString("devemu.service.db.user"));
-        bind(String.class).annotatedWith(Names.named("JDBC.password")).toInstance(config.getString("devemu.service.db.pass"));
     }
 
     private <I> List<Field> findFields(TypeLiteral<I> type) {

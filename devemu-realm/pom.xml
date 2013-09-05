@@ -24,24 +24,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>${commons-pool.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>org.apache.mina</groupId>
+            <artifactId>mina-core</artifactId>
+            <version>${mina-core.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.mina</groupId>
-            <artifactId>mina-core</artifactId>
-            <version>${mina-core.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -58,20 +48,20 @@
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
         </dependency>
-        <dependency>
-  			<groupId>org.mybatis</groupId>
-  			<artifactId>mybatis-guice</artifactId>
-  			<version>3.2</version>
+ 		<dependency>
+  			<groupId>com.google.inject.extensions</groupId>
+  			<artifactId>guice-persist</artifactId>
+  			<version>3.0</version>
 		</dependency>
 		<dependency>
-    		<groupId>org.mybatis</groupId>
-    		<artifactId>mybatis</artifactId>
-    		<version>3.2.2</version>
- 		</dependency>
-        <dependency>
-        	<groupId>org.mybatis.caches</groupId>
-        	<artifactId>mybatis-ehcache</artifactId>
-        	<version>1.0.2</version>
-    	</dependency>
+  			<groupId>org.hibernate</groupId>
+  			<artifactId>hibernate-core</artifactId>
+  			<version>4.3.0.Beta3</version>
+		</dependency>
+		<dependency>
+  			<groupId>org.hibernate</groupId>
+  			<artifactId>hibernate-entitymanager</artifactId>
+  			<version>4.3.0.Beta3</version>
+		</dependency>
     </dependencies>
 </project>

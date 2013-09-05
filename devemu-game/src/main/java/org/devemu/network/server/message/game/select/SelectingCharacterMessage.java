@@ -3,7 +3,7 @@ package org.devemu.network.server.message.game.select;
 import org.devemu.network.message.Message;
 import org.devemu.network.message.Packet;
 import org.devemu.sql.entity.Player;
-import org.devemu.utils.helper.PlayerHelper;
+import org.devemu.sql.entity.helper.PlayerHelper;
 
 import com.google.inject.Inject;
 

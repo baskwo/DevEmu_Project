@@ -11,7 +11,6 @@ import org.devemu.network.server.message.inter.AccountTicketMessage;
 import org.devemu.network.server.message.inter.ConnectionInterMessage;
 import org.devemu.network.server.message.transfert.NewWaitingMessage;
 import org.devemu.network.server.message.transfert.WaitingAgreedMessage;
-import org.devemu.program.Main;
 import org.devemu.sql.entity.Account;
 
 import com.google.common.collect.Lists;
@@ -43,7 +42,7 @@ public class InterEventHandler {
 			return;
 		}
 		waitings.remove((Object)message.aId);
-		Account acc = Main.getSqlService().findAccountById(""+message.aId);
+		Account acc = client.getAccHelper().findById(message.aId);
 		if(acc != null) {
 			client.setAcc(acc);
 			message.answer = true;

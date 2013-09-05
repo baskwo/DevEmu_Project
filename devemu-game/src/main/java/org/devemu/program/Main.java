@@ -2,7 +2,6 @@ package org.devemu.program;
 
 import java.io.File;
 
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.devemu.events.SimpleEventDispatcher;
 import org.devemu.file.FileProvider;
 import org.devemu.file.provider.StatsFileProvider;
@@ -19,32 +18,25 @@ import org.devemu.network.event.GameEventDispatcherStrategy;
 import org.devemu.network.message.InterMessageFactory;
 import org.devemu.network.message.MessageFactory;
 import org.devemu.queue.QueueListener;
-import org.devemu.sql.SqlService;
-import org.devemu.sql.SqlServiceImpl;
-import org.devemu.sql.mapper.AccountMapper;
-import org.devemu.sql.mapper.AlignmentMapper;
-import org.devemu.sql.mapper.MapsMapper;
-import org.devemu.sql.mapper.PlayerMapper;
-import org.devemu.sql.mapper.StatsMapper;
+import org.devemu.sql.SimpleSqlInitiator;
+import org.devemu.sql.entity.helper.AccountHelper;
+import org.devemu.sql.entity.helper.BanHelper;
+import org.devemu.sql.entity.helper.ChannelHelper;
+import org.devemu.sql.entity.helper.MapsHelper;
+import org.devemu.sql.entity.helper.PlayerHelper;
+import org.devemu.sql.entity.helper.StatsHelper;
 import org.devemu.utils.Pair;
 import org.devemu.utils.Stopwatch;
 import org.devemu.utils.enums.ServerPop;
 import org.devemu.utils.enums.ServerState;
-import org.devemu.utils.helper.AccountHelper;
-import org.devemu.utils.helper.BanHelper;
-import org.devemu.utils.helper.ChannelHelper;
-import org.devemu.utils.helper.MapsHelper;
-import org.devemu.utils.helper.PlayerHelper;
-import org.devemu.utils.helper.StatsHelper;
 import org.devemu.utils.queue.SelectionQueueListener;
 import org.devemu.utils.queue.TransfertQueueListener;
-import org.mybatis.guice.MyBatisModule;
-import org.mybatis.guice.datasource.dbcp.BasicDataSourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -72,21 +64,7 @@ public class Main {
                 QueueModule.of(new Pair<String,Class<? extends QueueListener>>("transfert",TransfertQueueListener.class),
                 			new Pair<String,Class<? extends QueueListener>>("selection",SelectionQueueListener.class)),
                 StatsModule.of(new Pair<String,FileProvider>("stats",StatsFileProvider.from("./static/stats.data"))),
-                new MyBatisModule() {
-                    @Override
-                    protected void initialize() {
-                        bindDataSourceProviderType(BasicDataSourceProvider.class);
-                        bindTransactionFactoryType(JdbcTransactionFactory.class);
-                        addMapperClass(AccountMapper.class);
-                        addMapperClass(MapsMapper.class);
-                        addMapperClass(PlayerMapper.class);
-                        addMapperClass(StatsMapper.class);
-                        addMapperClass(AlignmentMapper.class);
-                        bind(SqlService.class).to(SqlServiceImpl.class);
-                        environmentId("development");
-                    }
-
-                },
+                new JpaPersistModule("devemu-game"),
                 new HelperModule() {
 					@Override
 					public void initialize() {
@@ -99,6 +77,10 @@ public class Main {
 					}
 				}
         );
+        
+        SimpleSqlInitiator initiator = new SimpleSqlInitiator();
+        inject.injectMembers(initiator);
+        initiator.initiate();
 
         final ServiceManager services = ServiceManager.of(loader, inject, config.getConfig("devemu.mods"));
         
@@ -116,10 +98,6 @@ public class Main {
         try (Stopwatch ignored = Stopwatch.start(log, "successfully started in {} milliseconds")) {
             services.start();
         }
-	}
-
-	public static SqlService getSqlService() {
-        return inject.getInstance(SqlService.class);
 	}
 	
 	public static <T> T getInstanceFromInjector(Class<T> instance) {

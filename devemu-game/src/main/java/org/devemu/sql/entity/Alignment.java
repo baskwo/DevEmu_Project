@@ -2,8 +2,19 @@ package org.devemu.sql.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "alignements")
 public class Alignment implements Serializable{
 	private static final long serialVersionUID = 1L;
+	@Id
+	@Basic(optional = false)
+	@Column(name = "guid")
+	private int guid = 0;
 	private byte ordre = 0;
 	private int level = 0;
 	private int honor = 0;
@@ -39,6 +50,12 @@ public class Alignment implements Serializable{
 	}
 	public void setGrade(int grade) {
 		this.grade = grade;
+	}
+	public int getGuid() {
+		return guid;
+	}
+	public void setGuid(int guid) {
+		this.guid = guid;
 	}
 	
 }

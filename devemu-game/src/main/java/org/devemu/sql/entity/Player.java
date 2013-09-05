@@ -3,12 +3,28 @@ package org.devemu.sql.entity;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.devemu.network.server.client.GameClient;
 
 import com.google.common.collect.Maps;
 
+@Entity
+@Table(name = "players")
 public class Player implements Serializable{
 	private static final long serialVersionUID = 1L;
+	@Id
+	@Basic(optional = false)
+	@Column(name = "guid")
 	private int guid = 0;
 	private String name = "";
 	private int level = 1;//TODO: Better handler of level and exp?
@@ -22,15 +38,19 @@ public class Player implements Serializable{
 	private boolean sexe = false;
 	private int gameGuid = 0;
 	private long xp = 0;
+	@OneToMany(mappedBy="player", fetch = FetchType.EAGER)
+	@MapKey(name="statsId")
 	private Map<Integer,Stats> stats = Maps.newHashMap();
 	private long kamas = 0;
 	private int capitals = 0;
 	private int spellPoints = 0;
 	private int pdv = 0;
 	private int energy = 0;
+	@OneToOne(fetch = FetchType.EAGER)
 	private Alignment align = new Alignment();
 	private boolean isShowingWings = false;
 	private int mapsId = 0;
+	@Transient
 	private GameClient client = null;
 	private int cell = 0;
 	private byte orientation = 0;

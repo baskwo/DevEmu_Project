@@ -3,6 +3,8 @@ package org.devemu.network.event.handler;
 import org.devemu.events.Subscribe;
 import org.devemu.network.client.BaseClient.State;
 import org.devemu.network.event.event.login.ClientLoginEvent;
+import org.devemu.network.message.MessageFactory;
+import org.devemu.network.message.MessageNotFoundException;
 import org.devemu.network.server.client.RealmClient;
 import org.devemu.network.server.message.login.LoginAccountMessage;
 import org.devemu.network.server.message.login.LoginVersionMessage;
@@ -21,13 +23,17 @@ import com.google.common.collect.TreeMultiset;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import static com.google.common.base.Throwables.propagate;
+
 public class LoginEventHandler {
 	@Inject @Named("login") QueueListener listener;
+	@Inject MessageFactory factory;
 	
 	@Subscribe(ClientLoginEvent.class)
 	public void onVersion(RealmClient client, LoginVersionMessage message) {
-		if(message.version.equals(Main.getConfigValue("devemu.options.realm.vers")))
+		if(message.version.equals(Main.getConfigValue("devemu.options.realm.vers"))){
 			client.setState(State.ACCOUNT);
+		}
 		else {
 			//TODO: Error
 		}
@@ -36,9 +42,9 @@ public class LoginEventHandler {
 	@Subscribe(ClientLoginEvent.class)
 	public void onAccount(RealmClient client, LoginAccountMessage message) {
 		Account account = null;
-		
-		if(message.username != "")
-			account = Main.getSqlService().findAccountByName(message.username);
+		if(message.username != "") {
+			account = client.getAccHelper().findByName(message.username);
+		}
 		
 		if (account != null) {
 			String password = Crypt.cryptAnkama(account.getPassword(), client.getSalt());
@@ -75,9 +81,13 @@ public class LoginEventHandler {
 		message.serialize();
 		client.write(message.output);
 		
-		ServerListMessage o = new ServerListMessage();
-		o.serialize();
-		client.write(o.output);
+		try {
+			ServerListMessage o = (ServerListMessage) factory.getMessage("AH",State.SERVER);
+			o.serialize();
+			client.write(o.output);
+		} catch (MessageNotFoundException e) {
+			throw propagate(e);
+		}
 	}
 	
 	@Subscribe(ClientLoginEvent.class)

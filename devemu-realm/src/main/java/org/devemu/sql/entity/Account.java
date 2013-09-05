@@ -4,15 +4,35 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "accounts")
+@NamedQueries({
+	@NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
+	@NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id"),
+	@NamedQuery(name = "Account.findByName", query = "SELECT a FROM Account a WHERE a.name = :name")})
 public class Account implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@Basic(optional = false)
+	@Column(name = "id")
 	private int id = 0;
 	private String name = "";
 	private String password = "";
 	private int level = 0;
 	private String pseudo = "";
 	private String question = "";
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<Player> players = new ArrayList<>();
 	private long aboTime = 0;
 

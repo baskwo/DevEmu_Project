@@ -2,9 +2,9 @@ package org.devemu.network.server.client;
 
 import org.devemu.network.client.SimpleClient;
 import org.devemu.sql.entity.Account;
+import org.devemu.sql.entity.helper.AccountHelper;
+import org.devemu.sql.entity.helper.BanHelper;
 import org.devemu.utils.Crypt;
-import org.devemu.utils.helper.AccountHelper;
-import org.devemu.utils.helper.BanHelper;
 
 import com.google.inject.Inject;
 
